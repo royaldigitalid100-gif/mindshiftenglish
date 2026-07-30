@@ -22774,8 +22774,20 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 return;
             }
 
+            const reflectionSurvey = (userProgress.reflectionResponses && userProgress.reflectionResponses[String(currentDay)]) || null;
+            const latestStreak = calculateCurrentStreak();
+
             if ((userProgress.completedDayNumbers || []).includes(currentDay)) {
                 showNotification('Semua step wajib untuk day ini sudah selesai. Kamu bisa lanjut eksplor step opsional.', 'success');
+                showChallengeCelebration(currentDay, latestStreak, {
+                    requiredSteps,
+                    xpGain: 0,
+                    xpRawGain: 0,
+                    xpMultiplier: 1,
+                    xpWasCapped: false,
+                    reflectionSurvey,
+                    isStreakIncreased: false
+                });
                 return;
             }
 
@@ -22794,7 +22806,6 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     recordStudyTime(); // Track habit completion time
                 }
 
-                const latestStreak = calculateCurrentStreak();
                 let xpAward = { granted: 0, rawGain: 0, multiplier: 1, wasCapped: false };
                 if (isNewCompletion) {
                     xpAward = awardXPWithCap(XP_CONFIG.baseDayCompletionXp, 'Daily Challenge', {
@@ -22805,18 +22816,15 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
                 updateChallengeHero();
                 updateDashboard();
-                const reflectionSurvey = (userProgress.reflectionResponses && userProgress.reflectionResponses[String(currentDay)]) || null;
-                if (step === 'reflection') {
-                    showChallengeCelebration(currentDay, latestStreak, {
-                        requiredSteps,
-                        xpGain: xpAward.granted,
-                        xpRawGain: xpAward.rawGain,
-                        xpMultiplier: xpAward.multiplier,
-                        xpWasCapped: xpAward.wasCapped,
-                        reflectionSurvey,
-                        isStreakIncreased: isNewCompletion
-                    });
-                }
+                showChallengeCelebration(currentDay, latestStreak, {
+                    requiredSteps,
+                    xpGain: xpAward.granted,
+                    xpRawGain: xpAward.rawGain,
+                    xpMultiplier: xpAward.multiplier,
+                    xpWasCapped: xpAward.wasCapped,
+                    reflectionSurvey,
+                    isStreakIncreased: isNewCompletion
+                });
                 
                 // Show quiz on milestone days
                 if (MILESTONE_DAYS.includes(currentDay)) {
