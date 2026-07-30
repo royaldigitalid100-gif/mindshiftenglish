@@ -17673,6 +17673,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 userProgress.reflectionResponses = userProgress.reflectionResponses || {};
                 userProgress.readingAnalyses = userProgress.readingAnalyses || {};
                 userProgress.writingAnalyses = userProgress.writingAnalyses || {};
+                userProgress.rewriteInputs = userProgress.rewriteInputs || {};
+                userProgress.translationInputs = userProgress.translationInputs || {};
+                userProgress.bonusInputs = userProgress.bonusInputs || {};
                 userProgress.totalXP = Number(userProgress.totalXP || 0);
                 userProgress.dailyXpLog = userProgress.dailyXpLog || {};
                 userProgress.xpAuditLog = Array.isArray(userProgress.xpAuditLog) ? userProgress.xpAuditLog : [];
@@ -18385,7 +18388,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             const completedDayNumbers = userProgress.completedDayNumbers || [];
             const defaultDay = completedDayNumbers.length > 0 ? Math.max(...completedDayNumbers) + 1 : 1;
+            const previousDay = selectedChallengeDay;
             const targetDay = Math.max(1, Math.min(TOTAL_DAYS, dayOverride || selectedChallengeDay || defaultDay));
+            const hasDayChanged = Number(previousDay || 0) !== Number(targetDay);
             selectedChallengeDay = targetDay;
 
             updateChallengeHero();
@@ -18499,6 +18504,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             document.getElementById('readingContent').textContent = readingPassage;
             resetReadingRecordingState();
             resetWritingAnalysisState();
+            if (hasDayChanged) {
+                syncWritingDraftInputsForDay(targetDay);
+            }
 
             const vocabContainer = document.getElementById('vocabListContainer');
             if (vocabContainer) {
@@ -18666,6 +18674,37 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             writingExerciseSkipped = false;
             const statusEl = document.getElementById('writingAiStatus');
             const resultEl = document.getElementById('writingAiResult');
+            if (statusEl) statusEl.textContent = 'Status: waiting';
+            if (resultEl) {
+                resultEl.style.display = 'none';
+                resultEl.innerHTML = '';
+            }
+        }
+
+        function resetRewriteFeedbackPanel() {
+            rewriteFeedbackAnalysis = null;
+            const statusEl = document.getElementById('rewriteFeedbackStatus');
+            const resultEl = document.getElementById('rewriteFeedbackResult');
+            if (statusEl) statusEl.textContent = 'Status: waiting';
+            if (resultEl) {
+                resultEl.style.display = 'none';
+                resultEl.innerHTML = '';
+            }
+        }
+
+        function resetTranslationFeedbackPanel() {
+            const statusEl = document.getElementById('translationFeedbackStatus');
+            const resultEl = document.getElementById('translationFeedbackResult');
+            if (statusEl) statusEl.textContent = 'Status: waiting';
+            if (resultEl) {
+                resultEl.style.display = 'none';
+                resultEl.innerHTML = '';
+            }
+        }
+
+        function resetBonusFeedbackPanel() {
+            const statusEl = document.getElementById('bonusFeedbackStatus');
+            const resultEl = document.getElementById('bonusFeedbackResult');
             if (statusEl) statusEl.textContent = 'Status: waiting';
             if (resultEl) {
                 resultEl.style.display = 'none';
@@ -20300,10 +20339,41 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        function syncWritingDraftInputsForDay(dayValue = selectedChallengeDay || 1) {
+            const dayKey = String(Math.max(1, Math.min(TOTAL_DAYS || 100, Number(dayValue) || 1)));
+            const rewriteInput = document.getElementById('rewriteInput');
+            const translationInput = document.getElementById('translationInput');
+            const bonusInput = document.getElementById('bonusInput');
+
+            const rewriteDraftRaw = (userProgress.rewriteInputs && userProgress.rewriteInputs[dayKey]) || '';
+            const translationDraftRaw = (userProgress.translationInputs && userProgress.translationInputs[dayKey]) || '';
+            const bonusDraftRaw = (userProgress.bonusInputs && userProgress.bonusInputs[dayKey]) || '';
+
+            if (rewriteInput) {
+                rewriteInput.value = rewriteDraftRaw === '[Skipped]' ? '' : String(rewriteDraftRaw);
+            }
+
+            if (translationInput) {
+                translationInput.value = translationDraftRaw === '[Skipped]' ? '' : String(translationDraftRaw);
+            }
+
+            if (bonusInput) {
+                bonusInput.value = bonusDraftRaw === '[Skipped]' ? '' : String(bonusDraftRaw);
+            }
+
+            resetRewriteFeedbackPanel();
+            resetTranslationFeedbackPanel();
+            resetBonusFeedbackPanel();
+            updateWriteInputCounter('rewriteInput', 'rewriteWordCounter', 40);
+            updateWriteInputCounter('translationInput', 'translationWordCounter', 25);
+            updateBonusWordCounter();
+        }
+
         function loadRewriteReferenceText() {
             // Get reading text from the current challenge
             const readingText = document.getElementById('readingContent')?.textContent || '';
             const refTextEl = document.getElementById('rewriteReferenceText');
+            const dayKey = String(Math.max(1, Math.min(TOTAL_DAYS || 100, Number(selectedChallengeDay) || 1)));
             
             if (refTextEl) {
                 if (readingText && readingText !== 'Today\'s reading content will appear here.') {
@@ -20316,8 +20386,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             // Load saved rewrite if exists
             const rewriteInput = document.getElementById('rewriteInput');
             if (rewriteInput && userProgress.rewriteInputs) {
-                const savedRewrite = userProgress.rewriteInputs[selectedChallengeDay || currentDay] || '';
-                rewriteInput.value = savedRewrite;
+                const savedRewriteRaw = userProgress.rewriteInputs[dayKey] || '';
+                rewriteInput.value = savedRewriteRaw === '[Skipped]' ? '' : String(savedRewriteRaw);
                 if (!rewriteInput.dataset.feedbackBound) {
                     rewriteInput.addEventListener('input', () => {
                         const statusEl = document.getElementById('rewriteFeedbackStatus');
@@ -20327,7 +20397,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 }
             }
 
-            const savedAnalysis = userProgress.rewriteAnalyses?.[selectedChallengeDay || currentDay];
+            const savedAnalysis = userProgress.rewriteAnalyses?.[dayKey];
             if (savedAnalysis) {
                 rewriteFeedbackAnalysis = savedAnalysis;
                 const statusEl = document.getElementById('rewriteFeedbackStatus');
@@ -21851,6 +21921,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     closeOverlay();
                     const nextDay = Math.min(TOTAL_DAYS || 100, day + 1);
                     if (nextDay > day) {
+                        resetRewriteFeedbackPanel();
+                        resetTranslationFeedbackPanel();
+                        resetBonusFeedbackPanel();
                         selectedChallengeDay = nextDay;
                         updateChallengePage(nextDay);
                         showNotification(`Day ${nextDay} is ready. Keep your momentum!`, 'success');
@@ -21909,6 +21982,44 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             updateWriteInputCounter(inputId, counterId, minWords);
+        }
+
+        const draftAutosaveTimers = {};
+
+        function sanitizeChallengeDayKey(dayValue) {
+            return String(Math.max(1, Math.min(TOTAL_DAYS || 100, Number(dayValue) || 1)));
+        }
+
+        function saveDraftForDay(storageField, dayKey, value) {
+            if (!storageField) return;
+            const safeDayKey = sanitizeChallengeDayKey(dayKey);
+            userProgress[storageField] = userProgress[storageField] || {};
+            userProgress[storageField][safeDayKey] = String(value || '');
+            saveUserData();
+        }
+
+        function bindDraftAutosave(inputId, storageField) {
+            const input = document.getElementById(inputId);
+            if (!input || !storageField) return;
+
+            const boundKey = `${storageField}AutosaveBound`;
+            if (input.dataset[boundKey] === '1') return;
+
+            input.addEventListener('input', () => {
+                const dayKeyAtInput = sanitizeChallengeDayKey(selectedChallengeDay || 1);
+                const timerKey = `${inputId}:${dayKeyAtInput}`;
+
+                if (draftAutosaveTimers[timerKey]) {
+                    clearTimeout(draftAutosaveTimers[timerKey]);
+                }
+
+                draftAutosaveTimers[timerKey] = setTimeout(() => {
+                    saveDraftForDay(storageField, dayKeyAtInput, input.value || '');
+                    delete draftAutosaveTimers[timerKey];
+                }, 350);
+            });
+
+            input.dataset[boundKey] = '1';
         }
 
         function selectWritingType(type) {
@@ -22037,6 +22148,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
         function loadBonusTask() {
             const currentDay = selectedChallengeDay || 1;
+            const dayKey = String(currentDay);
             const bonusTask = getTypeCBonusTaskByDay(currentDay);
             const normalizedRequirements = Array.isArray(bonusTask.requirements) ? bonusTask.requirements : [];
             const requirementMeta = extractRequirementMeta(normalizedRequirements);
@@ -22074,11 +22186,17 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             const bonusInput = document.getElementById('bonusInput');
+            if (bonusInput) {
+                const savedBonusRaw = (userProgress.bonusInputs && userProgress.bonusInputs[dayKey]) || '';
+                bonusInput.value = savedBonusRaw === '[Skipped]' ? '' : String(savedBonusRaw);
+                bindDraftAutosave('bonusInput', 'bonusInputs');
+            }
             if (bonusInput && !bonusInput.dataset.counterBound) {
                 bonusInput.addEventListener('input', updateBonusWordCounter);
                 bonusInput.dataset.counterBound = '1';
             }
 
+            resetBonusFeedbackPanel();
             updateBonusWordCounter();
         }
 
@@ -22158,15 +22276,50 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         function loadTranslationSourceText() {
             const readingContent = document.getElementById('readingContent')?.textContent || '';
             const sourceTextDiv = document.getElementById('translationSourceText');
+            const currentDay = selectedChallengeDay || 1;
+            const dayKey = String(currentDay);
             
             // Make text interactive with clickable words
             sourceTextDiv.innerHTML = makeTextInteractive(readingContent);
+
+            const translationInput = document.getElementById('translationInput');
+            if (translationInput) {
+                const savedTranslationRaw = (userProgress.translationInputs && userProgress.translationInputs[dayKey]) || '';
+                translationInput.value = savedTranslationRaw === '[Skipped]' ? '' : String(savedTranslationRaw);
+                bindDraftAutosave('translationInput', 'translationInputs');
+            }
+
+            resetTranslationFeedbackPanel();
             updateWriteInputCounter('translationInput', 'translationWordCounter', 25);
         }
 
         function toggleTranslationSourceText() {
             const sourceTextDiv = document.getElementById('translationSourceText');
             sourceTextDiv.style.maxHeight = sourceTextDiv.style.maxHeight === 'none' ? '200px' : 'none';
+        }
+
+        function markChallengeStepCompleteForDay(dayNumber, stepName) {
+            const safeDay = String(Math.max(1, Math.min(TOTAL_DAYS || 100, Number(dayNumber) || 1)));
+            const today = new Date().toISOString().split('T')[0];
+
+            if (!userProgress.completedTasks[today]) {
+                userProgress.completedTasks[today] = [];
+            }
+            if (!userProgress.completedTasks[today].includes(stepName)) {
+                userProgress.completedTasks[today].push(stepName);
+            }
+
+            userProgress.challengeStepProgress = userProgress.challengeStepProgress || {};
+            if (!userProgress.challengeStepProgress[safeDay]) {
+                userProgress.challengeStepProgress[safeDay] = [];
+            }
+
+            if (!userProgress.challengeStepProgress[safeDay].includes(stepName)) {
+                userProgress.challengeStepProgress[safeDay].push(stepName);
+                return true;
+            }
+
+            return false;
         }
 
         function completeWritingType(type) {
@@ -22176,6 +22329,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             const currentDay = selectedChallengeDay || 1;
+            let writingTypeValidated = false;
 
             if (type === 'A') {
                 const rewriteInput = document.getElementById('rewriteInput');
@@ -22185,6 +22339,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     showNotification('⚠️ Tulis minimal 20 karakter untuk Type A', 'warning');
                     return;
                 }
+                writingTypeValidated = true;
 
                 if (!userProgress.completedWritingTypes) {
                     userProgress.completedWritingTypes = {};
@@ -22221,6 +22376,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     showNotification('⚠️ Tulis minimal 20 karakter untuk Type B', 'warning');
                     return;
                 }
+                writingTypeValidated = true;
 
                 if (!userProgress.completedWritingTypes) {
                     userProgress.completedWritingTypes = {};
@@ -22247,6 +22403,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     updateChallengeHero();
                     renderXpRewardCenter();
                 }
+                userProgress.translationInputs = userProgress.translationInputs || {};
+                userProgress.translationInputs[String(currentDay)] = translationText;
                 saveUserData();
                 
             } else if (type === 'C') {
@@ -22257,6 +22415,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     showNotification('⚠️ Tulis minimal 20 karakter untuk Type C', 'warning');
                     return;
                 }
+                writingTypeValidated = true;
 
                 if (!userProgress.completedWritingTypes) {
                     userProgress.completedWritingTypes = {};
@@ -22337,11 +22496,32 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 } else {
                     showNotification('✓ Type C (Bonus) sudah diselesaikan hari ini!', 'info');
                 }
+                userProgress.bonusInputs = userProgress.bonusInputs || {};
+                userProgress.bonusInputs[String(currentDay)] = bonusText;
                 
                 saveUserData();
             }
+
+            if (writingTypeValidated) {
+                const wasNewWritingCompletion = markChallengeStepCompleteForDay(currentDay, 'writing');
+                if (wasNewWritingCompletion) {
+                    showNotification('✓ Writing challenge ditandai selesai. Lanjut ke Reflection untuk menyelesaikan day ini.', 'success');
+                }
+                saveUserData();
+                updateChallengeHero();
+                const dayKey = String(currentDay);
+                const completedCountEl = document.getElementById('dpCompleted');
+                if (completedCountEl) {
+                    const stepsCompleted = (userProgress.challengeStepProgress && userProgress.challengeStepProgress[dayKey]) || [];
+                    completedCountEl.textContent = `${stepsCompleted.length}/${(activeChallengeSteps || []).length || 4}`;
+                }
+            }
+
             setTimeout(() => {
                 backFromWritingType();
+                if (writingTypeValidated) {
+                    showChallengeStep('reflection', false);
+                }
             }, 500);
         }
 
@@ -22570,8 +22750,16 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             saveUserData();
 
             const dayStepState = userProgress.challengeStepProgress[dayKey] || [];
-            const allRequiredDone = requiredSteps.every((requiredStep) => dayStepState.includes(requiredStep));
-            const nextMissingRequired = requiredSteps.find((requiredStep) => !dayStepState.includes(requiredStep));
+            if (step === 'reflection' && !dayStepState.includes('writing')) {
+                const completedWritingTypes = (userProgress.completedWritingTypes && userProgress.completedWritingTypes[currentDay]) || [];
+                if (Array.isArray(completedWritingTypes) && completedWritingTypes.length > 0) {
+                    markChallengeStepCompleteForDay(currentDay, 'writing');
+                }
+            }
+
+            const refreshedDayStepState = userProgress.challengeStepProgress[dayKey] || [];
+            const allRequiredDone = requiredSteps.every((requiredStep) => refreshedDayStepState.includes(requiredStep));
+            const nextMissingRequired = requiredSteps.find((requiredStep) => !refreshedDayStepState.includes(requiredStep));
 
             if (!allRequiredDone) {
                 showNotification(`✓ ${step.charAt(0).toUpperCase() + step.slice(1)} completed! Moving to next challenge...`, 'success');
