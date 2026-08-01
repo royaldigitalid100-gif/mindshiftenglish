@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>MindShift Admin Analytics</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+		:root {
+			--bg: #f4f8f4;
+			--panel: #ffffff;
+			--panel-soft: #f7fbf7;
+			--ink: #142216;
+			--muted: #4f6252;
+			--line: #d4dfd4;
+			--line-strong: #bfd1c0;
+			--brand: #1f7a4a;
+			--brand-2: #2aa46a;
+			--accent: #f4a941;
+			--danger: #b83a3a;
+			--ok: #1f8e57;
+			--focus: rgba(31, 122, 74, 0.18);
+			--shadow: 0 16px 40px rgba(20, 34, 22, 0.1);
+			--radius: 18px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at 10% 15%, rgba(47, 138, 83, 0.17), transparent 32%),
+				radial-gradient(circle at 86% 8%, rgba(244, 169, 65, 0.15), transparent 28%),
+				linear-gradient(140deg, #f0f7f1 0%, #f7faf5 55%, #fff9f0 100%);
+			min-height: 100vh;
+			padding: 24px;
+		}
+
+		.shell {
+			max-width: 1380px;
+			margin: 0 auto;
+			display: grid;
+			gap: 20px;
+		}
+
+		.hero {
+			background: linear-gradient(130deg, #1f7a4a 0%, #2aa46a 52%, #f4a941 100%);
+			border-radius: var(--radius);
+			padding: 24px;
+			color: #f6fff8;
+			box-shadow: var(--shadow);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.hero::after {
+			content: '';
+			position: absolute;
+			width: 320px;
+			height: 320px;
+			right: -90px;
+			top: -120px;
+			border-radius: 50%;
+			background: radial-gradient(circle, rgba(255, 255, 255, 0.32) 0%, transparent 72%);
+		}
+
+		.hero h1 {
+			font-family: 'Outfit', sans-serif;
+			font-size: clamp(26px, 4vw, 40px);
+			line-height: 1.1;
+			margin-bottom: 8px;
+			position: relative;
+			z-index: 1;
+		}
+
+		.hero p {
+			font-size: 15px;
+			line-height: 1.55;
+			max-width: 820px;
+			position: relative;
+			z-index: 1;
+			color: rgba(247, 255, 248, 0.95);
+		}
+
+		.hero-kpis {
+			margin-top: 14px;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			position: relative;
+			z-index: 1;
+		}
+
+		.hero-chip {
+			padding: 6px 10px;
+			border-radius: 999px;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 0.03em;
+			color: #f5fff8;
+			background: rgba(8, 42, 22, 0.24);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.panel {
+			background: var(--panel);
+			border: 1px solid var(--line);
+			border-radius: var(--radius);
+			box-shadow: 0 8px 26px rgba(20, 34, 22, 0.07);
+			padding: 20px;
+		}
+
+		.panel-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-end;
+			gap: 10px;
+			margin-bottom: 12px;
+		}
+
+		.panel-head p {
+			font-size: 12px;
+			color: var(--muted);
+			max-width: 720px;
+			line-height: 1.5;
+		}
+
+		.source-grid {
+			display: grid;
+			gap: 12px;
+			grid-template-columns: repeat(12, 1fr);
+			align-items: end;
+		}
+
+		.field {
+			display: grid;
+			gap: 6px;
+		}
+
+		.field label {
+			font-size: 12px;
+			color: var(--muted);
+			font-weight: 600;
+			letter-spacing: 0.02em;
+		}
+
+		.field input,
+		.field select {
+			border: 1px solid #c8d6c9;
+			border-radius: 12px;
+			padding: 10px 12px;
+			font: inherit;
+			background: #fcfffc;
+			color: var(--ink);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+		}
+
+		.field input:focus,
+		.field select:focus {
+			border-color: var(--brand-2);
+			outline: 2px solid var(--focus);
+		}
+
+		.btn {
+			border: none;
+			border-radius: 12px;
+			padding: 11px 14px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: transform 0.18s ease, box-shadow 0.2s ease;
+			font-family: inherit;
+		}
+
+		.btn:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 8px 18px rgba(20, 34, 22, 0.15);
+		}
+
+		.btn-primary {
+			background: linear-gradient(130deg, var(--brand), var(--brand-2));
+			color: #fff;
+		}
+
+		.btn-muted {
+			background: #edf3ed;
+			color: #25412c;
+		}
+
+		.action-row {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+			padding: 10px;
+			border: 1px solid var(--line);
+			border-radius: 12px;
+			background: var(--panel-soft);
+		}
+
+		.status {
+			margin-top: 8px;
+			font-size: 13px;
+			color: var(--muted);
+			min-height: 20px;
+		}
+
+		.status.error {
+			color: var(--danger);
+			font-weight: 600;
+		}
+
+		.status.ok {
+			color: var(--ok);
+			font-weight: 600;
+		}
+
+		.kpi-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.exec-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.exec-card {
+			border: 1px solid #cfe0d1;
+			border-radius: 14px;
+			padding: 14px;
+			background: linear-gradient(160deg, #ffffff 0%, #f5faf6 100%);
+			box-shadow: 0 6px 18px rgba(18, 44, 25, 0.06);
+		}
+
+		.exec-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 8px;
+		}
+
+		.exec-title {
+			font-family: 'Outfit', sans-serif;
+			font-size: 16px;
+			color: #1a3e28;
+		}
+
+		.exec-delta {
+			font-size: 12px;
+			font-weight: 700;
+			padding: 4px 8px;
+			border-radius: 999px;
+			border: 1px solid transparent;
+		}
+
+		.exec-delta.up {
+			color: #0f6b3f;
+			background: #e8f7ef;
+			border-color: #bae1ca;
+		}
+
+		.exec-delta.down {
+			color: #9a5a00;
+			background: #fff4e8;
+			border-color: #f2d0ad;
+		}
+
+		.exec-delta.flat {
+			color: #355b45;
+			background: #edf4ee;
+			border-color: #d4e1d5;
+		}
+
+		.exec-stats {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 8px;
+		}
+
+		.exec-stat {
+			border-radius: 10px;
+			padding: 8px;
+			text-align: center;
+			border: 1px solid #d4e1d5;
+			background: #fbfefc;
+		}
+
+		.exec-stat .num {
+			font-family: 'Outfit', sans-serif;
+			font-size: 20px;
+			line-height: 1.1;
+		}
+
+		.exec-stat .txt {
+			font-size: 11px;
+			color: #506655;
+			margin-top: 2px;
+			font-weight: 600;
+		}
+
+		.exec-stat.met .num {
+			color: #156b3f;
+		}
+
+		.exec-stat.risk .num {
+			color: #a05a00;
+		}
+
+		.exec-stat.na .num {
+			color: #536458;
+		}
+
+		.user-filter-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-bottom: 10px;
+		}
+
+		.filter-chip {
+			border: 1px solid #cbdaca;
+			border-radius: 999px;
+			background: #f3f8f3;
+			color: #2a4a34;
+			padding: 6px 10px;
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+		}
+
+		.filter-chip.active {
+			background: linear-gradient(130deg, var(--brand), var(--brand-2));
+			color: #fff;
+			border-color: transparent;
+		}
+
+		.filter-meta {
+			font-size: 12px;
+			color: #536657;
+			margin-left: auto;
+		}
+
+		.kpi {
+			background: linear-gradient(165deg, #ffffff 0%, #f6fbf6 100%);
+			border: 1px solid var(--line-strong);
+			border-radius: 14px;
+			padding: 14px 14px 12px;
+			box-shadow: 0 6px 18px rgba(19, 45, 26, 0.06);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.kpi::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 4px;
+			background: linear-gradient(90deg, var(--brand) 0%, var(--accent) 100%);
+		}
+
+		.kpi .label {
+			font-size: 12px;
+			color: var(--muted);
+			margin-bottom: 8px;
+			font-weight: 600;
+			letter-spacing: 0.02em;
+		}
+
+		.kpi .value {
+			font-size: clamp(22px, 2.3vw, 30px);
+			font-weight: 800;
+			font-family: 'Outfit', sans-serif;
+			line-height: 1;
+		}
+
+		.section-title {
+			font-family: 'Outfit', sans-serif;
+			font-size: 21px;
+			margin-bottom: 4px;
+			color: #15331f;
+		}
+
+		.section-subtitle {
+			font-size: 12px;
+			line-height: 1.5;
+			color: #4f6252;
+			margin-bottom: 14px;
+		}
+
+		.appendix-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.appendix-card {
+			border: 1px solid #d2dfd3;
+			border-radius: 14px;
+			padding: 14px;
+			background: #fbfefb;
+		}
+
+		.appendix-card h3 {
+			font-size: 16px;
+			margin-bottom: 10px;
+			color: #174226;
+			font-family: 'Outfit', sans-serif;
+		}
+
+		.metrics-list {
+			display: grid;
+			gap: 7px;
+		}
+
+		.metric-row {
+			display: flex;
+			justify-content: space-between;
+			gap: 8px;
+			font-size: 13px;
+			color: #243f2b;
+		}
+
+		.metric-row strong {
+			font-family: 'Outfit', sans-serif;
+			font-size: 14px;
+		}
+
+		.two-col {
+			display: grid;
+			grid-template-columns: 1.25fr 0.95fr;
+			gap: 12px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13px;
+		}
+
+		th,
+		td {
+			padding: 10px;
+			border-bottom: 1px solid #e1e9e2;
+			text-align: left;
+			vertical-align: top;
+		}
+
+		th {
+			color: #224333;
+			font-size: 12px;
+			letter-spacing: 0.02em;
+			text-transform: uppercase;
+			background: #f1f7f2;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+		}
+
+		tr:hover {
+			background: #f6fbf7;
+		}
+
+		tbody tr:nth-child(even) {
+			background: #fbfefc;
+		}
+
+		.users-row.selected {
+			background: #e8f6ee !important;
+			outline: 1px solid #bad9c4;
+		}
+
+		.users-row.heat-low {
+			background: #f4fbf6;
+		}
+
+		.users-row.heat-medium {
+			background: #fff7e8;
+		}
+
+		.users-row.heat-high {
+			background: #ffeedd;
+		}
+
+		.users-row.heat-critical {
+			background: #ffe1e1;
+		}
+
+		.users-row.heat-low:hover {
+			background: #ecf8f0;
+		}
+
+		.users-row.heat-medium:hover {
+			background: #fff2db;
+		}
+
+		.users-row.heat-high:hover {
+			background: #ffe6d1;
+		}
+
+		.users-row.heat-critical:hover {
+			background: #ffd6d6;
+		}
+
+		.risk-chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			margin-left: 6px;
+			padding: 2px 7px;
+			border-radius: 999px;
+			font-size: 10px;
+			font-weight: 800;
+			letter-spacing: 0.03em;
+			vertical-align: middle;
+			border: 1px solid transparent;
+		}
+
+		.risk-chip.low {
+			background: #e8f7ef;
+			color: #1a6b40;
+			border-color: #b9dfc9;
+		}
+
+		.risk-chip.medium {
+			background: #fff4e2;
+			color: #975a00;
+			border-color: #efcf9f;
+		}
+
+		.risk-chip.high {
+			background: #ffe9d4;
+			color: #9a4f00;
+			border-color: #efbe8a;
+		}
+
+		.risk-chip.critical {
+			background: #ffe0e0;
+			color: #9e2f2f;
+			border-color: #efb0b0;
+		}
+
+		.user-link {
+			color: #1d7f4d;
+			text-decoration: underline;
+			cursor: pointer;
+			font-weight: 600;
+		}
+
+		.detail-box {
+			border: 1px solid #c9ddcb;
+			border-radius: 12px;
+			padding: 14px;
+			background: linear-gradient(165deg, #fcfffc 0%, #f4faf5 100%);
+			min-height: 100%;
+			position: sticky;
+			top: 16px;
+		}
+
+		.detail-box h4 {
+			margin-bottom: 10px;
+			color: #143723;
+			font-family: 'Outfit', sans-serif;
+		}
+
+		.detail-line {
+			font-size: 13px;
+			color: #2c4433;
+			margin-bottom: 7px;
+		}
+
+		.activity-list {
+			margin-top: 10px;
+			display: grid;
+			gap: 6px;
+		}
+
+		.activity-item {
+			font-size: 12px;
+			line-height: 1.45;
+			color: #2a3f31;
+			background: #f6fbf6;
+			border: 1px solid #d9e6db;
+			border-radius: 10px;
+			padding: 8px 9px;
+		}
+
+		.activity-item b {
+			color: #17472a;
+		}
+
+		.note {
+			font-size: 12px;
+			color: #4a6251;
+			margin-top: 12px;
+			line-height: 1.45;
+			background: #f3faf3;
+			border: 1px solid #d8e5d9;
+			border-radius: 10px;
+			padding: 10px;
+		}
+
+		.export-row {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap;
+		}
+
+		.coverage-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 10px;
+		}
+
+		.coverage-card {
+			border: 1px solid #d2dfd3;
+			border-radius: 12px;
+			padding: 12px;
+			background: linear-gradient(160deg, #ffffff 0%, #f4faf4 100%);
+			box-shadow: 0 6px 16px rgba(21, 50, 31, 0.06);
+		}
+
+		.coverage-label {
+			font-size: 12px;
+			font-weight: 700;
+			color: #355744;
+			margin-bottom: 6px;
+		}
+
+		.coverage-value {
+			font-family: 'Outfit', sans-serif;
+			font-size: 30px;
+			line-height: 1;
+			color: #11462b;
+		}
+
+		.coverage-note {
+			font-size: 11px;
+			margin-top: 6px;
+			color: #537261;
+		}
+
+		.coverage-list {
+			margin-top: 12px;
+			display: grid;
+			gap: 6px;
+		}
+
+		.coverage-item {
+			display: flex;
+			justify-content: space-between;
+			gap: 10px;
+			border: 1px solid #dde8de;
+			border-radius: 10px;
+			padding: 8px 10px;
+			background: #fbfefc;
+			font-size: 12px;
+			color: #2f4b3a;
+		}
+
+		.chart-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.instrument-table-wrap {
+			overflow: auto;
+			border: 1px solid #d2dfd3;
+			border-radius: 12px;
+			max-height: 420px;
+		}
+
+		.instrument-table {
+			min-width: 980px;
+		}
+
+		.instrument-table td small {
+			display: block;
+			color: #587160;
+			font-size: 11px;
+			margin-top: 2px;
+		}
+
+		.tag {
+			display: inline-block;
+			padding: 3px 8px;
+			border-radius: 999px;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 0.02em;
+		}
+
+		.tag.f1 {
+			background: #e8f7ef;
+			color: #176b40;
+		}
+
+		.tag.f2 {
+			background: #e8f2ff;
+			color: #1f4f97;
+		}
+
+		.tag.f3 {
+			background: #fff3e2;
+			color: #9a5a00;
+		}
+
+		.tag.target {
+			background: #eef3ff;
+			color: #2a4f93;
+		}
+
+		.badge-status {
+			display: inline-block;
+			padding: 3px 8px;
+			border-radius: 999px;
+			font-size: 11px;
+			font-weight: 700;
+		}
+
+		.badge-status.met {
+			background: #e8f8ee;
+			color: #176b40;
+		}
+
+		.badge-status.risk {
+			background: #fff4e8;
+			color: #9a5a00;
+		}
+
+		.badge-status.na {
+			background: #f0f3f1;
+			color: #536458;
+		}
+
+		.chart-card {
+			border: 1px solid #cddccd;
+			border-radius: 14px;
+			padding: 12px;
+			background: linear-gradient(160deg, #fcfffc 0%, #f4faf4 100%);
+			box-shadow: 0 6px 16px rgba(21, 50, 31, 0.06);
+		}
+
+		.chart-title {
+			font-size: 14px;
+			font-weight: 700;
+			color: #1a3d28;
+			margin-bottom: 8px;
+		}
+
+		.chart-subtitle {
+			font-size: 12px;
+			color: #4f6252;
+			margin-bottom: 10px;
+		}
+
+		.bars {
+			display: grid;
+			grid-auto-flow: column;
+			grid-auto-columns: minmax(24px, 1fr);
+			gap: 6px;
+			align-items: end;
+			height: 140px;
+			padding-top: 8px;
+			padding-bottom: 4px;
+			overflow-x: auto;
+			border-top: 1px dashed #d6e4d8;
+			scrollbar-width: thin;
+		}
+
+		.bar-wrap {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-end;
+			gap: 4px;
+		}
+
+		.bar-val {
+			font-size: 11px;
+			font-weight: 700;
+			color: #255236;
+		}
+
+		.bar {
+			width: 100%;
+			min-height: 6px;
+			border-radius: 8px 8px 3px 3px;
+			background: linear-gradient(180deg, #2aa46a 0%, #1f7a4a 100%);
+			box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+		}
+
+		.bar-label {
+			font-size: 11px;
+			color: #5a6e5d;
+		}
+
+		@media (max-width: 980px) {
+			.kpi-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.exec-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.appendix-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.two-col {
+				grid-template-columns: 1fr;
+			}
+
+			.detail-box {
+				position: static;
+			}
+
+			.chart-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.coverage-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.source-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		@media (max-width: 640px) {
+			body {
+				padding: 12px;
+			}
+
+			.kpi-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.source-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.coverage-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.panel-head {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.filter-meta {
+				margin-left: 0;
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="shell">
+		<section class="hero">
+			<h1>MindShift Admin Monitoring</h1>
+			<p>
+				Dashboard admin untuk memantau progres user MindShift berdasarkan Appendix F Usability Instruments:
+				F1 Habit-Related Analytics, F2 Integrated Skills Engagement, dan F3 Self-Regulated Learning.
+			</p>
+			<div class="hero-kpis">
+				<span class="hero-chip">F1 Habit Analytics</span>
+				<span class="hero-chip">F2 Integrated Skills</span>
+				<span class="hero-chip">F3 Self-Regulated Learning</span>
+				<span class="hero-chip">Per Milestone 10 Hari</span>
+			</div>
+		</section>
+
+		<section class="panel">
+			<div class="panel-head">
+				<div>
+					<h2 class="section-title">Data Source</h2>
+					<p class="section-subtitle">Pilih sumber data, atur periode milestone, lalu muat analisis untuk membaca progres user secara cepat.</p>
+				</div>
+			</div>
+			<div class="source-grid">
+				<div class="field" style="grid-column: span 2;">
+					<label for="sourceMode">Mode Data</label>
+					<select id="sourceMode">
+						<option value="local">Local Browser (mindshift.html)</option>
+						<option value="firestore">Firebase Firestore (multi-user)</option>
+					</select>
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="projectId">Firebase Project ID</label>
+					<input id="projectId" placeholder="mindshift-english-xxxxx" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="apiKey">Firebase API Key</label>
+					<input id="apiKey" placeholder="AIza..." />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="authDomain">Firebase Auth Domain</label>
+					<input id="authDomain" placeholder="your-project.firebaseapp.com" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="storageBucket">Firebase Storage Bucket</label>
+					<input id="storageBucket" placeholder="your-project.appspot.com" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="messagingSenderId">Messaging Sender ID</label>
+					<input id="messagingSenderId" placeholder="123456789" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="appId">Firebase App ID</label>
+					<input id="appId" placeholder="1:123456789:web:abcdef" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="startDate">Start Date</label>
+					<input id="startDate" type="date" />
+				</div>
+
+				<div class="field" style="grid-column: span 2;">
+					<label for="endDate">End Date</label>
+					<input id="endDate" type="date" />
+				</div>
+
+				<div class="action-row" style="grid-column: span 2;">
+					<button id="loadBtn" class="btn btn-primary">Load Analytics</button>
+					<button id="last7Btn" class="btn btn-muted">Last 10 Days (Milestone)</button>
+					<button id="last30Btn" class="btn btn-muted">Last 30 Days</button>
+					<button id="saveCfgBtn" class="btn btn-muted">Save Firebase Config</button>
+					<button id="clearCfgBtn" class="btn btn-muted">Clear Config</button>
+				</div>
+			</div>
+			<div id="status" class="status">Siap memuat data.</div>
+			<p class="note">
+				Mode Local membaca semua akun dari key localStorage yang dipakai index.html:
+				mindshift_user_[email], mindshift_progress_[email], mindshift_dayCompletionDates_[email],
+				ditambah fallback key legacy (mindshift_user, mindshift_progress, dayCompletionDates).
+			</p>
+		</section>
+
+		<section class="kpi-grid">
+			<article class="kpi">
+				<div class="label">Total Learners</div>
+				<div class="value" id="kpiUsers">0</div>
+			</article>
+			<article class="kpi">
+				<div class="label">Avg F1 Study Frequency (10d Milestone)</div>
+				<div class="value" id="kpiStudyFreq">0</div>
+			</article>
+			<article class="kpi">
+				<div class="label">Avg F2 Integrated Tasks (10d Milestone)</div>
+				<div class="value" id="kpiIntegrated">0</div>
+			</article>
+			<article class="kpi">
+				<div class="label">Avg F3 Reflection Entries (10d Milestone)</div>
+				<div class="value" id="kpiReflection">0</div>
+			</article>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Data Coverage (Index HTML Sync)</h2>
+			<p class="section-subtitle">Status penyerapan data dari key penting index.html: profile, progress, speaking, template, dan metadata akun.</p>
+			<div class="coverage-grid">
+				<article class="coverage-card">
+					<div class="coverage-label">Recognized Keys</div>
+					<div class="coverage-value" id="coverageRecognized">0</div>
+					<div class="coverage-note">Key app utama terdeteksi</div>
+				</article>
+				<article class="coverage-card">
+					<div class="coverage-label">Per-Email Accounts</div>
+					<div class="coverage-value" id="coveragePerEmailUsers">0</div>
+					<div class="coverage-note">Akun dari mindshift_user_[email]</div>
+				</article>
+				<article class="coverage-card">
+					<div class="coverage-label">Legacy Fallback</div>
+					<div class="coverage-value" id="coverageLegacyFound">0</div>
+					<div class="coverage-note">mindshift_user/progress/dayCompletionDates</div>
+				</article>
+				<article class="coverage-card">
+					<div class="coverage-label">Speaking Records</div>
+					<div class="coverage-value" id="coverageSpeakingRecords">0</div>
+					<div class="coverage-note">practice + feedback sessions</div>
+				</article>
+			</div>
+			<div id="coverageList" class="coverage-list"></div>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Executive View</h2>
+			<p class="section-subtitle">Ringkasan cepat status benchmark per kategori dan perubahan terhadap milestone sebelumnya.</p>
+			<p id="execPeriodLabel" class="section-subtitle" style="margin-top:-6px;">Perbandingan terhadap milestone sebelumnya belum tersedia.</p>
+			<div class="exec-grid">
+				<article class="exec-card">
+					<div class="exec-head">
+						<div class="exec-title">F1 Habit Analytics</div>
+						<div id="execDeltaF1" class="exec-delta flat">0.00</div>
+					</div>
+					<div class="exec-stats">
+						<div class="exec-stat met">
+							<div id="execF1Met" class="num">0</div>
+							<div class="txt">Target Met</div>
+						</div>
+						<div class="exec-stat risk">
+							<div id="execF1Risk" class="num">0</div>
+							<div class="txt">At Risk</div>
+						</div>
+						<div class="exec-stat na">
+							<div id="execF1Na" class="num">0</div>
+							<div class="txt">N/A</div>
+						</div>
+					</div>
+				</article>
+
+				<article class="exec-card">
+					<div class="exec-head">
+						<div class="exec-title">F2 Integrated Skills</div>
+						<div id="execDeltaF2" class="exec-delta flat">0.00</div>
+					</div>
+					<div class="exec-stats">
+						<div class="exec-stat met">
+							<div id="execF2Met" class="num">0</div>
+							<div class="txt">Target Met</div>
+						</div>
+						<div class="exec-stat risk">
+							<div id="execF2Risk" class="num">0</div>
+							<div class="txt">At Risk</div>
+						</div>
+						<div class="exec-stat na">
+							<div id="execF2Na" class="num">0</div>
+							<div class="txt">N/A</div>
+						</div>
+					</div>
+				</article>
+
+				<article class="exec-card">
+					<div class="exec-head">
+						<div class="exec-title">F3 Self-Regulated</div>
+						<div id="execDeltaF3" class="exec-delta flat">0.00</div>
+					</div>
+					<div class="exec-stats">
+						<div class="exec-stat met">
+							<div id="execF3Met" class="num">0</div>
+							<div class="txt">Target Met</div>
+						</div>
+						<div class="exec-stat risk">
+							<div id="execF3Risk" class="num">0</div>
+							<div class="txt">At Risk</div>
+						</div>
+						<div class="exec-stat na">
+							<div id="execF3Na" class="num">0</div>
+							<div class="txt">N/A</div>
+						</div>
+					</div>
+				</article>
+			</div>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Research Report Export</h2>
+			<div class="export-row">
+				<button id="exportJsonBtn" class="btn btn-primary">Export JSON Report</button>
+				<button id="exportCsvBtn" class="btn btn-muted">Export CSV Report</button>
+			</div>
+			<p class="note">
+				Export mencakup ringkasan indikator Appendix F (agregat), data per user, dan tren 10 hari (per milestone) untuk evaluasi formatif maupun sumatif.
+			</p>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Appendix F Indicator Summary</h2>
+			<p class="section-subtitle">Ringkasan utama yang paling penting untuk dipantau pada 1 milestone aktif.</p>
+			<div class="appendix-grid">
+				<article class="appendix-card">
+					<h3>F1. Habit-Related Analytics</h3>
+					<div class="metrics-list" id="f1List"></div>
+				</article>
+				<article class="appendix-card">
+					<h3>F2. Integrated Skills Engagement</h3>
+					<div class="metrics-list" id="f2List"></div>
+				</article>
+				<article class="appendix-card">
+					<h3>F3. Self-Regulated Learning</h3>
+					<div class="metrics-list" id="f3List"></div>
+				</article>
+			</div>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Appendix F Instrument Matrix (Operationalized)</h2>
+			<p class="section-subtitle">Tabel benchmark lengkap untuk evaluasi cepat status tiap indikator (Target Met, At Risk, atau N/A).</p>
+			<div class="instrument-table-wrap">
+				<table class="instrument-table">
+					<thead>
+						<tr>
+							<th>Category</th>
+							<th>Indicator</th>
+							<th>Definition</th>
+							<th>Measurement Method</th>
+							<th>Frequency</th>
+							<th>Target Benchmark</th>
+							<th>Status</th>
+							<th>Current Aggregated Value</th>
+						</tr>
+					</thead>
+					<tbody id="instrumentMatrixBody"></tbody>
+				</table>
+			</div>
+		</section>
+
+		<section class="panel two-col">
+			<div>
+				<h2 class="section-title">Per User Monitoring</h2>
+				<p class="section-subtitle">Klik user untuk melihat detail aktivitas, XP, dan indikator pembelajaran pada panel kanan.</p>
+				<div class="user-filter-row">
+					<button id="filterAllBtn" class="filter-chip active">Semua User</button>
+					<button id="filterActiveBtn" class="filter-chip">User Aktif</button>
+					<button id="filterInactiveBtn" class="filter-chip">User Tidak Aktif</button>
+					<div id="userFilterMeta" class="filter-meta">Menampilkan 0 dari 0 user</div>
+				</div>
+				<div style="overflow: auto; border: 1px solid #d2dfd3; border-radius: 12px;">
+					<table>
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Source</th>
+								<th>Total XP</th>
+								<th>Completed Days</th>
+								<th>F1 Streak</th>
+								<th>F1 Completion Milestone</th>
+								<th>F2 Integrated</th>
+								<th>F3 Reflection</th>
+								<th>Last Activity</th>
+							</tr>
+						</thead>
+						<tbody id="usersTableBody"></tbody>
+					</table>
+				</div>
+			</div>
+			<aside class="detail-box">
+				<h4>User Detail</h4>
+				<div id="userDetailContent" class="detail-line">Klik user untuk lihat detail indikator.</div>
+			</aside>
+		</section>
+
+		<section class="panel">
+			<h2 class="section-title">Milestone Trend Charts (Last 10 Days)</h2>
+			<div class="chart-grid">
+				<article class="chart-card">
+					<div class="chart-title">F1 - Daily Study Active Users</div>
+					<div class="chart-subtitle">Jumlah user aktif belajar per hari</div>
+					<div id="f1TrendBars" class="bars"></div>
+				</article>
+				<article class="chart-card">
+					<div class="chart-title">F2 - Integrated Tasks Completed</div>
+					<div class="chart-subtitle">Task dengan 2+ skill per hari</div>
+					<div id="f2TrendBars" class="bars"></div>
+				</article>
+				<article class="chart-card">
+					<div class="chart-title">F3 - Reflection Submitted</div>
+					<div class="chart-subtitle">Entry refleksi SRL per hari</div>
+					<div id="f3TrendBars" class="bars"></div>
+				</article>
+			</div>
+		</section>
+	</main>
+
+	<script type="module">
+
+		const DAY_MS = 24 * 60 * 60 * 1000;
+		const MILESTONE_DAYS = 10;
+		const STORAGE_CFG_KEY = 'mindshift_admin_firebase_config';
+
+		const INDICATOR_SPECS = [
+			{
+				category: 'F1',
+				indicator: 'Study Frequency',
+				definition: 'Number of days the learner engages with the platform per 10-day milestone',
+				method: 'System log of login timestamps',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f1.studyFrequencyPerWeek} days/10d`,
+			},
+			{
+				category: 'F1',
+				indicator: 'Streak Length',
+				definition: 'Number of consecutive days the learner completes at least one task',
+				method: 'Streak counter based on daily task completion',
+				frequency: 'Daily',
+				getValue: (s) => `${s.f1.streakLength} days`,
+			},
+			{
+				category: 'F1',
+				indicator: 'Routine Stability',
+				definition: 'Consistency of study time (same time of day)',
+				method: 'Time-of-day analysis of session start times (standard deviation)',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f1.routineStabilityStdDevHour} stddev-hour`,
+			},
+			{
+				category: 'F1',
+				indicator: 'Session Duration',
+				definition: 'Average time spent per session',
+				method: 'Time between login and logout per session',
+				frequency: 'Daily/Milestone',
+				getValue: (s) => `Daily ${s.f1.sessionDurationAvgDayMin} min | Milestone ${s.f1.sessionDurationAvgWeekMin} min`,
+			},
+			{
+				category: 'F1',
+				indicator: 'Task Completion Rate',
+				definition: 'Percentage of assigned tasks completed per day/milestone',
+				method: 'Completed tasks divided by assigned tasks multiplied by 100%',
+				frequency: 'Daily/Milestone',
+				getValue: (s) => `Daily ${s.f1.taskCompletionRateDay}% | Milestone ${s.f1.taskCompletionRateWeek}%`,
+			},
+			{
+				category: 'F2',
+				indicator: 'Skill Engagement Balance',
+				definition: 'Distribution of time spent on reading, listening, speaking, and writing tasks',
+				method: 'Time-on-task logs per skill',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `L ${s.f2.skillEngagementBalance.listening}% | S ${s.f2.skillEngagementBalance.speaking}% | R ${s.f2.skillEngagementBalance.reading}% | W ${s.f2.skillEngagementBalance.writing}%`,
+			},
+			{
+				category: 'F2',
+				indicator: 'Integrated Task Completion',
+				definition: 'Number of tasks that combine two or more skills completed',
+				method: 'Task metadata and completion logs',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f2.integratedTaskCompletion} tasks/10d`,
+			},
+			{
+				category: 'F2',
+				indicator: 'Skill Progression',
+				definition: 'Learner movement across CEFR-aligned levels in each skill',
+				method: 'Pre/post-test scores and in-app performance',
+				frequency: 'Monthly',
+				getValue: () => 'Per-user detail (CEFR shown on user-level data)',
+			},
+			{
+				category: 'F2',
+				indicator: 'Skill Switching Patterns',
+				definition: 'Frequency and sequence of transitions between skills',
+				method: 'Clickstream analysis',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f2.skillSwitchingPatterns.frequency} switches/10d`,
+			},
+			{
+				category: 'F3',
+				indicator: 'Goal Setting Frequency',
+				definition: 'Number of times learners set or update personal learning goals',
+				method: 'Goal-setting feature usage logs',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f3.goalSettingFrequency} updates/10d`,
+			},
+			{
+				category: 'F3',
+				indicator: 'Reflection Entries',
+				definition: 'Number and depth of learner reflections submitted',
+				method: 'Reflection journal entries (word count, sentiment analysis)',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f3.reflectionEntries.count} entries | ${s.f3.reflectionEntries.avgWordCount} words avg | sentiment ${s.f3.reflectionEntries.avgSentiment}`,
+			},
+			{
+				category: 'F3',
+				indicator: 'Feedback Utilization',
+				definition: 'Learner responses to system feedback (revisiting tasks, adjusting routines)',
+				method: 'Log of feedback-triggered actions',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f3.feedbackUtilization} actions/10d`,
+			},
+			{
+				category: 'F3',
+				indicator: 'Self-Monitoring Behavior',
+				definition: 'Frequency of dashboard checks, progress reviews, or analytics views',
+				method: 'Interaction logs with analytics dashboard',
+				frequency: 'Per Milestone (10 days)',
+				getValue: (s) => `${s.f3.selfMonitoringBehavior} views/10d`,
+			},
+		];
+
+		const state = {
+			users: [],
+			aggregated: null,
+			previousAggregated: null,
+			executiveSummary: null,
+			trends: null,
+			filters: null,
+			selectedUserId: null,
+			userFilter: 'all',
+			visibleUsers: [],
+			firebaseModules: null,
+			dataCoverage: null,
+		};
+
+		const ui = {
+			sourceMode: document.getElementById('sourceMode'),
+			projectId: document.getElementById('projectId'),
+			apiKey: document.getElementById('apiKey'),
+			authDomain: document.getElementById('authDomain'),
+			storageBucket: document.getElementById('storageBucket'),
+			messagingSenderId: document.getElementById('messagingSenderId'),
+			appId: document.getElementById('appId'),
+			startDate: document.getElementById('startDate'),
+			endDate: document.getElementById('endDate'),
+			loadBtn: document.getElementById('loadBtn'),
+			last7Btn: document.getElementById('last7Btn'),
+			last30Btn: document.getElementById('last30Btn'),
+			saveCfgBtn: document.getElementById('saveCfgBtn'),
+			clearCfgBtn: document.getElementById('clearCfgBtn'),
+			status: document.getElementById('status'),
+			usersTableBody: document.getElementById('usersTableBody'),
+			userDetailContent: document.getElementById('userDetailContent'),
+			f1List: document.getElementById('f1List'),
+			f2List: document.getElementById('f2List'),
+			f3List: document.getElementById('f3List'),
+			kpiUsers: document.getElementById('kpiUsers'),
+			kpiStudyFreq: document.getElementById('kpiStudyFreq'),
+			kpiIntegrated: document.getElementById('kpiIntegrated'),
+			kpiReflection: document.getElementById('kpiReflection'),
+			exportJsonBtn: document.getElementById('exportJsonBtn'),
+			exportCsvBtn: document.getElementById('exportCsvBtn'),
+			f1TrendBars: document.getElementById('f1TrendBars'),
+			f2TrendBars: document.getElementById('f2TrendBars'),
+			f3TrendBars: document.getElementById('f3TrendBars'),
+			instrumentMatrixBody: document.getElementById('instrumentMatrixBody'),
+			execPeriodLabel: document.getElementById('execPeriodLabel'),
+			execF1Met: document.getElementById('execF1Met'),
+			execF1Risk: document.getElementById('execF1Risk'),
+			execF1Na: document.getElementById('execF1Na'),
+			execDeltaF1: document.getElementById('execDeltaF1'),
+			execF2Met: document.getElementById('execF2Met'),
+			execF2Risk: document.getElementById('execF2Risk'),
+			execF2Na: document.getElementById('execF2Na'),
+			execDeltaF2: document.getElementById('execDeltaF2'),
+			execF3Met: document.getElementById('execF3Met'),
+			execF3Risk: document.getElementById('execF3Risk'),
+			execF3Na: document.getElementById('execF3Na'),
+			execDeltaF3: document.getElementById('execDeltaF3'),
+			filterAllBtn: document.getElementById('filterAllBtn'),
+			filterActiveBtn: document.getElementById('filterActiveBtn'),
+			filterInactiveBtn: document.getElementById('filterInactiveBtn'),
+			userFilterMeta: document.getElementById('userFilterMeta'),
+			coverageRecognized: document.getElementById('coverageRecognized'),
+			coveragePerEmailUsers: document.getElementById('coveragePerEmailUsers'),
+			coverageLegacyFound: document.getElementById('coverageLegacyFound'),
+			coverageSpeakingRecords: document.getElementById('coverageSpeakingRecords'),
+			coverageList: document.getElementById('coverageList'),
+		};
+
+		const toDate = (value) => {
+			if (!value) return null;
+			if (value instanceof Date) return value;
+			if (typeof value === 'object' && typeof value.toDate === 'function') return value.toDate();
+			const parsed = new Date(value);
+			return Number.isNaN(parsed.getTime()) ? null : parsed;
+		};
+
+		const withinDays = (date, days) => {
+			const parsed = toDate(date);
+			if (!parsed) return false;
+			const diff = Date.now() - parsed.getTime();
+			return diff >= 0 && diff <= days * DAY_MS;
+		};
+
+		const stdDev = (values) => {
+			if (!values.length) return 0;
+			const mean = values.reduce((sum, value) => sum + value, 0) / values.length;
+			const variance = values.reduce((sum, value) => sum + (value - mean) ** 2, 0) / values.length;
+			return Math.sqrt(variance);
+		};
+
+		const safeNum = (value, fallback = 0) => {
+			const parsed = Number(value);
+			return Number.isFinite(parsed)  ? parsed : fallback;
+		};
+
+		const safeParseJSON = (raw, fallback = null) => {
+			if (typeof raw !== 'string') return fallback;
+			try {
+				return JSON.parse(raw);
+			} catch {
+				return fallback;
+			}
+		};
+
+		function buildDefaultCoverage() {
+			return {
+				recognizedKeys: 0,
+				perEmailUsers: 0,
+				legacyFound: 0,
+				speakingRecords: 0,
+				details: [],
+			};
+		}
+
+		function buildLocalStorageCoverage() {
+			const coverage = buildDefaultCoverage();
+			const knownKeys = new Set([
+				'mindshift_user',
+				'mindshift_progress',
+				'dayCompletionDates',
+				'mindshift_last_active_user_email',
+				'mindshift_recent_accounts',
+				'speakingPracticeHistory',
+				'speakingStats',
+				'speakingCoachMemory',
+				'speakingMode',
+				'speakingFeedbackSessions',
+				'preferredStudyTime',
+				'celebrationStoryTemplate',
+				'profileIdCardTemplate',
+			]);
+
+			const counters = {
+				userPrefixed: 0,
+				progressPrefixed: 0,
+				dayPrefixed: 0,
+				additionalPayload: 0,
+			};
+
+			for (let idx = 0; idx < localStorage.length; idx += 1) {
+				const key = localStorage.key(idx);
+				if (!key) continue;
+
+				if (knownKeys.has(key)) {
+					coverage.recognizedKeys += 1;
+					continue;
+				}
+
+				if (key.startsWith('mindshift_user_')) {
+					counters.userPrefixed += 1;
+					coverage.recognizedKeys += 1;
+					continue;
+				}
+
+				if (key.startsWith('mindshift_progress_')) {
+					counters.progressPrefixed += 1;
+					coverage.recognizedKeys += 1;
+					continue;
+				}
+
+				if (key.startsWith('mindshift_dayCompletionDates_')) {
+					counters.dayPrefixed += 1;
+					coverage.recognizedKeys += 1;
+					continue;
+				}
+
+				if (key.startsWith('mindshift_') || key.includes('speaking') || key.includes('challenge') || key.includes('reflection')) {
+					counters.additionalPayload += 1;
+				}
+			}
+
+			coverage.details = [
+				{ label: 'mindshift_user_[email]', value: counters.userPrefixed },
+				{ label: 'mindshift_progress_[email]', value: counters.progressPrefixed },
+				{ label: 'mindshift_dayCompletionDates_[email]', value: counters.dayPrefixed },
+				{ label: 'Additional app payload keys', value: counters.additionalPayload },
+			];
+
+			return coverage;
+		}
+
+		function renderDataCoverage() {
+			const coverage = state.dataCoverage || buildDefaultCoverage();
+			ui.coverageRecognized.textContent = String(coverage.recognizedKeys || 0);
+			ui.coveragePerEmailUsers.textContent = String(coverage.perEmailUsers || 0);
+			ui.coverageLegacyFound.textContent = String(coverage.legacyFound || 0);
+			ui.coverageSpeakingRecords.textContent = String(coverage.speakingRecords || 0);
+
+			const detailRows = (coverage.details || []).map((item) => (
+				`<div class="coverage-item"><span>${item.label}</span><strong>${item.value}</strong></div>`
+			)).join('');
+			ui.coverageList.innerHTML = detailRows || '<div class="coverage-item"><span>Belum ada data</span><strong>0</strong></div>';
+		}
+
+		function readGlobalIndexStoragePayload() {
+			return {
+				lastActiveEmail: String(localStorage.getItem('mindshift_last_active_user_email') || '').toLowerCase(),
+				recentAccounts: safeParseJSON(localStorage.getItem('mindshift_recent_accounts'), []),
+				preferredStudyTime: localStorage.getItem('preferredStudyTime') || 'morning',
+				celebrationStoryTemplate: localStorage.getItem('celebrationStoryTemplate') || 'clean',
+				profileIdCardTemplate: localStorage.getItem('profileIdCardTemplate') || 'clean',
+				speakingMode: localStorage.getItem('speakingMode') || 'qa',
+				speakingStats: safeParseJSON(localStorage.getItem('speakingStats'), { totalSessions: 0, totalSpeeches: 0, totalMinutes: 0 }),
+				speakingPracticeHistory: safeParseJSON(localStorage.getItem('speakingPracticeHistory'), []),
+				speakingFeedbackSessions: safeParseJSON(localStorage.getItem('speakingFeedbackSessions'), []),
+				speakingCoachMemory: safeParseJSON(localStorage.getItem('speakingCoachMemory'), {}),
+			};
+		}
+
+		const extractHourFloat = (value) => {
+			const dt = toDate(value);
+			if (!dt) return null;
+			return dt.getHours() + dt.getMinutes() / 60;
+		};
+
+		function toDateInputValue(date) {
+			return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+		}
+
+		function setDateRange(daysBack) {
+			const end = new Date();
+			end.setHours(23, 59, 59, 999);
+			const start = new Date(end);
+			start.setDate(end.getDate() - (daysBack - 1));
+			start.setHours(0, 0, 0, 0);
+
+			ui.startDate.value = toDateInputValue(start);
+			ui.endDate.value = toDateInputValue(end);
+		}
+
+		function getActiveFilters() {
+			const startRaw = ui.startDate.value;
+			const endRaw = ui.endDate.value;
+
+			const start = startRaw ? new Date(`${startRaw}T00:00:00`) : (() => {
+				const d = new Date();
+				d.setDate(d.getDate() - 6);
+				d.setHours(0, 0, 0, 0);
+				return d;
+			})();
+
+			const end = endRaw ? new Date(`${endRaw}T23:59:59`) : (() => {
+				const d = new Date();
+				d.setHours(23, 59, 59, 999);
+				return d;
+			})();
+
+			if (start.getTime() > end.getTime()) {
+				throw new Error('Rentang tanggal tidak valid: start date lebih besar dari end date.');
+			}
+
+			return { start, end };
+		}
+
+		function isWithinRange(dateValue, filters) {
+			const dt = toDate(dateValue);
+			if (!dt) return false;
+			return dt.getTime() >= filters.start.getTime() && dt.getTime() <= filters.end.getTime();
+		}
+
+		function getPreviousFilters(filters) {
+			if (!filters) return null;
+			const rangeMs = filters.end.getTime() - filters.start.getTime();
+			const end = new Date(filters.start.getTime() - 1);
+			const start = new Date(end.getTime() - rangeMs);
+			return { start, end };
+		}
+
+		function computeAnalyticsIndicators(progress = {}, filters) {
+			const events = Array.isArray(progress?.analytics?.events) ? progress.analytics.events : [];
+
+			const loginEvents7d = events.filter((event) => event.type === 'login' && isWithinRange(event.timestamp, filters));
+			const uniqueStudyDays = new Set(loginEvents7d.map((event) => toDate(event.timestamp)?.toDateString()).filter(Boolean));
+
+			const completionEvents7d = events.filter((event) => event.type === 'day_completed' && isWithinRange(event.timestamp, filters));
+			const completionEvents1d = events.filter((event) => event.type === 'day_completed' && dateKey(event.timestamp) === dateKey(filters.end));
+			const sessionEnds7d = events.filter((event) => event.type === 'session_end' && isWithinRange(event.timestamp, filters));
+			const sessionEnds1d = events.filter((event) => event.type === 'session_end' && dateKey(event.timestamp) === dateKey(filters.end));
+
+			const sessionAvg = (records) => {
+				if (!records.length) return 0;
+				const total = records.reduce((sum, record) => sum + safeNum(record.durationMin), 0);
+				return Number((total / records.length).toFixed(1));
+			};
+
+			const hours = loginEvents7d.map((event) => extractHourFloat(event.timestamp)).filter((hour) => hour !== null);
+			const routineStability = Number(stdDev(hours).toFixed(2));
+			const streakLength = safeNum(progress?.streak);
+
+			const totalAssignedWeek = completionEvents7d.reduce((sum, item) => sum + safeNum(item.assignedTasks), 0);
+			const totalCompletedWeek = completionEvents7d.reduce((sum, item) => sum + safeNum(item.completedTasks), 0);
+			const taskCompletionRateWeek = totalAssignedWeek ? Number(((totalCompletedWeek / totalAssignedWeek) * 100).toFixed(1)) : 0;
+
+			const totalAssignedDay = completionEvents1d.reduce((sum, item) => sum + safeNum(item.assignedTasks), 0);
+			const totalCompletedDay = completionEvents1d.reduce((sum, item) => sum + safeNum(item.completedTasks), 0);
+			const taskCompletionRateDay = totalAssignedDay ? Number(((totalCompletedDay / totalAssignedDay) * 100).toFixed(1)) : 0;
+
+			const weeklySkillMinutes = { listening: 0, speaking: 0, reading: 0, writing: 0 };
+			events
+				.filter((event) => event.type === 'step_completed' && isWithinRange(event.timestamp, filters))
+				.forEach((event) => {
+					const durationMin = safeNum(event.durationMin);
+					const skills = Array.isArray(event.skills) ? event.skills : [];
+					skills.forEach((skill) => {
+						if (Object.prototype.hasOwnProperty.call(weeklySkillMinutes, skill)) {
+							weeklySkillMinutes[skill] += durationMin;
+						}
+					});
+				});
+
+			const totalSkillMinutes = Object.values(weeklySkillMinutes).reduce((sum, value) => sum + value, 0);
+
+			const skillEngagementBalance = {
+				listening: totalSkillMinutes ? Number(((weeklySkillMinutes.listening / totalSkillMinutes) * 100).toFixed(1)) : 0,
+				speaking: totalSkillMinutes ? Number(((weeklySkillMinutes.speaking / totalSkillMinutes) * 100).toFixed(1)) : 0,
+				reading: totalSkillMinutes ? Number(((weeklySkillMinutes.reading / totalSkillMinutes) * 100).toFixed(1)) : 0,
+				writing: totalSkillMinutes ? Number(((weeklySkillMinutes.writing / totalSkillMinutes) * 100).toFixed(1)) : 0,
+			};
+
+			const integratedTaskCompletion = events.filter((event) => (
+				event.type === 'step_completed'
+				&& isWithinRange(event.timestamp, filters)
+				&& Array.isArray(event.skills)
+				&& event.skills.length >= 2
+			)).length;
+
+			const switchingEvents7d = events.filter((event) => event.type === 'skill_switch' && isWithinRange(event.timestamp, filters));
+
+			const skillSwitchingPatterns = {
+				frequency: switchingEvents7d.length,
+				sequences: switchingEvents7d.slice(-10).map((event) => `${event.from || '?'}->${event.to || '?'}`),
+			};
+
+			const latestSkillProgress = progress?.skillProgress || {
+				listening: { score: 0, cefr: 'A1' },
+				speaking: { score: 0, cefr: 'A1' },
+				reading: { score: 0, cefr: 'A1' },
+				writing: { score: 0, cefr: 'A1' },
+			};
+
+			const goalsUpdated7d = events.filter((event) => event.type === 'goal_set' && isWithinRange(event.timestamp, filters)).length;
+
+			const reflectionEvents7d = events.filter((event) => event.type === 'reflection_submitted' && isWithinRange(event.timestamp, filters));
+			const reflectionEntries = {
+				count: reflectionEvents7d.length,
+				avgWordCount: reflectionEvents7d.length
+					? Number((reflectionEvents7d.reduce((sum, event) => sum + safeNum(event.wordCount), 0) / reflectionEvents7d.length).toFixed(1))
+					: 0,
+				avgSentiment: reflectionEvents7d.length
+					? Number((reflectionEvents7d.reduce((sum, event) => sum + safeNum(event.sentimentScore), 0) / reflectionEvents7d.length).toFixed(3))
+					: 0,
+			};
+
+			const feedbackUtilization = events.filter((event) => event.type === 'feedback_action' && isWithinRange(event.timestamp, filters)).length;
+			const selfMonitoringBehavior = events.filter((event) => isWithinRange(event.timestamp, filters) && (event.type === 'dashboard_view' || event.type === 'statistics_view')).length;
+
+			return {
+				f1: {
+					studyFrequencyPerWeek: uniqueStudyDays.size,
+					streakLength,
+					routineStabilityStdDevHour: routineStability,
+					sessionDurationAvgDayMin: sessionAvg(sessionEnds1d),
+					sessionDurationAvgWeekMin: sessionAvg(sessionEnds7d),
+					taskCompletionRateDay,
+					taskCompletionRateWeek,
+				},
+				f2: {
+					skillEngagementBalance,
+					integratedTaskCompletion,
+					skillProgression: latestSkillProgress,
+					skillSwitchingPatterns,
+					weeklySkillMinutes,
+				},
+				f3: {
+					goalSettingFrequency: goalsUpdated7d,
+					reflectionEntries,
+					feedbackUtilization,
+					selfMonitoringBehavior,
+				},
+			};
+		}
+
+		function computeLegacyIndicators(raw = {}, filters) {
+			const progress = raw.progress || {};
+			const completedTasks = progress.completedTasks || {};
+			const dayCompletionDates = Array.isArray(raw.dayCompletionDates) ? raw.dayCompletionDates : [];
+			const speakingStats = raw.speakingStats || { totalSessions: 0, totalMinutes: 0 };
+
+			const now = new Date();
+			const studyDates = new Set();
+
+			Object.keys(completedTasks).forEach((dateKey) => {
+				const dt = toDate(dateKey);
+				if (dt && isWithinRange(dt, filters)) {
+					studyDates.add(dt.toDateString());
+				}
+			});
+
+			dayCompletionDates.forEach((entry) => {
+				const dt = toDate(entry.date);
+				if (dt && isWithinRange(dt, filters)) {
+					studyDates.add(dt.toDateString());
+				}
+			});
+
+			const streakLength = (() => {
+				const seen = new Set(dayCompletionDates.map((entry) => toDate(entry.date)?.toDateString()).filter(Boolean));
+				let streak = 0;
+				for (let i = 0; i < 365; i += 1) {
+					const check = new Date(now);
+					check.setDate(now.getDate() - i);
+					if (seen.has(check.toDateString())) streak += 1;
+					else break;
+				}
+				return streak;
+			})();
+
+			const timeMap = { morning: 8, afternoon: 14, evening: 20 };
+			const hourValues = dayCompletionDates
+				.slice(-30)
+				.map((entry) => timeMap[entry.time] ?? null)
+				.filter((value) => value !== null);
+
+			const taskStats = Object.entries(completedTasks)
+				.filter(([dateKey]) => isWithinRange(toDate(dateKey), filters))
+				.map(([, steps]) => {
+					const completed = Array.isArray(steps) ? steps.length : 0;
+					return {
+						assigned: 4,
+						completed,
+					};
+				});
+
+			const taskStatsDay = Object.entries(completedTasks)
+				.filter(([entryDate]) => entryDate === dateKey(filters.end))
+				.map(([, steps]) => {
+					const completed = Array.isArray(steps) ? steps.length : 0;
+					return {
+						assigned: 4,
+						completed,
+					};
+				});
+
+			const sumAssignedWeek = taskStats.reduce((sum, row) => sum + row.assigned, 0);
+			const sumCompletedWeek = taskStats.reduce((sum, row) => sum + row.completed, 0);
+			const sumAssignedDay = taskStatsDay.reduce((sum, row) => sum + row.assigned, 0);
+			const sumCompletedDay = taskStatsDay.reduce((sum, row) => sum + row.completed, 0);
+
+			const listeningDays = Object.keys(progress.listeningCounts || {}).length;
+			const readingDays = Object.keys(progress.readingAnalyses || {}).length;
+			const writingDays = Object.keys(progress.writingAnalyses || {}).length;
+			const speakingSessions = safeNum(speakingStats.totalSessions);
+			const totalEngagement = listeningDays + readingDays + writingDays + speakingSessions;
+
+			const skillEngagementBalance = {
+				listening: totalEngagement ? Number(((listeningDays / totalEngagement) * 100).toFixed(1)) : 0,
+				speaking: totalEngagement ? Number(((speakingSessions / totalEngagement) * 100).toFixed(1)) : 0,
+				reading: totalEngagement ? Number(((readingDays / totalEngagement) * 100).toFixed(1)) : 0,
+				writing: totalEngagement ? Number(((writingDays / totalEngagement) * 100).toFixed(1)) : 0,
+			};
+
+			const integratedTaskCompletion = Object.entries(completedTasks)
+				.filter(([dateKey, steps]) => isWithinRange(toDate(dateKey), filters) && Array.isArray(steps) && steps.length >= 2)
+				.length;
+
+			const reflections = Array.isArray(progress.dailyReflections) ? progress.dailyReflections : [];
+			const reflections7d = reflections.filter((entry) => isWithinRange(entry.timestamp || entry.date, filters));
+
+			const reflectionWordCounts = reflections7d.map((entry) => {
+				const text = String(entry.moodNotes || '').trim();
+				return text ? text.split(/\s+/).length : 0;
+			});
+
+			const reflectionEntries = {
+				count: reflections7d.length,
+				avgWordCount: reflectionWordCounts.length
+					? Number((reflectionWordCounts.reduce((sum, value) => sum + value, 0) / reflectionWordCounts.length).toFixed(1))
+					: 0,
+				avgSentiment: 0,
+			};
+
+			const feedbackUtilization = Object.entries(progress.readingAnalyses || {}).filter(([day]) => safeNum(day) > 0).length
+				+ Object.entries(progress.writingAnalyses || {}).filter(([day]) => safeNum(day) > 0).length;
+
+			return {
+				f1: {
+					studyFrequencyPerWeek: studyDates.size,
+					streakLength,
+					routineStabilityStdDevHour: Number(stdDev(hourValues).toFixed(2)),
+					sessionDurationAvgDayMin: 0,
+					sessionDurationAvgWeekMin: safeNum(speakingStats.totalSessions) > 0
+						? Number((safeNum(speakingStats.totalMinutes) / safeNum(speakingStats.totalSessions)).toFixed(1))
+						: 0,
+					taskCompletionRateDay: sumAssignedDay ? Number(((sumCompletedDay / sumAssignedDay) * 100).toFixed(1)) : 0,
+					taskCompletionRateWeek: sumAssignedWeek ? Number(((sumCompletedWeek / sumAssignedWeek) * 100).toFixed(1)) : 0,
+				},
+				f2: {
+					skillEngagementBalance,
+					integratedTaskCompletion,
+					skillProgression: {
+						listening: { score: 0, cefr: 'A1' },
+						speaking: { score: 0, cefr: 'A1' },
+						reading: { score: 0, cefr: 'A1' },
+						writing: { score: 0, cefr: 'A1' },
+					},
+					skillSwitchingPatterns: {
+						frequency: 0,
+						sequences: [],
+					},
+					weeklySkillMinutes: {
+						listening: safeNum(listeningDays) * 5,
+						speaking: safeNum(speakingSessions) * 5,
+						reading: safeNum(readingDays) * 5,
+						writing: safeNum(writingDays) * 5,
+					},
+				},
+				f3: {
+					goalSettingFrequency: 0,
+					reflectionEntries,
+					feedbackUtilization,
+					selfMonitoringBehavior: 0,
+				},
+			};
+		}
+
+		function computeUserIndicators(userRecord, filters) {
+			const progress = userRecord.progress || {};
+			const hasAnalyticsEvents = Array.isArray(progress?.analytics?.events) && progress.analytics.events.length > 0;
+			return hasAnalyticsEvents ? computeAnalyticsIndicators(progress, filters) : computeLegacyIndicators(userRecord.raw || {}, filters);
+		}
+
+		function avg(values) {
+			if (!values.length) return 0;
+			return Number((values.reduce((sum, value) => sum + value, 0) / values.length).toFixed(2));
+		}
+
+		function aggregateIndicators(users) {
+			if (!users.length) {
+				return {
+					f1: {
+						studyFrequencyPerWeek: 0,
+						streakLength: 0,
+						routineStabilityStdDevHour: 0,
+						sessionDurationAvgDayMin: 0,
+						sessionDurationAvgWeekMin: 0,
+						taskCompletionRateDay: 0,
+						taskCompletionRateWeek: 0,
+					},
+					f2: {
+						skillEngagementBalance: { listening: 0, speaking: 0, reading: 0, writing: 0 },
+						integratedTaskCompletion: 0,
+						skillSwitchingPatterns: { frequency: 0 },
+					},
+					f3: {
+						goalSettingFrequency: 0,
+						reflectionEntries: { count: 0, avgWordCount: 0, avgSentiment: 0 },
+						feedbackUtilization: 0,
+						selfMonitoringBehavior: 0,
+					},
+				};
+			}
+
+			const mapped = users.map((entry) => entry.indicators);
+
+			return {
+				f1: {
+					studyFrequencyPerWeek: avg(mapped.map((m) => safeNum(m.f1.studyFrequencyPerWeek))),
+					streakLength: avg(mapped.map((m) => safeNum(m.f1.streakLength))),
+					routineStabilityStdDevHour: avg(mapped.map((m) => safeNum(m.f1.routineStabilityStdDevHour))),
+					sessionDurationAvgDayMin: avg(mapped.map((m) => safeNum(m.f1.sessionDurationAvgDayMin))),
+					sessionDurationAvgWeekMin: avg(mapped.map((m) => safeNum(m.f1.sessionDurationAvgWeekMin))),
+					taskCompletionRateDay: avg(mapped.map((m) => safeNum(m.f1.taskCompletionRateDay))),
+					taskCompletionRateWeek: avg(mapped.map((m) => safeNum(m.f1.taskCompletionRateWeek))),
+				},
+				f2: {
+					skillEngagementBalance: {
+						listening: avg(mapped.map((m) => safeNum(m.f2.skillEngagementBalance.listening))),
+						speaking: avg(mapped.map((m) => safeNum(m.f2.skillEngagementBalance.speaking))),
+						reading: avg(mapped.map((m) => safeNum(m.f2.skillEngagementBalance.reading))),
+						writing: avg(mapped.map((m) => safeNum(m.f2.skillEngagementBalance.writing))),
+					},
+					integratedTaskCompletion: avg(mapped.map((m) => safeNum(m.f2.integratedTaskCompletion))),
+					skillSwitchingPatterns: {
+						frequency: avg(mapped.map((m) => safeNum(m.f2.skillSwitchingPatterns.frequency))),
+					},
+				},
+				f3: {
+					goalSettingFrequency: avg(mapped.map((m) => safeNum(m.f3.goalSettingFrequency))),
+					reflectionEntries: {
+						count: avg(mapped.map((m) => safeNum(m.f3.reflectionEntries.count))),
+						avgWordCount: avg(mapped.map((m) => safeNum(m.f3.reflectionEntries.avgWordCount))),
+						avgSentiment: avg(mapped.map((m) => safeNum(m.f3.reflectionEntries.avgSentiment))),
+					},
+					feedbackUtilization: avg(mapped.map((m) => safeNum(m.f3.feedbackUtilization))),
+					selfMonitoringBehavior: avg(mapped.map((m) => safeNum(m.f3.selfMonitoringBehavior))),
+				},
+			};
+		}
+
+		const BENCHMARK_RULES = {
+			Study_Frequency: {
+				target: '>= 6 days/10d milestone',
+				getScore: (s) => safeNum(s.f1.studyFrequencyPerWeek),
+				isMet: (v) => v >= 6,
+			},
+			Streak_Length: {
+				target: '>= 7 consecutive days',
+				getScore: (s) => safeNum(s.f1.streakLength),
+				isMet: (v) => v >= 7,
+			},
+			Routine_Stability: {
+				target: '<= 2.5 stddev-hour',
+				getScore: (s) => safeNum(s.f1.routineStabilityStdDevHour),
+				isMet: (v) => v <= 2.5,
+			},
+			Session_Duration: {
+				target: '>= 10 min/session (milestone avg)',
+				getScore: (s) => safeNum(s.f1.sessionDurationAvgWeekMin),
+				isMet: (v) => v >= 10,
+			},
+			Task_Completion_Rate: {
+				target: '>= 70% milestone completion',
+				getScore: (s) => safeNum(s.f1.taskCompletionRateWeek),
+				isMet: (v) => v >= 70,
+			},
+			Skill_Engagement_Balance: {
+				target: 'Balanced: each skill >= 15%',
+				getScore: (s) => {
+					const values = [
+						safeNum(s.f2.skillEngagementBalance.listening),
+						safeNum(s.f2.skillEngagementBalance.speaking),
+						safeNum(s.f2.skillEngagementBalance.reading),
+						safeNum(s.f2.skillEngagementBalance.writing),
+					];
+					return Math.min(...values);
+				},
+				isMet: (v) => v >= 15,
+			},
+			Integrated_Task_Completion: {
+				target: '>= 3 integrated tasks/period',
+				getScore: (s) => safeNum(s.f2.integratedTaskCompletion),
+				isMet: (v) => v >= 3,
+			},
+			Skill_Progression: {
+				target: 'CEFR progress month to month',
+				getScore: () => null,
+				isMet: () => null,
+			},
+			Skill_Switching_Patterns: {
+				target: '>= 7 switches/10d',
+				getScore: (s) => safeNum(s.f2.skillSwitchingPatterns.frequency),
+				isMet: (v) => v >= 7,
+			},
+			Goal_Setting_Frequency: {
+				target: '>= 1 goal update/10d',
+				getScore: (s) => safeNum(s.f3.goalSettingFrequency),
+				isMet: (v) => v >= 1,
+			},
+			Reflection_Entries: {
+				target: '>= 3 reflections/10d',
+				getScore: (s) => safeNum(s.f3.reflectionEntries.count),
+				isMet: (v) => v >= 3,
+			},
+			Feedback_Utilization: {
+				target: '>= 3 feedback actions/10d',
+				getScore: (s) => safeNum(s.f3.feedbackUtilization),
+				isMet: (v) => v >= 3,
+			},
+			Self_Monitoring_Behavior: {
+				target: '>= 4 dashboard/stat checks/10d',
+				getScore: (s) => safeNum(s.f3.selfMonitoringBehavior),
+				isMet: (v) => v >= 4,
+			},
+		};
+
+		function indicatorRuleKey(indicator) {
+			return indicator.replace(/[^A-Za-z0-9]+/g, '_');
+		}
+
+		function evaluateBenchmark(spec, summary) {
+			const rule = BENCHMARK_RULES[indicatorRuleKey(spec.indicator)];
+			if (!rule) {
+				return { target: 'Custom target belum diatur', status: 'N/A', css: 'na', score: null };
+			}
+
+			const score = rule.getScore(summary);
+			const met = score === null ? null : rule.isMet(score);
+			if (met === null) {
+				return { target: rule.target, status: 'N/A', css: 'na', score };
+			}
+
+			return {
+				target: rule.target,
+				status: met ? 'Target Met' : 'At Risk',
+				css: met ? 'met' : 'risk',
+				score,
+			};
+		}
+
+		function getCategoryBenchmarkCounts(summary, category) {
+			const initial = { met: 0, risk: 0, na: 0 };
+			return INDICATOR_SPECS
+				.filter((spec) => spec.category === category)
+				.reduce((acc, spec) => {
+					const evalResult = evaluateBenchmark(spec, summary);
+					if (evalResult.css === 'met') acc.met += 1;
+					else if (evalResult.css === 'risk') acc.risk += 1;
+					else acc.na += 1;
+					return acc;
+				}, initial);
+		}
+
+		function buildDeltaTag(currentValue, previousValue, unitLabel = '') {
+			const current = safeNum(currentValue);
+			const previous = safeNum(previousValue);
+			const delta = Number((current - previous).toFixed(2));
+			if (delta > 0) {
+				return {
+					text: `UP +${delta}${unitLabel}`,
+					css: 'up',
+				};
+			}
+			if (delta < 0) {
+				return {
+					text: `DOWN ${delta}${unitLabel}`,
+					css: 'down',
+				};
+			}
+			return {
+				text: `FLAT 0${unitLabel}`,
+				css: 'flat',
+			};
+		}
+
+		function buildExecutiveSummary(currentSummary, previousSummary) {
+			const previous = previousSummary || aggregateIndicators([]);
+			return {
+				f1: {
+					counts: getCategoryBenchmarkCounts(currentSummary, 'F1'),
+					delta: buildDeltaTag(currentSummary.f1.studyFrequencyPerWeek, previous.f1.studyFrequencyPerWeek, ' days'),
+				},
+				f2: {
+					counts: getCategoryBenchmarkCounts(currentSummary, 'F2'),
+					delta: buildDeltaTag(currentSummary.f2.integratedTaskCompletion, previous.f2.integratedTaskCompletion, ' tasks'),
+				},
+				f3: {
+					counts: getCategoryBenchmarkCounts(currentSummary, 'F3'),
+					delta: buildDeltaTag(currentSummary.f3.reflectionEntries.count, previous.f3.reflectionEntries.count, ' entries'),
+				},
+			};
+		}
+
+		function buildUserRiskProfile(userIndicators) {
+			if (!userIndicators) {
+				return { score: 0, level: 'low', met: 0, risk: 0, na: 0 };
+			}
+
+			const statusCounts = INDICATOR_SPECS.reduce((acc, spec) => {
+				const evalResult = evaluateBenchmark(spec, userIndicators);
+				if (evalResult.css === 'met') acc.met += 1;
+				else if (evalResult.css === 'risk') acc.risk += 1;
+				else acc.na += 1;
+				return acc;
+			}, { met: 0, risk: 0, na: 0 });
+
+			const measurable = statusCounts.met + statusCounts.risk;
+			const score = measurable > 0
+				? Math.round((statusCounts.risk / measurable) * 100)
+				: 0;
+
+			let level = 'low';
+			if (score >= 75) level = 'critical';
+			else if (score >= 50) level = 'high';
+			else if (score >= 25) level = 'medium';
+
+			return {
+				score,
+				level,
+				met: statusCounts.met,
+				risk: statusCounts.risk,
+				na: statusCounts.na,
+			};
+		}
+
+		function setStatus(message, type = '') {
+			ui.status.textContent = message;
+			ui.status.className = `status ${type}`.trim();
+		}
+
+		function renderMetricRows(container, rows) {
+			container.innerHTML = rows.map((row) => (
+				`<div class="metric-row"><span>${row.label}</span><strong>${row.value}</strong></div>`
+			)).join('');
+		}
+
+		function renderExecutiveView() {
+			const summary = state.executiveSummary || {
+				f1: { counts: { met: 0, risk: 0, na: 0 }, delta: { text: 'FLAT 0', css: 'flat' } },
+				f2: { counts: { met: 0, risk: 0, na: 0 }, delta: { text: 'FLAT 0', css: 'flat' } },
+				f3: { counts: { met: 0, risk: 0, na: 0 }, delta: { text: 'FLAT 0', css: 'flat' } },
+			};
+
+			const applyDelta = (element, delta) => {
+				if (!element) return;
+				element.textContent = delta.text;
+				element.classList.remove('up', 'down', 'flat');
+				element.classList.add(delta.css || 'flat');
+			};
+
+			ui.execF1Met.textContent = String(summary.f1.counts.met);
+			ui.execF1Risk.textContent = String(summary.f1.counts.risk);
+			ui.execF1Na.textContent = String(summary.f1.counts.na);
+			applyDelta(ui.execDeltaF1, summary.f1.delta);
+
+			ui.execF2Met.textContent = String(summary.f2.counts.met);
+			ui.execF2Risk.textContent = String(summary.f2.counts.risk);
+			ui.execF2Na.textContent = String(summary.f2.counts.na);
+			applyDelta(ui.execDeltaF2, summary.f2.delta);
+
+			ui.execF3Met.textContent = String(summary.f3.counts.met);
+			ui.execF3Risk.textContent = String(summary.f3.counts.risk);
+			ui.execF3Na.textContent = String(summary.f3.counts.na);
+			applyDelta(ui.execDeltaF3, summary.f3.delta);
+
+			if (!state.filters) {
+				ui.execPeriodLabel.textContent = 'Perbandingan terhadap milestone sebelumnya belum tersedia.';
+				return;
+			}
+
+			const currentStart = toDateInputValue(state.filters.start);
+			const currentEnd = toDateInputValue(state.filters.end);
+			const prev = getPreviousFilters(state.filters);
+			const prevStart = prev ? toDateInputValue(prev.start) : '-';
+			const prevEnd = prev ? toDateInputValue(prev.end) : '-';
+			ui.execPeriodLabel.textContent = `Current: ${currentStart} s/d ${currentEnd} • Previous: ${prevStart} s/d ${prevEnd}`;
+		}
+
+		function renderSummary() {
+			const users = state.users;
+			const summary = state.aggregated || aggregateIndicators([]);
+
+			ui.kpiUsers.textContent = String(users.length);
+			ui.kpiStudyFreq.textContent = String(summary.f1.studyFrequencyPerWeek);
+			ui.kpiIntegrated.textContent = String(summary.f2.integratedTaskCompletion);
+			ui.kpiReflection.textContent = String(summary.f3.reflectionEntries.count);
+
+			renderMetricRows(ui.f1List, [
+				{ label: 'Study Frequency / 10 Days', value: `${summary.f1.studyFrequencyPerWeek} days` },
+				{ label: 'Streak Length', value: `${summary.f1.streakLength} days` },
+				{ label: 'Routine Stability (StdDev)', value: `${summary.f1.routineStabilityStdDevHour}` },
+				{ label: 'Session Duration Daily', value: `${summary.f1.sessionDurationAvgDayMin} min` },
+				{ label: 'Session Duration Milestone', value: `${summary.f1.sessionDurationAvgWeekMin} min` },
+				{ label: 'Task Completion Day', value: `${summary.f1.taskCompletionRateDay}%` },
+				{ label: 'Task Completion Milestone', value: `${summary.f1.taskCompletionRateWeek}%` },
+			]);
+
+			renderMetricRows(ui.f2List, [
+				{ label: 'Engagement Listening', value: `${summary.f2.skillEngagementBalance.listening}%` },
+				{ label: 'Engagement Speaking', value: `${summary.f2.skillEngagementBalance.speaking}%` },
+				{ label: 'Engagement Reading', value: `${summary.f2.skillEngagementBalance.reading}%` },
+				{ label: 'Engagement Writing', value: `${summary.f2.skillEngagementBalance.writing}%` },
+				{ label: 'Integrated Task Completion', value: `${summary.f2.integratedTaskCompletion}` },
+				{ label: 'Skill Switching Frequency', value: `${summary.f2.skillSwitchingPatterns.frequency} / 10d` },
+			]);
+
+			renderMetricRows(ui.f3List, [
+				{ label: 'Goal Setting Frequency', value: `${summary.f3.goalSettingFrequency}` },
+				{ label: 'Reflection Entries', value: `${summary.f3.reflectionEntries.count}` },
+				{ label: 'Avg Reflection Word Count', value: `${summary.f3.reflectionEntries.avgWordCount}` },
+				{ label: 'Avg Reflection Sentiment', value: `${summary.f3.reflectionEntries.avgSentiment}` },
+				{ label: 'Feedback Utilization', value: `${summary.f3.feedbackUtilization}` },
+				{ label: 'Self Monitoring Behavior', value: `${summary.f3.selfMonitoringBehavior}` },
+			]);
+
+			renderExecutiveView();
+		}
+
+		function isUserActive(user) {
+			const indicators = user?.indicators;
+			if (!indicators) return false;
+			return safeNum(indicators.f1.studyFrequencyPerWeek) > 0
+				|| safeNum(indicators.f2.integratedTaskCompletion) > 0
+				|| safeNum(indicators.f3.reflectionEntries.count) > 0;
+		}
+
+		function getFilteredUsers() {
+			if (state.userFilter === 'active') {
+				return state.users.filter((user) => isUserActive(user));
+			}
+			if (state.userFilter === 'inactive') {
+				return state.users.filter((user) => !isUserActive(user));
+			}
+			return state.users;
+		}
+
+		function renderUserFilterMeta(visibleUsers) {
+			const total = state.users.length;
+			ui.userFilterMeta.textContent = `Menampilkan ${visibleUsers.length} dari ${total} user`;
+			ui.filterAllBtn.classList.toggle('active', state.userFilter === 'all');
+			ui.filterActiveBtn.classList.toggle('active', state.userFilter === 'active');
+			ui.filterInactiveBtn.classList.toggle('active', state.userFilter === 'inactive');
+		}
+
+		function renderUsersTable() {
+			const visibleUsers = getFilteredUsers();
+			state.visibleUsers = visibleUsers;
+
+			if (!visibleUsers.some((user) => user.id === state.selectedUserId)) {
+				state.selectedUserId = visibleUsers[0]?.id || null;
+			}
+
+			renderUserFilterMeta(visibleUsers);
+
+			const rows = visibleUsers.map((user) => {
+				const displayName = user.profile?.name || user.profile?.email || user.id;
+				const activity = user.activitySummary || {};
+				const isSelected = state.selectedUserId === user.id;
+				const risk = user.riskProfile || buildUserRiskProfile(user.indicators);
+				const rowHeatClass = `heat-${risk.level}`;
+				const riskLabel = `Risk ${risk.score}%`;
+				return `
+					<tr class="users-row ${rowHeatClass} ${isSelected ? 'selected' : ''}" title="${riskLabel} • Met ${risk.met} • Risk ${risk.risk} • N/A ${risk.na}">
+						<td>
+							<span class="user-link" data-user-id="${user.id}">${displayName}</span>
+							<span class="risk-chip ${risk.level}">${riskLabel}</span>
+						</td>
+						<td>${user.source}</td>
+						<td>${safeNum(activity.totalXP)}</td>
+						<td>${safeNum(activity.completedDaysCount)}</td>
+						<td>${user.indicators.f1.streakLength}</td>
+						<td>${user.indicators.f1.taskCompletionRateWeek}%</td>
+						<td>${user.indicators.f2.integratedTaskCompletion}</td>
+						<td>${user.indicators.f3.reflectionEntries.count}</td>
+						<td>${activity.lastActivityText || '-'}</td>
+					</tr>
+				`;
+			}).join('');
+
+			ui.usersTableBody.innerHTML = rows || '<tr><td colspan="9">Tidak ada user pada filter ini.</td></tr>';
+
+			ui.usersTableBody.querySelectorAll('[data-user-id]').forEach((el) => {
+				el.addEventListener('click', () => {
+					state.selectedUserId = el.getAttribute('data-user-id');
+					renderUserDetail();
+				});
+			});
+		}
+
+		function dateKey(value) {
+			const dt = toDate(value);
+			if (!dt) return null;
+			return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+		}
+
+		function getDayKeysInRange(filters) {
+			const days = [];
+			const cursor = new Date(filters.start);
+			cursor.setHours(0, 0, 0, 0);
+			const end = new Date(filters.end);
+			end.setHours(0, 0, 0, 0);
+
+			while (cursor.getTime() <= end.getTime()) {
+				days.push(dateKey(cursor));
+				cursor.setDate(cursor.getDate() + 1);
+			}
+
+			if (days.length <= 45) return days;
+
+			// Keep charts readable: cap to the latest 45 day labels.
+			return days.slice(-45);
+		}
+
+		function buildTrendSeries(users, filters) {
+			const days = getDayKeysInRange(filters);
+			const f1 = days.map(() => 0);
+			const f2 = days.map(() => 0);
+			const f3 = days.map(() => 0);
+
+			users.forEach((user) => {
+				const progress = user.progress || {};
+				const events = Array.isArray(progress?.analytics?.events) ? progress.analytics.events : [];
+				const hasEvents = events.length > 0;
+
+				if (hasEvents) {
+					const activePerDay = new Set();
+					events.forEach((event) => {
+						const key = dateKey(event.timestamp);
+						if (!key) return;
+						const idx = days.indexOf(key);
+						if (idx === -1) return;
+
+						if (event.type === 'login') {
+							activePerDay.add(key);
+						}
+						if (event.type === 'step_completed' && Array.isArray(event.skills) && event.skills.length >= 2) {
+							f2[idx] += 1;
+						}
+						if (event.type === 'reflection_submitted') {
+							f3[idx] += 1;
+						}
+					});
+
+					activePerDay.forEach((key) => {
+						const idx = days.indexOf(key);
+						if (idx !== -1) f1[idx] += 1;
+					});
+					return;
+				}
+
+				const completedTasks = progress.completedTasks || {};
+				Object.entries(completedTasks).forEach(([taskDate, steps]) => {
+					const key = dateKey(taskDate);
+					const idx = days.indexOf(key);
+					if (idx === -1) return;
+					f1[idx] += 1;
+					if (Array.isArray(steps) && steps.length >= 2) f2[idx] += 1;
+				});
+
+				const reflections = Array.isArray(progress.dailyReflections) ? progress.dailyReflections : [];
+				reflections.forEach((entry) => {
+					const key = dateKey(entry.timestamp || entry.date);
+					const idx = days.indexOf(key);
+					if (idx !== -1) f3[idx] += 1;
+				});
+			});
+
+			return { days, f1, f2, f3 };
+		}
+
+		function renderBarChart(container, values, dayKeys) {
+			if (!container) return;
+			const maxValue = Math.max(...values, 1);
+			container.innerHTML = values.map((value, idx) => {
+				const height = Math.max(6, Math.round((value / maxValue) * 100));
+				const dayLabel = dayKeys[idx].slice(5);
+				return `
+					<div class="bar-wrap">
+						<div class="bar-val">${value}</div>
+						<div class="bar" style="height: ${height}%;"></div>
+						<div class="bar-label">${dayLabel}</div>
+					</div>
+				`;
+			}).join('');
+		}
+
+		function renderTrends() {
+			const trends = state.trends || {
+				days: getDayKeysInRange(state.filters || getActiveFilters()),
+				f1: Array(MILESTONE_DAYS).fill(0),
+				f2: Array(MILESTONE_DAYS).fill(0),
+				f3: Array(MILESTONE_DAYS).fill(0),
+			};
+			renderBarChart(ui.f1TrendBars, trends.f1, trends.days);
+			renderBarChart(ui.f2TrendBars, trends.f2, trends.days);
+			renderBarChart(ui.f3TrendBars, trends.f3, trends.days);
+		}
+
+		function renderInstrumentMatrix() {
+			const summary = state.aggregated || aggregateIndicators([]);
+			ui.instrumentMatrixBody.innerHTML = INDICATOR_SPECS.map((spec) => {
+				const evalResult = evaluateBenchmark(spec, summary);
+				return `
+				<tr>
+					<td><span class="tag ${spec.category.toLowerCase()}">${spec.category}</span></td>
+					<td>${spec.indicator}</td>
+					<td>${spec.definition}</td>
+					<td>${spec.method}</td>
+					<td>${spec.frequency}</td>
+					<td><span class="tag target">${evalResult.target}</span></td>
+					<td><span class="badge-status ${evalResult.css}">${evalResult.status}</span></td>
+					<td>${spec.getValue(summary)}<small>Aggregated from loaded users</small></td>
+				</tr>
+				`;
+			}).join('');
+		}
+
+		function saveBlob(content, type, fileName) {
+			const blob = new Blob([content], { type });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = fileName;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			URL.revokeObjectURL(url);
+		}
+
+		function buildExportPayload() {
+			const summary = state.aggregated || aggregateIndicators([]);
+			return {
+				generatedAt: new Date().toISOString(),
+				sourceMode: ui.sourceMode.value,
+				period: {
+					startDate: state.filters ? toDateInputValue(state.filters.start) : null,
+					endDate: state.filters ? toDateInputValue(state.filters.end) : null,
+				},
+				totalUsers: state.users.length,
+				dataCoverage: state.dataCoverage || buildDefaultCoverage(),
+				aggregated: summary,
+				instrumentMatrix: INDICATOR_SPECS.map((spec) => ({
+					...(evaluateBenchmark(spec, summary)),
+					category: spec.category,
+					indicator: spec.indicator,
+					definition: spec.definition,
+					measurementMethod: spec.method,
+					frequency: spec.frequency,
+					currentAggregatedValue: spec.getValue(summary),
+				})),
+				trends: state.trends || buildTrendSeries([], state.filters || getActiveFilters()),
+				users: state.users.map((user) => ({
+					id: user.id,
+					source: user.source,
+					profile: {
+						name: user.profile?.name || null,
+						email: user.profile?.email || null,
+						phone: user.profile?.phone || null,
+						idNumber: user.profile?.idNumber || null,
+						hasPhoto: Boolean(user.profile?.hasPhoto),
+						idCardTemplate: user.profile?.idCardTemplate || null,
+					},
+					indicators: user.indicators,
+					rawSignals: {
+						speakingStats: user.raw?.speakingStats || null,
+						speakingPracticeHistoryCount: safeNum(user.raw?.speakingPracticeHistory?.length),
+						speakingFeedbackSessionsCount: safeNum(user.raw?.speakingFeedbackSessions?.length),
+						preferredStudyTime: user.raw?.preferredStudyTime || null,
+						celebrationStoryTemplate: user.raw?.celebrationStoryTemplate || null,
+						speakingMode: user.raw?.speakingMode || null,
+					},
+				})),
+			};
+		}
+
+		function exportJSONReport() {
+			const payload = buildExportPayload();
+			saveBlob(JSON.stringify(payload, null, 2), 'application/json;charset=utf-8', `mindshift-admin-report-${new Date().toISOString().slice(0, 10)}.json`);
+			setStatus('JSON report berhasil diunduh.', 'ok');
+		}
+
+		function exportCSVReport() {
+			const payload = buildExportPayload();
+			const lines = [];
+			const pushLine = (arr) => lines.push(arr.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','));
+
+			pushLine(['section', 'metric', 'value']);
+			pushLine(['summary', 'generatedAt', payload.generatedAt]);
+			pushLine(['summary', 'sourceMode', payload.sourceMode]);
+			pushLine(['summary', 'periodStart', payload.period.startDate]);
+			pushLine(['summary', 'periodEnd', payload.period.endDate]);
+			pushLine(['summary', 'totalUsers', payload.totalUsers]);
+			pushLine(['F1', 'studyFrequencyPerWeek', payload.aggregated.f1.studyFrequencyPerWeek]);
+			pushLine(['F1', 'streakLength', payload.aggregated.f1.streakLength]);
+			pushLine(['F1', 'taskCompletionRateWeek', payload.aggregated.f1.taskCompletionRateWeek]);
+			pushLine(['F2', 'integratedTaskCompletion', payload.aggregated.f2.integratedTaskCompletion]);
+			pushLine(['F2', 'skillSwitchingFrequency', payload.aggregated.f2.skillSwitchingPatterns.frequency]);
+			pushLine(['F3', 'reflectionEntries', payload.aggregated.f3.reflectionEntries.count]);
+			pushLine(['F3', 'feedbackUtilization', payload.aggregated.f3.feedbackUtilization]);
+			pushLine(['F3', 'selfMonitoringBehavior', payload.aggregated.f3.selfMonitoringBehavior]);
+
+			pushLine([]);
+			pushLine(['category', 'indicator', 'definition', 'measurement_method', 'frequency', 'target', 'status', 'current_aggregated_value']);
+			payload.instrumentMatrix.forEach((row) => {
+				pushLine([row.category, row.indicator, row.definition, row.measurementMethod, row.frequency, row.target, row.status, row.currentAggregatedValue]);
+			});
+
+			pushLine([]);
+			pushLine(['trend_day', 'f1_daily_active_users', 'f2_integrated_tasks', 'f3_reflections']);
+			payload.trends.days.forEach((day, idx) => {
+				pushLine([day, payload.trends.f1[idx], payload.trends.f2[idx], payload.trends.f3[idx]]);
+			});
+
+			pushLine([]);
+			pushLine(['user_id', 'name', 'email', 'source', 'f1_studyFreq', 'f1_streak', 'f2_integrated', 'f3_reflections']);
+			payload.users.forEach((user) => {
+				pushLine([
+					user.id,
+					user.profile?.name || '',
+					user.profile?.email || '',
+					user.source,
+					user.indicators.f1.studyFrequencyPerWeek,
+					user.indicators.f1.streakLength,
+					user.indicators.f2.integratedTaskCompletion,
+					user.indicators.f3.reflectionEntries.count,
+				]);
+			});
+
+			saveBlob(lines.join('\n'), 'text/csv;charset=utf-8', `mindshift-admin-report-${new Date().toISOString().slice(0, 10)}.csv`);
+			setStatus('CSV report berhasil diunduh.', 'ok');
+		}
+
+		function renderUserDetail() {
+			const selected = state.users.find((user) => user.id === state.selectedUserId);
+			if (!selected) {
+				ui.userDetailContent.textContent = 'Klik user untuk lihat detail indikator.';
+				return;
+			}
+
+			const profile = selected.profile || {};
+			const i = selected.indicators;
+			const activity = selected.activitySummary || {};
+			const risk = selected.riskProfile || buildUserRiskProfile(i);
+			const speakingStats = selected.raw?.speakingStats || {};
+			const speakingHistoryCount = safeNum(selected.raw?.speakingPracticeHistory?.length);
+			const speakingFeedbackCount = safeNum(selected.raw?.speakingFeedbackSessions?.length);
+			const activityRows = (activity.activityFeed || []).slice(0, 10).map((entry) => (
+				`<div class="activity-item"><b>${entry.when}</b> • ${entry.label}</div>`
+			)).join('');
+
+			ui.userDetailContent.innerHTML = `
+				<div class="detail-line"><strong>User:</strong> ${profile.name || '-'} (${profile.email || selected.id})</div>
+				<div class="detail-line"><strong>Profile:</strong> Phone ${profile.phone || '-'} | ID ${profile.idNumber || '-'} | Photo ${profile.hasPhoto ? 'Yes' : 'No'} | Card ${profile.idCardTemplate || '-'}</div>
+				<div class="detail-line"><strong>Source:</strong> ${selected.source}</div>
+				<div class="detail-line"><strong>Progress:</strong> XP ${safeNum(activity.totalXP)}, Completed Days ${safeNum(activity.completedDaysCount)}, Milestone Badges ${safeNum(activity.badgesCount)}</div>
+				<div class="detail-line"><strong>Speaking:</strong> Sessions ${safeNum(speakingStats.totalSessions)}, Minutes ${safeNum(speakingStats.totalMinutes)}, Practice Logs ${speakingHistoryCount}, Feedback Sessions ${speakingFeedbackCount}</div>
+				<div class="detail-line"><strong>Template & Settings:</strong> Story ${selected.raw?.celebrationStoryTemplate || '-'} | Study Time ${selected.raw?.preferredStudyTime || '-'} | Speaking Mode ${selected.raw?.speakingMode || '-'}</div>
+				<div class="detail-line"><strong>Risk Score:</strong> ${risk.score}% (${risk.level.toUpperCase()}) • Met ${risk.met} • At Risk ${risk.risk} • N/A ${risk.na}</div>
+				<div class="detail-line"><strong>Aktivitas 24 Jam:</strong> XP Granted ${safeNum(activity.recentXpGranted)} (${safeNum(activity.recentXpEntries)} grant, capped ${safeNum(activity.recentXpCappedCount)}x)</div>
+				<div class="detail-line"><strong>Last Activity:</strong> ${activity.lastActivityText || '-'}</div>
+				<div class="detail-line"><strong>F1:</strong> Study ${i.f1.studyFrequencyPerWeek}/10d, Streak ${i.f1.streakLength}, Completion Milestone ${i.f1.taskCompletionRateWeek}%</div>
+				<div class="detail-line"><strong>F2:</strong> L ${i.f2.skillEngagementBalance.listening}% | S ${i.f2.skillEngagementBalance.speaking}% | R ${i.f2.skillEngagementBalance.reading}% | W ${i.f2.skillEngagementBalance.writing}%</div>
+				<div class="detail-line"><strong>F2 Integrated:</strong> ${i.f2.integratedTaskCompletion}, Switch ${i.f2.skillSwitchingPatterns.frequency}/10d</div>
+				<div class="detail-line"><strong>F3:</strong> Goal ${i.f3.goalSettingFrequency}, Reflection ${i.f3.reflectionEntries.count}, Feedback ${i.f3.feedbackUtilization}, Monitor ${i.f3.selfMonitoringBehavior}</div>
+				<div class="detail-line"><strong>Recent Activity Feed:</strong></div>
+				<div class="activity-list">${activityRows || '<div class="activity-item">Belum ada aktivitas yang terekam.</div>'}</div>
+			`;
+		}
+
+		function getLastDateText(dateCandidate) {
+			const dt = toDate(dateCandidate);
+			if (!dt) return '-';
+			return dt.toLocaleString('id-ID', {
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+			});
+		}
+
+		function deriveActivitySummary(userRecord) {
+			const progress = userRecord.progress || {};
+			const raw = userRecord.raw || {};
+			const completedTasks = progress.completedTasks || {};
+			const completedDayNumbers = Array.isArray(progress.completedDayNumbers) ? progress.completedDayNumbers : [];
+			const dayCompletionDates = Array.isArray(raw.dayCompletionDates) ? raw.dayCompletionDates : [];
+			const analyticsEvents = Array.isArray(progress?.analytics?.events) ? progress.analytics.events : [];
+			const xpAuditLog = Array.isArray(progress.xpAuditLog) ? progress.xpAuditLog : [];
+
+			const completedTaskDays = Object.keys(completedTasks).filter((key) => {
+				const steps = completedTasks[key];
+				return Array.isArray(steps) && steps.length > 0;
+			});
+
+			const uniqueCompletedDays = new Set([
+				...completedTaskDays,
+				...dayCompletionDates.map((entry) => dateKey(entry?.date)).filter(Boolean),
+			]);
+
+			const recentXpEntries = xpAuditLog.filter((entry) => {
+				const ts = toDate(entry?.timestamp);
+				if (!ts) return false;
+				return withinDays(ts, 1);
+			});
+			const recentXpGranted = recentXpEntries.reduce((sum, entry) => sum + safeNum(entry.granted), 0);
+			const recentXpCappedCount = recentXpEntries.filter((entry) => !!entry.capped).length;
+
+			const feed = [];
+			analyticsEvents.slice(-20).forEach((event) => {
+				const ts = toDate(event?.timestamp);
+				if (!ts) return;
+				feed.push({
+					ts,
+					when: getLastDateText(ts),
+					label: `Analytics ${event.type || 'event'}`,
+				});
+			});
+
+			xpAuditLog.slice(-20).forEach((entry) => {
+				const ts = toDate(entry?.timestamp);
+				if (!ts) return;
+				const src = entry.source || 'Challenge';
+				const cap = entry.capped ? 'YES' : 'NO';
+				feed.push({
+					ts,
+					when: getLastDateText(ts),
+					label: `XP Grant ${safeNum(entry.granted)} (${src}, capped ${cap})`,
+				});
+			});
+
+			dayCompletionDates.slice(-20).forEach((entry) => {
+				const ts = toDate(entry?.date || entry?.timestamp);
+				if (!ts) return;
+				const whenTime = entry?.time ? ` (${entry.time})` : '';
+				feed.push({
+					ts,
+					when: getLastDateText(ts),
+					label: `Day Completion${whenTime}`,
+				});
+			});
+
+			feed.sort((a, b) => b.ts.getTime() - a.ts.getTime());
+			const lastActivity = feed[0]?.ts || null;
+
+			return {
+				totalXP: safeNum(progress.totalXP),
+				completedDaysCount: Math.max(uniqueCompletedDays.size, completedDayNumbers.length),
+				badgesCount: Array.isArray(progress.unlockedBadges) ? progress.unlockedBadges.length : 0,
+				recentXpEntries: recentXpEntries.length,
+				recentXpGranted,
+				recentXpCappedCount,
+				lastActivityAt: lastActivity ? lastActivity.toISOString() : null,
+				lastActivityText: lastActivity ? getLastDateText(lastActivity) : '-',
+				activityFeed: feed,
+			};
+		}
+
+		function mapAndStoreUsers(rawUsers) {
+			const filters = state.filters || getActiveFilters();
+			const previousFilters = getPreviousFilters(filters);
+			state.users = rawUsers.map((user) => {
+				const indicators = computeUserIndicators(user, filters);
+				return {
+					...user,
+					indicators,
+					riskProfile: buildUserRiskProfile(indicators),
+					activitySummary: deriveActivitySummary(user),
+				};
+			});
+
+			state.users.sort((a, b) => {
+				const at = toDate(a.activitySummary?.lastActivityAt)?.getTime() || 0;
+				const bt = toDate(b.activitySummary?.lastActivityAt)?.getTime() || 0;
+				return bt - at;
+			});
+
+			state.aggregated = aggregateIndicators(state.users);
+			if (previousFilters) {
+				const previousMappedUsers = rawUsers.map((user) => ({
+					indicators: computeUserIndicators(user, previousFilters),
+				}));
+				state.previousAggregated = aggregateIndicators(previousMappedUsers);
+			} else {
+				state.previousAggregated = aggregateIndicators([]);
+			}
+			state.executiveSummary = buildExecutiveSummary(state.aggregated, state.previousAggregated);
+			state.trends = buildTrendSeries(state.users, filters);
+			state.selectedUserId = state.users[0]?.id || null;
+			renderSummary();
+			renderDataCoverage();
+			renderTrends();
+			renderInstrumentMatrix();
+			renderUsersTable();
+			renderUserDetail();
+		}
+
+		function loadFromLocalStorage() {
+			const usersByEmail = new Map();
+			const USER_PREFIX = 'mindshift_user_';
+			const PROGRESS_PREFIX = 'mindshift_progress_';
+			const DAY_PREFIX = 'mindshift_dayCompletionDates_';
+			const globalPayload = readGlobalIndexStoragePayload();
+
+			const ensureEntry = (emailKey) => {
+				if (!usersByEmail.has(emailKey)) {
+					usersByEmail.set(emailKey, {
+						emailKey,
+						user: null,
+						progress: null,
+						dayCompletionDates: [],
+					});
+				}
+				return usersByEmail.get(emailKey);
+			};
+
+			for (let idx = 0; idx < localStorage.length; idx += 1) {
+				const key = localStorage.key(idx);
+				if (!key) continue;
+
+				if (key.startsWith(USER_PREFIX)) {
+					const emailKey = key.slice(USER_PREFIX.length);
+					const entry = ensureEntry(emailKey);
+					entry.user = safeParseJSON(localStorage.getItem(key), null);
+					continue;
+				}
+
+				if (key.startsWith(PROGRESS_PREFIX)) {
+					const emailKey = key.slice(PROGRESS_PREFIX.length);
+					const entry = ensureEntry(emailKey);
+					entry.progress = safeParseJSON(localStorage.getItem(key), {});
+					continue;
+				}
+
+				if (key.startsWith(DAY_PREFIX)) {
+					const emailKey = key.slice(DAY_PREFIX.length);
+					const entry = ensureEntry(emailKey);
+					entry.dayCompletionDates = safeParseJSON(localStorage.getItem(key), []);
+				}
+			}
+
+			const localRecords = Array.from(usersByEmail.values())
+				.filter((entry) => entry.user || entry.progress)
+				.map((entry) => {
+					const user = entry.user || {};
+					const progress = entry.progress || {};
+					const email = user.email || entry.emailKey || 'unknown';
+					const normalizedEmail = String(email).toLowerCase();
+					const shouldAttachGlobalSpeaking = globalPayload.lastActiveEmail
+						? globalPayload.lastActiveEmail === normalizedEmail
+						: usersByEmail.size <= 1;
+					return {
+						id: normalizedEmail,
+						source: 'localStorage/per-email',
+						profile: {
+							name: user.name || normalizedEmail,
+							email: normalizedEmail,
+							phone: user.phone || '',
+							idNumber: user.idNumber || '',
+							joinedAt: user.joinedAt || '',
+							hasPhoto: Boolean(user.profilePhoto),
+							idCardTemplate: user.idCardTemplate || globalPayload.profileIdCardTemplate || 'clean',
+						},
+						progress,
+						raw: {
+							progress,
+							dayCompletionDates: Array.isArray(entry.dayCompletionDates) ? entry.dayCompletionDates : [],
+							speakingStats: shouldAttachGlobalSpeaking ? globalPayload.speakingStats : { totalSessions: 0, totalSpeeches: 0, totalMinutes: 0 },
+							speakingPracticeHistory: shouldAttachGlobalSpeaking ? globalPayload.speakingPracticeHistory : [],
+							speakingFeedbackSessions: shouldAttachGlobalSpeaking ? globalPayload.speakingFeedbackSessions : [],
+							speakingMode: shouldAttachGlobalSpeaking ? globalPayload.speakingMode : 'qa',
+							speakingCoachMemory: shouldAttachGlobalSpeaking ? globalPayload.speakingCoachMemory : {},
+							preferredStudyTime: globalPayload.preferredStudyTime,
+							celebrationStoryTemplate: globalPayload.celebrationStoryTemplate,
+							recentAccounts: Array.isArray(globalPayload.recentAccounts) ? globalPayload.recentAccounts : [],
+						},
+					};
+				});
+
+			const legacyUser = safeParseJSON(localStorage.getItem('mindshift_user'), null);
+			const legacyProgress = safeParseJSON(localStorage.getItem('mindshift_progress'), null);
+			const legacyDayCompletionDates = safeParseJSON(localStorage.getItem('dayCompletionDates'), []);
+			const legacySpeakingStats = safeParseJSON(localStorage.getItem('speakingStats'), { totalSessions: 0, totalSpeeches: 0, totalMinutes: 0 });
+
+			if (legacyUser || legacyProgress) {
+				const legacyEmail = String(legacyUser?.email || 'legacy-user').toLowerCase();
+				const exists = localRecords.some((record) => record.id === legacyEmail);
+				if (!exists) {
+					localRecords.push({
+						id: legacyEmail,
+						source: 'localStorage/legacy',
+						profile: {
+							name: legacyUser?.name || 'Legacy User',
+							email: legacyUser?.email || legacyEmail,
+							phone: legacyUser?.phone || '',
+							idNumber: legacyUser?.idNumber || '',
+							joinedAt: legacyUser?.joinedAt || '',
+							hasPhoto: Boolean(legacyUser?.profilePhoto),
+							idCardTemplate: legacyUser?.idCardTemplate || globalPayload.profileIdCardTemplate || 'clean',
+						},
+						progress: legacyProgress || {},
+						raw: {
+							progress: legacyProgress || {},
+							dayCompletionDates: Array.isArray(legacyDayCompletionDates) ? legacyDayCompletionDates : [],
+							speakingStats: legacySpeakingStats,
+							speakingPracticeHistory: globalPayload.speakingPracticeHistory,
+							speakingFeedbackSessions: globalPayload.speakingFeedbackSessions,
+							speakingMode: globalPayload.speakingMode,
+							speakingCoachMemory: globalPayload.speakingCoachMemory,
+							preferredStudyTime: globalPayload.preferredStudyTime,
+							celebrationStoryTemplate: globalPayload.celebrationStoryTemplate,
+							recentAccounts: Array.isArray(globalPayload.recentAccounts) ? globalPayload.recentAccounts : [],
+						},
+					});
+				}
+			}
+
+			const coverage = buildLocalStorageCoverage();
+			coverage.perEmailUsers = localRecords.filter((record) => record.source === 'localStorage/per-email').length;
+			coverage.legacyFound = localRecords.some((record) => record.source === 'localStorage/legacy') ? 1 : 0;
+			coverage.speakingRecords = safeNum(globalPayload.speakingPracticeHistory?.length) + safeNum(globalPayload.speakingFeedbackSessions?.length);
+			coverage.details = [
+				...coverage.details,
+				{ label: 'Recent accounts list', value: safeNum(globalPayload.recentAccounts?.length) },
+				{ label: 'Speaking mode', value: globalPayload.speakingMode || '-' },
+				{ label: 'Preferred study time', value: globalPayload.preferredStudyTime || '-' },
+				{ label: 'Celebration template', value: globalPayload.celebrationStoryTemplate || '-' },
+			];
+			state.dataCoverage = coverage;
+
+			if (!localRecords.length) {
+				throw new Error('Data local index.html tidak ditemukan. Login dulu di index.html agar localStorage terisi.');
+			}
+
+			mapAndStoreUsers(localRecords);
+		}
+
+		async function getFirebaseModules() {
+			if (state.firebaseModules) return state.firebaseModules;
+
+			try {
+				const [firebaseAppMod, firestoreMod] = await Promise.all([
+					import('https://www.gstatic.com/firebasejs/11.11.1/firebase-app.js'),
+					import('https://www.gstatic.com/firebasejs/11.11.1/firebase-firestore.js'),
+				]);
+
+				state.firebaseModules = {
+					initializeApp: firebaseAppMod.initializeApp,
+					getApps: firebaseAppMod.getApps,
+					getFirestore: firestoreMod.getFirestore,
+					collection: firestoreMod.collection,
+					doc: firestoreMod.doc,
+					getDoc: firestoreMod.getDoc,
+					getDocs: firestoreMod.getDocs,
+				};
+				return state.firebaseModules;
+			} catch (error) {
+				throw new Error('Gagal memuat Firebase SDK. Mode Local tetap bisa dipakai, atau cek koneksi internet untuk mode Firestore.');
+			}
+		}
+
+		async function loadFromFirestore() {
+			const config = {
+				apiKey: ui.apiKey.value.trim(),
+				authDomain: ui.authDomain.value.trim(),
+				projectId: ui.projectId.value.trim(),
+				storageBucket: ui.storageBucket.value.trim(),
+				messagingSenderId: ui.messagingSenderId.value.trim(),
+				appId: ui.appId.value.trim(),
+			};
+
+			if (!config.apiKey || !config.projectId || !config.authDomain || !config.appId) {
+				throw new Error('Isi minimal apiKey, authDomain, projectId, dan appId untuk mode Firestore.');
+			}
+
+			const {
+				initializeApp,
+				getApps,
+				getFirestore,
+				collection,
+				doc,
+				getDoc,
+				getDocs,
+			} = await getFirebaseModules();
+
+			const app = getApps().length ? getApps()[0] : initializeApp(config);
+			const db = getFirestore(app);
+
+			const usersSnapshot = await getDocs(collection(db, 'users'));
+			const docs = usersSnapshot.docs;
+			if (!docs.length) {
+				mapAndStoreUsers([]);
+				return;
+			}
+
+			const userRecords = await Promise.all(docs.map(async (userDoc) => {
+				const userId = userDoc.id;
+				const profileDoc = await getDoc(doc(db, 'users', userId, 'data', 'profile'));
+				const progressDoc = await getDoc(doc(db, 'users', userId, 'data', 'progress'));
+
+				return {
+					id: userId,
+					source: 'firestore',
+					profile: profileDoc.exists() ? profileDoc.data() : {
+						email: '-',
+						name: 'Unknown',
+						phone: '',
+						idNumber: '',
+						hasPhoto: false,
+						idCardTemplate: 'clean',
+					},
+					progress: progressDoc.exists() ? progressDoc.data() : {},
+					raw: {
+						progress: progressDoc.exists() ? progressDoc.data() : {},
+					},
+				};
+			}));
+
+			state.dataCoverage = {
+				recognizedKeys: docs.length,
+				perEmailUsers: docs.length,
+				legacyFound: 0,
+				speakingRecords: 0,
+				details: [
+					{ label: 'Firestore user documents', value: docs.length },
+					{ label: 'Profile sub-docs loaded', value: userRecords.filter((row) => row.profile).length },
+					{ label: 'Progress sub-docs loaded', value: userRecords.filter((row) => row.progress).length },
+				],
+			};
+
+			mapAndStoreUsers(userRecords);
+		}
+
+		function readSavedConfig() {
+			const raw = localStorage.getItem(STORAGE_CFG_KEY);
+			if (!raw) return;
+			try {
+				const cfg = JSON.parse(raw);
+				ui.projectId.value = cfg.projectId || '';
+				ui.apiKey.value = cfg.apiKey || '';
+				ui.authDomain.value = cfg.authDomain || '';
+				ui.storageBucket.value = cfg.storageBucket || '';
+				ui.messagingSenderId.value = cfg.messagingSenderId || '';
+				ui.appId.value = cfg.appId || '';
+			} catch {
+				setStatus('Config Firebase tersimpan tidak valid.', 'error');
+			}
+		}
+
+		function saveConfig() {
+			const cfg = {
+				projectId: ui.projectId.value.trim(),
+				apiKey: ui.apiKey.value.trim(),
+				authDomain: ui.authDomain.value.trim(),
+				storageBucket: ui.storageBucket.value.trim(),
+				messagingSenderId: ui.messagingSenderId.value.trim(),
+				appId: ui.appId.value.trim(),
+			};
+			localStorage.setItem(STORAGE_CFG_KEY, JSON.stringify(cfg));
+			setStatus('Firebase config disimpan di browser admin.', 'ok');
+		}
+
+		function clearConfig() {
+			localStorage.removeItem(STORAGE_CFG_KEY);
+			ui.projectId.value = '';
+			ui.apiKey.value = '';
+			ui.authDomain.value = '';
+			ui.storageBucket.value = '';
+			ui.messagingSenderId.value = '';
+			ui.appId.value = '';
+			setStatus('Firebase config dibersihkan.', 'ok');
+		}
+
+		function setUserFilter(filterKey) {
+			state.userFilter = filterKey;
+			renderUsersTable();
+			renderUserDetail();
+		}
+
+		async function loadData() {
+			try {
+				state.filters = getActiveFilters();
+				setStatus('Memuat data...', '');
+				if (ui.sourceMode.value === 'local') {
+					loadFromLocalStorage();
+					setStatus(`Data local berhasil dimuat (${toDateInputValue(state.filters.start)} s/d ${toDateInputValue(state.filters.end)}).`, 'ok');
+					return;
+				}
+
+				await loadFromFirestore();
+				setStatus(`Data Firestore berhasil dimuat (${state.users.length} user, ${toDateInputValue(state.filters.start)} s/d ${toDateInputValue(state.filters.end)}).`, 'ok');
+			} catch (error) {
+				console.error(error);
+				setStatus(error.message || 'Gagal memuat data.', 'error');
+			}
+		}
+
+		ui.loadBtn.addEventListener('click', loadData);
+		ui.last7Btn.addEventListener('click', () => {
+			setDateRange(MILESTONE_DAYS);
+			setStatus('Periode diset ke 10 hari terakhir (1 milestone). Klik Load Analytics untuk refresh.', 'ok');
+		});
+		ui.last30Btn.addEventListener('click', () => {
+			setDateRange(30);
+			setStatus('Periode diset ke 30 hari terakhir. Klik Load Analytics untuk refresh.', 'ok');
+		});
+		ui.saveCfgBtn.addEventListener('click', saveConfig);
+		ui.clearCfgBtn.addEventListener('click', clearConfig);
+		ui.exportJsonBtn.addEventListener('click', exportJSONReport);
+		ui.exportCsvBtn.addEventListener('click', exportCSVReport);
+		ui.filterAllBtn.addEventListener('click', () => setUserFilter('all'));
+		ui.filterActiveBtn.addEventListener('click', () => setUserFilter('active'));
+		ui.filterInactiveBtn.addEventListener('click', () => setUserFilter('inactive'));
+		ui.sourceMode.addEventListener('change', () => {
+			const isFirestore = ui.sourceMode.value === 'firestore';
+			[ui.projectId, ui.apiKey, ui.authDomain, ui.storageBucket, ui.messagingSenderId, ui.appId].forEach((el) => {
+				el.disabled = !isFirestore;
+			});
+		});
+
+		readSavedConfig();
+		setDateRange(MILESTONE_DAYS);
+		ui.sourceMode.dispatchEvent(new Event('change'));
+		state.filters = getActiveFilters();
+		renderSummary();
+		renderDataCoverage();
+		renderTrends();
+		renderInstrumentMatrix();
+		renderUsersTable();
+	</script>
+</body>
+</html>
