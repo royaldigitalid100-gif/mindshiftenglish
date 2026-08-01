@@ -62,350 +62,80 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background:
-                radial-gradient(ellipse at 0% 0%, rgba(37, 99, 235, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 100% 0%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 100%, rgba(245, 158, 11, 0.04) 0%, transparent 50%),
-                #F8FAFC;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
             color: var(--dark);
-            position: relative;
-            overflow-x: hidden;
-            line-height: 1.65;
-            font-size: 15px;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: -10%;
-            right: -5%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.07) 0%, rgba(37, 99, 235, 0.01) 70%, transparent 100%);
-            border-radius: 50%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -12%;
-            left: -4%;
-            width: 420px;
-            height: 420px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, rgba(16, 185, 129, 0.01) 70%, transparent 100%);
-            border-radius: 50%;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        body.dark-mode {
-            background:
-                radial-gradient(ellipse at 15% 8%, rgba(37, 99, 235, 0.14) 0%, transparent 42%),
-                radial-gradient(ellipse at 88% 12%, rgba(16, 185, 129, 0.09) 0%, transparent 40%),
-                radial-gradient(ellipse at 50% 95%, rgba(139, 92, 246, 0.09) 0%, transparent 40%),
-                #06090F;
-            color: #E2E8F0;
-        }
-
-        html {
-            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 1200px;
             width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px 24px;
-            box-sizing: border-box;
-            overflow-x: hidden;
+            padding: 16px;
         }
 
         .page {
             display: none;
-            animation: fadeIn 0.3s ease-in;
         }
 
         .page.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes celebrationOverlayIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes celebrationCardIn {
-            0% { opacity: 0; transform: scale(0.86) translateY(18px); }
-            55% { opacity: 1; transform: scale(1.04) translateY(-3px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @keyframes celebrationCardShake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-3px); }
-            40% { transform: translateX(3px); }
-            60% { transform: translateX(-2px); }
-            80% { transform: translateX(2px); }
-        }
-
-        @keyframes celebrationConfettiFall {
-            0% { opacity: 0; transform: translate3d(0, -12vh, 0) rotate(0deg); }
-            12% { opacity: 1; }
-            100% { opacity: 0.95; transform: translate3d(0, 115vh, 0) rotate(480deg); }
-        }
-
-        @keyframes celebrationWave {
-            0% { opacity: 0.55; transform: scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: scale(1.07) rotate(1.4deg); }
-            100% { opacity: 0.65; transform: scale(1) rotate(0deg); }
-        }
-
-        @keyframes celebrationTwinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.7); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        @keyframes celebrationFirework {
-            0% { opacity: 0; transform: scale(0.18); filter: blur(1px); }
-            22% { opacity: 1; transform: scale(0.92); filter: blur(0); }
-            70% { opacity: 0.9; transform: scale(1.15); }
-            100% { opacity: 0; transform: scale(1.5); }
-        }
-
-        .celebration-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 2200;
-            background: rgba(15, 23, 42, 0.72);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            animation: celebrationOverlayIn 0.34s ease-out;
-        }
-
-        .celebration-wave {
-            position: absolute;
-            inset: 0;
-            animation: celebrationWave 1.7s ease-in-out infinite;
-            background:
-                radial-gradient(circle at 18% 20%, rgba(16, 185, 129, 0.34), transparent 34%),
-                radial-gradient(circle at 82% 16%, rgba(244, 114, 182, 0.35), transparent 32%),
-                radial-gradient(circle at 48% 82%, rgba(56, 189, 248, 0.35), transparent 38%);
-        }
-
-            .celebration-rings {
-                position: absolute;
-                width: 420px;
-                height: 420px;
-                border-radius: 50%;
-                border: 2px solid rgba(167, 243, 208, 0.3);
-                box-shadow: 0 0 0 26px rgba(56, 189, 248, 0.11), 0 0 0 52px rgba(251, 191, 36, 0.08);
-                animation: celebrationWave 2.2s ease-in-out infinite;
-            }
-
-        .celebration-confetti {
-            position: absolute;
-            top: -14%;
-            width: 10px;
-            height: 15px;
-            border-radius: 3px;
-            animation: celebrationConfettiFall linear forwards;
-        }
-
-        .celebration-star {
-            position: absolute;
-            color: rgba(254, 240, 138, 0.95);
-            text-shadow: 0 0 12px rgba(251, 191, 36, 0.65);
-            animation: celebrationTwinkle 1.4s ease-in-out infinite;
-        }
-
-        .celebration-firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: celebrationFirework 1.8s ease-out infinite;
-        }
-
-        .celebration-card {
-            position: relative;
-            width: min(90vw, 430px);
-            border-radius: 28px;
-            padding: 1.5px;
-            background: linear-gradient(135deg, #fbbf24 0%, #fb7185 46%, #6366f1 100%);
-            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.4);
-            animation: celebrationCardIn 0.56s cubic-bezier(0.19, 1, 0.22, 1) forwards, celebrationCardShake 0.55s ease-in-out 0.95s 2;
-        }
-
-        .celebration-card-inner {
-            border-radius: 27px;
-            background: rgba(255, 255, 255, 0.96);
-            padding: 26px 24px;
-            text-align: center;
-        }
-
-        .celebration-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border-radius: 999px;
-            padding: 7px 12px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.35px;
-            text-transform: uppercase;
-            color: #854d0e;
-            background: #fef3c7;
-            margin-bottom: 10px;
-        }
-
-        .celebration-title {
-            margin: 0;
-            font-size: clamp(30px, 5vw, 36px);
-            font-weight: 900;
-            color: #111827;
-            letter-spacing: -0.03em;
-        }
-
-        .celebration-subtitle {
-            margin: 8px 0 16px 0;
-            color: #4b5563;
-            font-size: 14px;
-        }
-
-        .celebration-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .celebration-stat {
-            border-radius: 12px;
-            padding: 10px;
-            border: 1px solid;
-        }
-
-        .celebration-stat.day {
-            background: #ecfdf5;
-            border-color: #6ee7b7;
-        }
-
-        .celebration-stat.streak {
-            background: #ecfeff;
-            border-color: #67e8f9;
-        }
-
-        .celebration-stat .label {
-            font-size: 11px;
-            color: #6b7280;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.35px;
-        }
-
-        .celebration-stat .value {
-            margin-top: 3px;
-            font-size: 26px;
-            font-weight: 900;
-            color: #111827;
-            line-height: 1;
-        }
-
-        body.dark-mode .celebration-card-inner {
-            background: rgba(15, 23, 42, 0.95);
-            color: #e2e8f0;
-        }
-
-        body.dark-mode .celebration-title {
-            color: #f8fafc;
-        }
-
-        body.dark-mode .celebration-subtitle,
-        body.dark-mode .celebration-stat .label {
-            color: #94a3b8;
-        }
-
-        body.dark-mode .celebration-stat .value {
-            color: #f8fafc;
-        }
-
-        /* Header & Navigation */
         .header-minimal {
-            background: rgba(255, 255, 255, 0.92);
-            padding: 14px 22px;
-            border-radius: 18px;
-            margin-bottom: 28px;
-            box-shadow: 0 2px 20px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.9);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0;
             position: sticky;
             top: 10px;
-            z-index: 100;
-            backdrop-filter: blur(20px) saturate(1.8);
-            border: 1px solid rgba(255, 255, 255, 0.85);
-            transition: box-shadow 0.3s ease;
-        }
-
-        .header-minimal:hover {
-            box-shadow: 0 4px 28px rgba(37, 99, 235, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.9);
+            z-index: 120;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(226, 232, 240, 0.85);
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(8px);
         }
 
         body.dark-mode .header-minimal {
-            background: rgba(30, 41, 59, 0.92);
-            color: #e2e8f0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            border-color: rgba(255,255,255,0.08);
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(148, 163, 184, 0.24);
         }
 
         .hamburger-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
+            width: 42px;
+            height: 42px;
+            border: 1.5px solid var(--gray-200);
+            background: #ffffff;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             flex-direction: column;
-            gap: 6px;
-            padding: 10px;
-            z-index: 102;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .hamburger-btn:hover {
+            border-color: #93c5fd;
+            background: #eff6ff;
         }
 
         .hamburger-btn span {
-            display: block;
-            width: 28px;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .header-minimal h1 {
-            font-family: 'Poppins', 'Sora', sans-serif;
-            letter-spacing: -0.5px;
-            font-size: clamp(19px, 2.8vw, 27px);
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            width: 18px;
+            height: 2px;
+            border-radius: 999px;
+            background: var(--dark);
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
         .hamburger-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(10px, 10px);
+            transform: translateY(7px) rotate(45deg);
         }
 
         .hamburger-btn.active span:nth-child(2) {
@@ -413,27 +143,21 @@
         }
 
         .hamburger-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(8px, -8px);
+            transform: translateY(-7px) rotate(-45deg);
         }
 
         .sidebar {
             position: fixed;
-            left: 0;
             top: 0;
-            width: 280px;
+            left: 0;
             height: 100vh;
-            background: white;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            z-index: 101;
-            padding-top: 20px;
+            width: 320px;
+            z-index: 210;
+            padding: 20px 14px 20px;
+            transform: translateX(-108%);
+            transition: transform 0.25s ease;
             overflow-y: auto;
-        }
-
-        body.dark-mode .sidebar {
-            background: #1f1f1f;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+            -webkit-overflow-scrolling: touch;
         }
 
         .sidebar.active {
@@ -442,31 +166,29 @@
 
         .sidebar-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 28px;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.08);
+            color: var(--dark);
+            font-size: 18px;
+            line-height: 1;
             cursor: pointer;
-            color: var(--primary);
-            padding: 0;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .sidebar-close:hover {
-            background: rgba(95,127,255,0.1);
-            border-radius: 8px;
+        body.dark-mode .sidebar-close {
+            background: rgba(148, 163, 184, 0.2);
+            color: #e2e8f0;
         }
 
         .sidebar-nav {
             display: flex;
             flex-direction: column;
             gap: 5px;
-            padding: 20px 15px 0;
+            padding: 38px 15px 0;
             margin-top: 30px;
         }
 
@@ -1801,6 +1523,14 @@
             color: #0f172a;
         }
 
+        .challenge-day-quick-nav-meta {
+            margin: 4px 0 0 0;
+            font-size: 12px;
+            color: #2563eb;
+            font-weight: 600;
+            opacity: 0.92;
+        }
+
         .challenge-day-quick-nav-actions {
             display: flex;
             gap: 10px;
@@ -1881,6 +1611,123 @@
             border: 1px solid rgba(37, 99, 235, 0.18);
             font-size: 12px;
             font-weight: 700;
+        }
+
+        .challenge-day-chip-strip-wrap {
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            background: #ffffff;
+            padding: 10px;
+        }
+
+        .challenge-day-chip-strip-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .challenge-day-chip-strip-title {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.25px;
+            color: #0f172a;
+            text-transform: uppercase;
+        }
+
+        .challenge-day-chip-strip-hint {
+            font-size: 11px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .challenge-day-chip-strip {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            padding-bottom: 4px;
+        }
+
+        .challenge-day-chip {
+            border: 1px solid #dbeafe;
+            background: #f8fafc;
+            color: #1e293b;
+            border-radius: 999px;
+            padding: 6px 12px;
+            min-width: 58px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .challenge-day-chip:hover {
+            border-color: #93c5fd;
+            color: #1d4ed8;
+            transform: translateY(-1px);
+            background: #eff6ff;
+        }
+
+        .challenge-day-chip.current {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.28);
+        }
+
+        .challenge-day-chip.completed {
+            border-color: #86efac;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .challenge-day-chip.milestone {
+            border-style: dashed;
+        }
+
+        .challenge-day-chip:focus-visible {
+            outline: 2px solid #1d4ed8;
+            outline-offset: 1px;
+        }
+
+        body.dark-mode .challenge-day-quick-nav-meta {
+            color: #93c5fd;
+        }
+
+        body.dark-mode .challenge-day-chip-strip-wrap {
+            border-color: #334155;
+            background: #111827;
+        }
+
+        body.dark-mode .challenge-day-chip-strip-title {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .challenge-day-chip-strip-hint {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .challenge-day-chip {
+            border-color: #334155;
+            background: #0f172a;
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .challenge-day-chip:hover {
+            border-color: #60a5fa;
+            color: #bfdbfe;
+            background: #1e293b;
+        }
+
+        body.dark-mode .challenge-day-chip.completed {
+            border-color: #16a34a;
+            background: #052e16;
+            color: #86efac;
         }
 
         .challenge-progress-shell {
@@ -4683,6 +4530,108 @@
 
         .milestone-status-pill.pending { background: #eceff1; color: #546e7a; }
         .milestone-status-pill.passed { background: #e8f5e9; color: #2e7d32; }
+
+        /* Statistics layout refresh */
+        #statisticsPage {
+            gap: 16px;
+        }
+
+        #statisticsPage.page.active {
+            display: grid;
+        }
+
+        #statisticsPage .statistics-overview-card {
+            margin-bottom: 2px;
+        }
+
+        #statisticsPage .statistics-hero-banner {
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.28);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        #statisticsPage .statistics-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
+        }
+
+        #statisticsPage .statistics-kpi-grid > div {
+            position: relative;
+            overflow: hidden;
+        }
+
+        #statisticsPage .statistics-kpi-grid > div::after {
+            content: '';
+            position: absolute;
+            inset: auto -30px -48px auto;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 72%);
+            pointer-events: none;
+        }
+
+        #statisticsPage .statistics-trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        #statisticsPage .statistics-trend-card {
+            min-height: 100%;
+        }
+
+        #statisticsPage .statistics-trend-card h3 {
+            font-size: 18px;
+            letter-spacing: 0.01em;
+        }
+
+        #statisticsPage .statistics-goal-card .goal-progress-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        #statisticsPage .statistics-goal-card .goal-progress-list > p {
+            margin: 0;
+            padding: 12px 12px 10px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: linear-gradient(160deg, #ffffff 0%, #f8fafc 100%);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            column-gap: 10px;
+            row-gap: 8px;
+            align-items: center;
+        }
+
+        #statisticsPage .statistics-goal-card .goal-progress-list > p .progress-bar {
+            grid-column: 1 / -1;
+            margin: 0;
+        }
+
+        #statisticsPage .statistics-goal-card .goal-progress-list > p strong {
+            color: #1f2937;
+        }
+
+        #statisticsPage .statistics-activity-card .calendar {
+            margin-top: 4px;
+        }
+
+        body.dark-mode #statisticsPage .statistics-goal-card .goal-progress-list > p {
+            border-color: rgba(148, 163, 184, 0.25);
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.45) 100%);
+        }
+
+        body.dark-mode #statisticsPage .statistics-hero-banner {
+            border-color: rgba(148, 163, 184, 0.3);
+            box-shadow: 0 20px 36px rgba(2, 6, 23, 0.5);
+        }
+
+        body.dark-mode #statisticsPage .statistics-kpi-grid > div::after {
+            background: radial-gradient(circle, rgba(148, 163, 184, 0.18) 0%, rgba(148, 163, 184, 0) 70%);
+        }
         .milestone-status-pill.failed { background: #ffebee; color: #c62828; }
 
         .milestone-detail-grid {
@@ -5618,6 +5567,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             animation: floatPulse 3s ease-in-out infinite;
+            display: none !important;
         }
 
         .floating-speak-btn:hover {
@@ -6674,10 +6624,85 @@
 
         /* ===== RESPONSIVE: MOBILE (< 768px) ===== */
         @media (max-width: 767px) {
-            .container { padding: 10px 12px; }
+            html, body {
+                overflow-x: hidden;
+            }
+
+            .container {
+                padding: 10px 12px;
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+            }
             .card { padding: 18px 16px; border-radius: 16px; margin-bottom: 14px; }
             .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 12px; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+            .btn,
+            .btn-primary,
+            .btn-secondary,
+            .nav-btn,
+            .milestone-filter-btn,
+            .challenge-day-nav-btn,
+            .challenge-focus-toggle {
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+
+            #statisticsPage {
+                gap: 12px;
+            }
+
+            #statisticsPage .statistics-hero-banner {
+                padding: 24px 18px 20px !important;
+                border-radius: 16px !important;
+                margin-bottom: 14px !important;
+            }
+
+            #statisticsPage .statistics-kpi-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            #statisticsPage .statistics-kpi-grid > div {
+                padding: 16px 10px !important;
+                border-radius: 14px !important;
+            }
+
+            #statisticsPage .statistics-goal-card .goal-progress-list {
+                gap: 10px;
+            }
+
+            #statisticsPage .milestone-recap-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #statisticsPage .milestone-filter-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            #statisticsPage .milestone-filter-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            #listeningTrendChart,
+            #speakingScoreChart,
+            #readingScoreChart,
+            #writingScoreChart {
+                justify-content: flex-start !important;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 22px !important;
+            }
+
+            #statisticsPage .calendar {
+                grid-template-columns: repeat(7, minmax(0, 1fr));
+                gap: 6px;
+            }
 
             .header-minimal { top: 4px; padding: 11px 14px; border-radius: 14px; margin-bottom: 18px; }
             .header-minimal h1 { font-size: 17px; }
@@ -6697,6 +6722,8 @@
             .challenge-day-nav-btn { width: 100%; min-width: unset; }
             .challenge-flow-tag { margin-left: 0; }
             .challenge-progress-row { flex-direction: column; }
+            .challenge-day-chip-strip-wrap { padding: 9px; }
+            .challenge-day-chip { min-width: 54px; padding: 6px 10px; }
 
             #overviewPage .overview-hero { padding: 32px 18px; }
             #overviewPage .overview-hero h1 { font-size: clamp(26px, 7vw, 36px) !important; }
@@ -6721,6 +6748,15 @@
             h1 { font-size: clamp(20px, 6vw, 28px); }
             h2 { font-size: clamp(17px, 4.5vw, 22px); }
             h3 { font-size: clamp(15px, 4vw, 18px); }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .card:hover,
+            .stat-item:hover,
+            .statistics-kpi-grid > div:hover {
+                transform: none !important;
+                box-shadow: none !important;
+            }
         }
 
         /* ===== RESPONSIVE: SMALL PHONE (< 400px) ===== */
@@ -7647,6 +7683,36 @@
             transform: translateY(10px);
             pointer-events: none;
             transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .celebration-template-picker {
+            display: grid;
+            gap: 6px;
+            text-align: left;
+            background: rgba(248, 250, 252, 0.92);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 9px 10px;
+        }
+        .celebration-template-picker label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.35px;
+        }
+        .celebration-template-picker select {
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0f172a;
+            background: #ffffff;
+            outline: none;
+        }
+        .celebration-template-picker select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
         }
         #challengeCelebrationOverlay.show-summary .celebration-actions {
             opacity: 1;
@@ -8656,6 +8722,31 @@
                         <button class="btn btn-primary" onclick="enterChallengeTaskScreen()">🎯 Mulai Focus Challenge</button>
                         <button class="btn btn-secondary" onclick="showPage('dashboard')">← Kembali ke Dashboard</button>
                     </div>
+                    <div style="margin-top: 12px; background: #fff; border: 1px solid #DBEAFE; border-radius: 12px; padding: 12px;">
+                        <p style="margin: 0 0 8px 0; font-size: 12px; color: #1E3A8A; font-weight: 700; letter-spacing: 0.2px; text-transform: uppercase;">Pilih Focus Daily Challenge</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#F8FAFC; font-size:13px; font-weight:600; color:#0F172A;">
+                                <input type="checkbox" id="focusListeningIntro" checked disabled />
+                                🎧 Listening (Wajib)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusSpeakingIntro" checked />
+                                🎙️ Speaking
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusReadingIntro" checked />
+                                📖 Reading
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusWritingIntro" checked />
+                                ✍️ Writing
+                            </label>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;">
+                            <button class="btn btn-secondary btn-small" onclick="applyChallengeFocusSettings('intro')">Simpan Focus</button>
+                            <span id="focusSummaryIntro" style="font-size: 12px; color: #1D4ED8; font-weight: 700;">Aktif: Listening • Speaking • Reading • Writing</span>
+                        </div>
+                    </div>
                     <p class="challenge-intro-note">Tekan mulai untuk masuk ke mode fokus.</p>
                 </div>
 
@@ -8667,6 +8758,7 @@
                         <div id="challengeCefrWrap" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
                             <span id="challengeCefrBadge" style="display: inline-flex; align-items: center; gap: 6px; background: #E0E7FF; color: #3730A3; border: 1px solid #C7D2FE; border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase;">CEFR A1</span>
                             <span id="challengeYoungLearnerTag" style="display: inline-flex; align-items: center; gap: 6px; background: #ECFEFF; color: #0E7490; border: 1px solid #A5F3FC; border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 700;">Young Learner Friendly</span>
+                            <span id="challengeActiveFocusChip" style="display: inline-flex; align-items: center; gap: 6px; background: #FFF7ED; color: #9A3412; border: 1px solid #FDBA74; border-radius: 999px; padding: 5px 10px; font-size: 11px; font-weight: 800;">Focus aktif: Listening + Speaking + Reading + Writing</span>
                         </div>
                         <div id="challengeIntegratedObjective" style="margin-top: 10px; background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%); border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; color: #334155; font-size: 12px; line-height: 1.5;">
                             🎯 Objective: Students will be able to identify family members and state their presence using the verb 'to be'.
@@ -8687,6 +8779,7 @@
                         <div class="challenge-day-quick-nav-info">
                             <p class="challenge-day-quick-nav-label">Navigasi Hari</p>
                             <p id="challengeCurrentDayLabel" class="challenge-day-quick-nav-value">Day 1 of 100</p>
+                            <p id="challengeCurrentDayMeta" class="challenge-day-quick-nav-meta">Progress 0/100 (0%) • Stage 1 (Day 1-10)</p>
                         </div>
                         <div class="challenge-day-quick-nav-actions">
                             <button id="challengePrevDayHeroBtn" class="challenge-day-nav-btn" onclick="goToAdjacentChallengeDay(-1)">← Hari Sebelumnya</button>
@@ -8700,6 +8793,14 @@
                             <option value="1">Day 1</option>
                         </select>
                         <span class="challenge-flow-tag">Full Access 1-100</span>
+                    </div>
+
+                    <div class="challenge-day-chip-strip-wrap">
+                        <div class="challenge-day-chip-strip-head">
+                            <span class="challenge-day-chip-strip-title">Quick Jump</span>
+                            <span class="challenge-day-chip-strip-hint">Klik chip untuk pindah hari cepat</span>
+                        </div>
+                        <div id="challengeDayChipStrip" class="challenge-day-chip-strip" role="group" aria-label="Challenge day quick navigation"></div>
                     </div>
 
                     <div class="challenge-detail-toggle-row">
@@ -8824,7 +8925,7 @@
                     
                     <div id="vocabListContainer" style="margin-top: 15px; padding: 15px; background: #e8eaf6; border-radius: 8px;" class="challenge-support challenge-surface"></div>
 
-                    <div style="margin-top: 15px; padding: 18px; background: #eef8ff; border: 1px solid #d0e7ff; border-radius: 10px;" class="challenge-support challenge-surface">
+                    <div id="readingRecordingPanel" style="margin-top: 15px; padding: 18px; background: #eef8ff; border: 1px solid #d0e7ff; border-radius: 10px;" class="challenge-support challenge-surface">
                         <p style="margin: 0 0 10px 0; font-weight: 700; color: var(--blue-700); font-family: 'Poppins',sans-serif; font-size: 14px;">🎙️ Speaking Recording & AI Rubric</p>
                         <p style="margin: 0 0 12px 0; color: var(--gray-600); font-size: 13px;">Record your voice while reading this passage. After you stop, AI will automatically analyze your speaking with a rubric.</p>
 
@@ -8842,7 +8943,7 @@
                         <div id="readingAiResult" style="display: none; margin-top: 10px; background: white; border: 1px solid #d9e6f7; border-radius: 10px; padding: 12px;"></div>
                     </div>
 
-                    <div class="tiktok-box challenge-support challenge-surface">
+                    <div id="readingTiktokPanel" class="tiktok-box challenge-support challenge-surface">
                         <p style="color: var(--gray-600); margin-bottom: 12px; font-size: 13px; font-weight: 700;">📱 <strong>Bonus TikTok Video:</strong> <span id="tiktokStatus" style="color: #10B981; font-weight: 700; display: none;">✓ Done</span></p>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                             <a id="tiktokLink" href="#" target="_blank" style="display: inline-block; padding: 10px 22px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,0.25); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">🎵 Watch on TikTok</a>
@@ -9112,15 +9213,16 @@
         </div>
 
         <!-- STATISTICS PAGE -->
-        <div id="statisticsPage" class="page">
-            <div class="card" style="padding: 0; overflow: hidden; border: none; background: transparent; box-shadow: none;">
+        <div id="statisticsPage" class="page statistics-page">
+            <div class="card statistics-overview-card" style="padding: 0; overflow: hidden; border: none; background: transparent; box-shadow: none;">
                 <!-- Hero Banner -->
-                <div style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 55%, #1D4ED8 100%); border-radius: 20px; padding: 32px 28px 28px; margin-bottom: 20px; position: relative; overflow: hidden;">
+                <div class="statistics-hero-banner" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 55%, #1D4ED8 100%); border-radius: 20px; padding: 32px 28px 28px; margin-bottom: 20px; position: relative; overflow: hidden;">
                     <div style="position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.01) 70%);"></div>
                     <div style="position: absolute; left: -40px; bottom: -50px; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, rgba(99,179,237,0.15) 0%, rgba(99,179,237,0.01) 70%);"></div>
                     <div style="position: relative; z-index: 1;">
                         <p style="color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">Overview</p>
                         <h2 style="color: #fff; font-size: clamp(20px, 3vw, 26px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 18px; text-shadow: 0 1px 8px rgba(0,0,0,0.3);">📈 Your Statistics</h2>
+                        <button class="btn btn-secondary btn-small" onclick="downloadStatisticsStoryImage()" style="margin-bottom: 14px; background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.35);">📸 Download Story 1080x1920</button>
                         <!-- Progress bar -->
                         <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
                             <span style="color: rgba(255,255,255,0.8); font-size: 12px; font-weight: 600;">Journey Progress</span>
@@ -9133,7 +9235,7 @@
                 </div>
 
                 <!-- Stats Grid 3×2 -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+                <div class="statistics-kpi-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
                     <!-- Days Completed -->
                     <div style="background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%); border: 1px solid #BFDBFE; border-radius: 18px; padding: 22px 16px; text-align: center; transition: transform 0.22s, box-shadow 0.22s;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(37,99,235,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                         <div style="font-size: 28px; margin-bottom: 6px;">✅</div>
@@ -9205,21 +9307,27 @@
                 </div>
             </div>
 
-            <div class="grid-2" id="skillsTrendWrapper">
-                <div class="card" id="readingTrendCard" style="display: none;">
-                    <h3 style="color: var(--primary); margin-bottom: 14px; text-align: center;">📈 Reading Score Trend</h3>
+            <div class="grid-2 statistics-trend-grid" id="skillsTrendWrapper">
+                <div class="card statistics-trend-card" id="speakingTrendCard" style="display: none;">
+                    <h3 style="color: var(--primary); margin-bottom: 14px; text-align: center;">🎙️ Speaking Score Trend</h3>
+                    <div id="speakingScoreChart" style="display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 15px; background: #f9f9f9; border-radius: 10px; justify-content: center;"></div>
+                    <div id="speakingTrendMessage" style="text-align: center; margin-top: 12px; padding: 12px; border-radius: 8px; font-weight: 600;"></div>
+                </div>
+
+                <div class="card statistics-trend-card" id="readingTrendCard" style="display: none;">
+                    <h3 style="color: var(--primary); margin-bottom: 14px; text-align: center;">📖 Reading Score Trend</h3>
                     <div id="readingScoreChart" style="display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 15px; background: #f9f9f9; border-radius: 10px; justify-content: center;"></div>
                     <div id="readingTrendMessage" style="text-align: center; margin-top: 12px; padding: 12px; border-radius: 8px; font-weight: 600;"></div>
                 </div>
 
-                <div class="card" id="writingTrendCard" style="display: none;">
-                    <h3 style="color: var(--primary); margin-bottom: 14px; text-align: center;">📉 Writing Score Trend</h3>
+                <div class="card statistics-trend-card" id="writingTrendCard" style="display: none;">
+                    <h3 style="color: var(--primary); margin-bottom: 14px; text-align: center;">✍️ Writing Score Trend</h3>
                     <div id="writingScoreChart" style="display: flex; align-items: flex-end; gap: 8px; height: 150px; padding: 15px; background: #f9f9f9; border-radius: 10px; justify-content: center;"></div>
                     <div id="writingTrendMessage" style="text-align: center; margin-top: 12px; padding: 12px; border-radius: 8px; font-weight: 600;"></div>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card statistics-activity-card">
                 <h2>📅 14-Day Activity</h2>
                 <div class="calendar" id="activityCalendar"></div>
                 <div style="display: flex; gap: 20px; justify-content: center; margin-top: 15px; flex-wrap: wrap;">
@@ -9238,13 +9346,19 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card statistics-goal-card">
                 <h2>🎯 Learning Goal Progress</h2>
-                <div style="margin-top: 20px;">
+                <div class="goal-progress-list" style="margin-top: 20px;">
                     <p style="margin-bottom: 10px;">
                         <strong>Listening</strong> <span id="listeningPercent" style="color: #4CAF50; font-weight: 600;">0%</span>
                         <div class="progress-bar">
                             <div class="progress-fill" id="listeningProgress" style="width: 0%"></div>
+                        </div>
+                    </p>
+                    <p style="margin-bottom: 10px;">
+                        <strong>Speaking</strong> <span id="speakingPercent" style="color: #4CAF50; font-weight: 600;">0%</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="speakingProgress" style="width: 0%"></div>
                         </div>
                     </p>
                     <p style="margin-bottom: 10px;">
@@ -9313,6 +9427,9 @@
                 <h1>🧠 Habit Dashboard</h1>
                 <p>Platform Pertama untuk Indonesian EFL Learners dengan Habit-Formation Framework</p>
                 <span class="tagline">📊 Learning Analytics • 🎯 Integrated Skills • 🇮🇩 Made for Indonesia</span>
+                <div style="margin-top: 14px; position: relative; z-index: 1;">
+                    <button class="btn btn-secondary btn-small" onclick="downloadHabitStoryImage()" style="background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.35);">📸 Download Story 1080x1920</button>
+                </div>
             </div>
 
             <!-- Indonesian Context -->
@@ -9685,6 +9802,30 @@
                             <option value="arcade">Arcade</option>
                             <option value="premium">Premium</option>
                         </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 16px; padding-top: 14px; border-top: 1px solid #E5E7EB;">
+                        <label style="font-weight: 700; color: #1E3A8A; display: block; margin-bottom: 8px;">🎯 Challenge Focus Skills</label>
+                        <p style="font-size: 12px; color: #64748B; margin: 0 0 10px 0;">Listening wajib setiap hari. Pilih skill lain yang ingin dimunculkan di Daily Challenge.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#F8FAFC; font-size:13px; font-weight:600; color:#0F172A;">
+                                <input type="checkbox" id="focusListeningSetting" checked disabled />
+                                🎧 Listening (Wajib)
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusSpeakingSetting" checked />
+                                🎙️ Speaking
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusReadingSetting" checked />
+                                📖 Reading
+                            </label>
+                            <label style="display:flex; align-items:center; gap:8px; padding:8px 10px; border:1px solid #D1D5DB; border-radius:10px; background:#fff; font-size:13px; color:#0F172A;">
+                                <input type="checkbox" id="focusWritingSetting" checked />
+                                ✍️ Writing
+                            </label>
+                        </div>
+                        <p id="focusSummarySetting" style="margin: 10px 0 0; font-size: 12px; color: #1D4ED8; font-weight: 700;">Aktif: Listening • Speaking • Reading • Writing</p>
+                        <button class="btn btn-secondary btn-small" style="margin-top: 10px;" onclick="applyChallengeFocusSettings('settings')">Terapkan Focus Skill</button>
                     </div>
                 </div>
 
@@ -17080,8 +17221,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         let milestoneActiveSpeechQid = null;
         let milestoneIsListening = false;
         let currentChallengeStep = 'listening'; // Track current active challenge step
-        let activeChallengeSteps = ['listening', 'reflection'];
-        let activeRequiredChallengeSteps = ['listening', 'reflection'];
+        let activeChallengeSteps = ['listening', 'reading', 'writing'];
+        let activeRequiredChallengeSteps = ['listening', 'reading', 'writing'];
         let selectedChallengeDay = null; // Allows direct access to any day (1-100)
         let currentMilestoneDay = null; // Track which milestone day quiz is being taken
         let milestoneStatsFilter = 'all';
@@ -17232,7 +17373,14 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 longestStreak: 0,
                 listeningCounts: {},
                 consecutiveBonusCompletions: 0,
-                settings: { darkMode: false, sound: true, soundProfile: 'arcade', challengeFocusMode: false, milestoneShowSparkline: true }
+                settings: {
+                    darkMode: false,
+                    sound: true,
+                    soundProfile: 'arcade',
+                    challengeFocusMode: false,
+                    milestoneShowSparkline: true,
+                    challengeSkillFocus: { listening: true, speaking: true, reading: true, writing: true }
+                }
             };
         }
 
@@ -17673,6 +17821,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 userProgress.reflectionResponses = userProgress.reflectionResponses || {};
                 userProgress.readingAnalyses = userProgress.readingAnalyses || {};
                 userProgress.writingAnalyses = userProgress.writingAnalyses || {};
+                userProgress.rewriteAnalyses = userProgress.rewriteAnalyses || {};
                 userProgress.rewriteInputs = userProgress.rewriteInputs || {};
                 userProgress.translationInputs = userProgress.translationInputs || {};
                 userProgress.bonusInputs = userProgress.bonusInputs || {};
@@ -17692,6 +17841,13 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 userProgress.settings.reminderEnabled = userProgress.settings.reminderEnabled ?? false;
                 userProgress.settings.reminderTime = userProgress.settings.reminderTime || '20:00';
                 userProgress.settings.milestoneShowSparkline = userProgress.settings.milestoneShowSparkline ?? true;
+                const savedFocus = userProgress.settings.challengeSkillFocus || {};
+                userProgress.settings.challengeSkillFocus = {
+                    listening: true,
+                    speaking: savedFocus.speaking !== false,
+                    reading: savedFocus.reading !== false,
+                    writing: savedFocus.writing !== false
+                };
                 userProgress.weeklyTarget = userProgress.weeklyTarget || 5;
                 ensureXpProgressDefaults();
                 updateAuthButton();
@@ -18847,7 +19003,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 feedback: 'Recording skipped. Baseline scores assigned. You can try again in future sessions.',
                 suggestions: ['Try recording on your next session', 'Ensure microphone is working properly'],
                 isSkipped: true,
+                sourceType: 'skip',
             };
+            const currentDay = selectedChallengeDay || 1;
+            userProgress.readingAnalyses = userProgress.readingAnalyses || {};
+            userProgress.readingAnalyses[currentDay] = readingAiAnalysis;
+            saveUserData();
             showNotification('✓ Recording skipped. Baseline scores assigned. You can proceed! 🚀', 'success');
             document.getElementById('readingRecordingStatus').textContent = 'Status: skipped';
             document.getElementById('recordingSkipContainer').style.display = 'none';
@@ -18874,7 +19035,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 feedback: 'Reading practice completed via TikTok. You watched a native speaker example to improve pronunciation.',
                 suggestions: ['Review the TikTok video regularly', 'Compare your pronunciation with native speaker', 'Focus on rhythm and intonation'],
                 isTiktokBased: true,
+                sourceType: 'tiktok',
             };
+            const currentDay = selectedChallengeDay || 1;
+            userProgress.readingAnalyses = userProgress.readingAnalyses || {};
+            userProgress.readingAnalyses[currentDay] = readingAiAnalysis;
+            saveUserData();
             showNotification('✓ Great! TikTok video watched. Scores assigned! 🎉', 'success');
             document.getElementById('readingRecordingStatus').textContent = 'Status: TikTok completed';
         }
@@ -19361,6 +19527,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 band: speakingBand(overallScore),
                 strengths,
                 improve,
+                sourceType: 'recording',
                 analyzedAt: new Date().toISOString(),
             };
 
@@ -19621,6 +19788,20 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const currentDayLabel = document.getElementById('challengeCurrentDayLabel');
             if (currentDayLabel) currentDayLabel.textContent = `Day ${selectedDay} of ${TOTAL_DAYS}`;
 
+            const currentDayMeta = document.getElementById('challengeCurrentDayMeta');
+            if (currentDayMeta) {
+                const completedList = Array.isArray(userProgress?.completedDayNumbers)
+                    ? userProgress.completedDayNumbers
+                    : [];
+                const completedSet = new Set(completedList.map((d) => Number(d)).filter((d) => d >= 1 && d <= TOTAL_DAYS));
+                const completedCount = completedSet.size;
+                const completionPct = Math.round((completedCount / TOTAL_DAYS) * 100);
+                const stage = getChallengePathwayByDay(selectedDay);
+                currentDayMeta.textContent = `Progress ${completedCount}/${TOTAL_DAYS} (${completionPct}%) • ${stage?.label || 'Stage Learning'}`;
+            }
+
+            renderChallengeDayChipStrip(selectedDay);
+
             const isFirstDay = Number(selectedDay) <= 1;
             const isLastDay = Number(selectedDay) >= TOTAL_DAYS;
             ['challengePrevDayHeroBtn'].forEach((id) => {
@@ -19630,6 +19811,50 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             ['challengeNextDayHeroBtn'].forEach((id) => {
                 const button = document.getElementById(id);
                 if (button) button.disabled = isLastDay;
+            });
+        }
+
+        function renderChallengeDayChipStrip(selectedDay) {
+            const container = document.getElementById('challengeDayChipStrip');
+            if (!container) return;
+
+            const safeDay = Math.max(1, Math.min(TOTAL_DAYS, Number(selectedDay) || 1));
+            const windowStart = Math.max(1, safeDay - 4);
+            const windowEnd = Math.min(TOTAL_DAYS, safeDay + 4);
+            const milestoneDays = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+            const daySet = new Set(milestoneDays);
+
+            for (let d = windowStart; d <= windowEnd; d++) {
+                daySet.add(d);
+            }
+
+            const completedList = Array.isArray(userProgress?.completedDayNumbers)
+                ? userProgress.completedDayNumbers
+                : [];
+            const completedSet = new Set(completedList.map((d) => Number(d)).filter((d) => d >= 1 && d <= TOTAL_DAYS));
+
+            const sortedDays = Array.from(daySet)
+                .filter((d) => d >= 1 && d <= TOTAL_DAYS)
+                .sort((a, b) => a - b);
+
+            container.innerHTML = '';
+            sortedDays.forEach((day) => {
+                const chip = document.createElement('button');
+                chip.type = 'button';
+
+                const classNames = ['challenge-day-chip'];
+                if (day === safeDay) classNames.push('current');
+                if (completedSet.has(day)) classNames.push('completed');
+                if (milestoneDays.includes(day)) classNames.push('milestone');
+                chip.className = classNames.join(' ');
+
+                chip.textContent = day === safeDay ? `Day ${day}` : `D${day}`;
+                chip.setAttribute('aria-label', `Go to Day ${day}`);
+                chip.title = completedSet.has(day)
+                    ? `Day ${day} - Completed`
+                    : `Go to Day ${day}`;
+                chip.onclick = () => handleChallengeDaySelect(day);
+                container.appendChild(chip);
             });
         }
 
@@ -19684,28 +19909,145 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             };
         }
 
+        function getDefaultChallengeSkillFocus() {
+            return {
+                listening: true,
+                speaking: true,
+                reading: true,
+                writing: true
+            };
+        }
+
+        function normalizeChallengeSkillFocus(rawFocus) {
+            const base = getDefaultChallengeSkillFocus();
+            const source = (rawFocus && typeof rawFocus === 'object') ? rawFocus : {};
+            base.listening = true;
+            base.speaking = source.speaking !== false;
+            base.reading = source.reading !== false;
+            base.writing = source.writing !== false;
+            return base;
+        }
+
+        function getChallengeSkillFocus() {
+            userProgress.settings = userProgress.settings || {};
+            userProgress.settings.challengeSkillFocus = normalizeChallengeSkillFocus(userProgress.settings.challengeSkillFocus);
+            return userProgress.settings.challengeSkillFocus;
+        }
+
+        function getChallengeSkillFocusSummary(focusInput = null) {
+            const focus = normalizeChallengeSkillFocus(focusInput || getChallengeSkillFocus());
+            const labels = ['Listening'];
+            if (focus.speaking) labels.push('Speaking');
+            if (focus.reading) labels.push('Reading');
+            if (focus.writing) labels.push('Writing');
+            return labels.join(' • ');
+        }
+
+        function updateChallengeReadingPanelsVisibility(focusInput = null) {
+            const focus = normalizeChallengeSkillFocus(focusInput || getChallengeSkillFocus());
+            const recordingPanel = document.getElementById('readingRecordingPanel');
+            const recordingSkipContainer = document.getElementById('recordingSkipContainer');
+            const tiktokPanel = document.getElementById('readingTiktokPanel');
+
+            if (recordingPanel) {
+                recordingPanel.style.display = focus.speaking ? '' : 'none';
+            }
+
+            if (!focus.speaking && recordingSkipContainer) {
+                recordingSkipContainer.style.display = 'none';
+            }
+
+            if (tiktokPanel) {
+                tiktokPanel.style.display = focus.reading ? '' : 'none';
+            }
+
+            const focusChip = document.getElementById('challengeActiveFocusChip');
+            if (focusChip) {
+                focusChip.textContent = `Focus aktif: ${getChallengeSkillFocusSummary(focus).replaceAll(' • ', ' + ')}`;
+            }
+        }
+
+        function syncChallengeFocusSelectors() {
+            const focus = getChallengeSkillFocus();
+            const pairs = [
+                ['focusListeningIntro', focus.listening],
+                ['focusSpeakingIntro', focus.speaking],
+                ['focusReadingIntro', focus.reading],
+                ['focusWritingIntro', focus.writing],
+                ['focusListeningSetting', focus.listening],
+                ['focusSpeakingSetting', focus.speaking],
+                ['focusReadingSetting', focus.reading],
+                ['focusWritingSetting', focus.writing]
+            ];
+
+            pairs.forEach(([id, checked]) => {
+                const el = document.getElementById(id);
+                if (el) el.checked = !!checked;
+            });
+
+            const summary = `Aktif: ${getChallengeSkillFocusSummary(focus)}`;
+            const introSummary = document.getElementById('focusSummaryIntro');
+            const settingsSummary = document.getElementById('focusSummarySetting');
+            if (introSummary) introSummary.textContent = summary;
+            if (settingsSummary) settingsSummary.textContent = summary;
+            updateChallengeReadingPanelsVisibility(focus);
+        }
+
+        function applyChallengeFocusSettings(source = 'intro') {
+            if (!userProgress) return;
+
+            const isSettingsSource = source === 'settings';
+            const speakingEl = document.getElementById(isSettingsSource ? 'focusSpeakingSetting' : 'focusSpeakingIntro');
+            const readingEl = document.getElementById(isSettingsSource ? 'focusReadingSetting' : 'focusReadingIntro');
+            const writingEl = document.getElementById(isSettingsSource ? 'focusWritingSetting' : 'focusWritingIntro');
+
+            userProgress.settings = userProgress.settings || {};
+            userProgress.settings.challengeSkillFocus = normalizeChallengeSkillFocus({
+                listening: true,
+                speaking: !!speakingEl?.checked,
+                reading: !!readingEl?.checked,
+                writing: !!writingEl?.checked
+            });
+
+            syncChallengeFocusSelectors();
+            saveUserData();
+
+            if (selectedChallengeDay || document.getElementById('challengePage')?.classList.contains('active')) {
+                updateChallengePage(selectedChallengeDay || 1);
+            }
+
+            showNotification(`Focus challenge diperbarui: ${getChallengeSkillFocusSummary()}`, 'success');
+        }
+
         function getRequiredChallengeSteps(dayValue = selectedChallengeDay || 1) {
-            const pathway = getChallengePathwayByDay(dayValue);
-            return (pathway.requiredSteps || ['listening', 'reading', 'reflection']).slice();
+            const focus = getChallengeSkillFocus();
+            const steps = ['listening'];
+            if (focus.speaking || focus.reading) steps.push('reading');
+            if (focus.writing) steps.push('writing');
+            // Reflection is always required as daily closure.
+            steps.push('reflection');
+            return steps;
         }
 
         function getActiveChallengeSteps(dayValue = selectedChallengeDay || 1) {
-            const pathway = getChallengePathwayByDay(dayValue);
-            const required = getRequiredChallengeSteps(dayValue);
-            const optional = pathway.optionalSteps || [];
-            const allSteps = ['listening', 'reading', 'writing', 'reflection'];
-            const visibleSet = new Set([...required, ...optional]);
-            return allSteps.filter((step) => visibleSet.has(step));
+            return getRequiredChallengeSteps(dayValue).slice();
         }
 
         function configureChallengePathway(dayValue) {
             const pathway = getChallengePathwayByDay(dayValue);
+            const focus = getChallengeSkillFocus();
             activeChallengeSteps = getActiveChallengeSteps(dayValue);
             activeRequiredChallengeSteps = getRequiredChallengeSteps(dayValue);
 
+            const readingNavLabel = focus.speaking && focus.reading
+                ? '📖 Reading + 🎙️ Speaking'
+                : focus.speaking
+                    ? '🎙️ Speaking'
+                    : '📖 Reading';
+
             const navConfig = {
                 listening: { id: 'stepNavListening', label: '🎧 Listening' },
-                reading: { id: 'stepNavReading', label: pathway.readingNavLabel || '📖 Reading' },
+                reading: { id: 'stepNavReading', label: readingNavLabel },
                 writing: { id: 'stepNavWriting', label: pathway.writingNavLabel || '✍️ Writing' },
                 reflection: { id: 'stepNavReflection', label: '🧠 Reflection' }
             };
@@ -19719,7 +20061,11 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             const stepTitleMap = {
                 listening: '🎧 Listening Challenge',
-                reading: '📖 Reading + Speaking Challenge',
+                reading: focus.speaking && focus.reading
+                    ? '📖 Reading + 🎙️ Speaking Challenge'
+                    : focus.speaking
+                        ? '🎙️ Speaking Challenge'
+                        : '📖 Reading Challenge',
                 writing: pathway.writingMode === 'typeA-focus'
                     ? '✍️ Writing Type A Challenge'
                     : pathway.writingMode === 'typeB-focus'
@@ -19751,13 +20097,13 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             const readingDesc = document.querySelector('#step-reading p.challenge-support');
             if (readingDesc) {
-                readingDesc.textContent = (dayValue <= 30)
-                    ? 'Fokus A1: baca teks pendek, latih pelafalan, lalu cek transcript minimal untuk pemahaman dasar.'
-                    : dayValue <= 60
-                        ? 'Fokus A2: pahami ide utama, vocabulary kunci, dan rekam bacaan untuk feedback AI.'
-                        : dayValue <= 80
-                            ? 'Fokus B1: tingkatkan akurasi speaking-reading dan inferensi isi teks.'
-                            : 'Fokus B2: integrasikan pemahaman detail + kelancaran speaking dengan akurasi tinggi.';
+                if (focus.speaking && focus.reading) {
+                    readingDesc.textContent = 'Selesaikan speaking recording dan tandai TikTok watched untuk memenuhi fokus Speaking + Reading.';
+                } else if (focus.speaking) {
+                    readingDesc.textContent = 'Fokus speaking: rekam bacaan dan cek feedback AI rubric (fluency, clarity, intonation).';
+                } else {
+                    readingDesc.textContent = 'Fokus reading: tonton video TikTok harian dan tandai sebagai selesai.';
+                }
             }
 
             const writingDesc = document.querySelector('#step-writing p.challenge-support');
@@ -19809,7 +20155,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const cefrProfile = getCefrProfileByDay(dayValue);
             const goalMetaEl = document.getElementById('dailyChallengeGoalMeta');
             if (goalMetaEl) {
-                goalMetaEl.textContent = `CEFR ${cefrProfile.level} • ${cefrProfile.stageLabel} • ${pathway.label}`;
+                goalMetaEl.textContent = `CEFR ${cefrProfile.level} • ${cefrProfile.stageLabel} • Focus: ${getChallengeSkillFocusSummary(focus)}`;
             }
 
             const dailyGoalListening = document.getElementById('dailyGoalListening');
@@ -19840,6 +20186,19 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (dailyGoalReflection) {
                 dailyGoalReflection.textContent = '🧠 Reflection: checklist + confidence scale + tomorrow focus.';
             }
+
+            if (dailyGoalSpeaking) {
+                dailyGoalSpeaking.style.display = focus.speaking ? '' : 'none';
+            }
+            if (dailyGoalReading) {
+                dailyGoalReading.style.display = focus.reading ? '' : 'none';
+            }
+            if (dailyGoalWriting) {
+                dailyGoalWriting.style.display = focus.writing ? '' : 'none';
+            }
+
+            updateChallengeReadingPanelsVisibility(focus);
+            syncChallengeFocusSelectors();
         }
 
         function showChallengeIntroScreen() {
@@ -20979,12 +21338,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         }
 
         function getCompletedDaysThisWeek() {
-            const completedTasks = userProgress.completedTasks || {};
             const weekStart = getWeekStart();
             const now = new Date();
-            return Object.entries(completedTasks).filter(([dateKey, tasks]) => {
-                const dt = new Date(dateKey);
-                return dt >= weekStart && dt <= now && Array.isArray(tasks) && tasks.length >= 4;
+            return (Array.isArray(dayCompletionDates) ? dayCompletionDates : []).filter((record) => {
+                if (!record || !record.date) return false;
+                const dt = new Date(record.date);
+                return dt >= weekStart && dt <= now;
             }).length;
         }
 
@@ -21037,7 +21396,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             timeEl.value = time;
 
             const todayKey = new Date().toISOString().slice(0, 10);
-            const todayDone = (userProgress.completedTasks?.[todayKey] || []).length >= 4;
+            const todayDone = (Array.isArray(dayCompletionDates) ? dayCompletionDates : []).some((record) => record && record.date === todayKey);
             statusEl.textContent = enabled
                 ? (todayDone ? `Hari ini sudah selesai. Reminder besok jam ${time}.` : `Reminder aktif jam ${time}. Jangan putus streak hari ini!`)
                 : 'Reminder belum aktif.';
@@ -21061,22 +21420,188 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
         function updateSkillScoreTrends() {
             renderSkillTrendChart(
-                userProgress.readingAnalyses || {},
+                getSpeakingTrendMap(),
+                'speakingTrendCard',
+                'speakingScoreChart',
+                'speakingTrendMessage',
+                '#0f766e',
+                'Speaking'
+            );
+
+            renderSkillTrendChart(
+                getReadingTrendMap(),
                 'readingTrendCard',
                 'readingScoreChart',
                 'readingTrendMessage',
-                '#5e35b1',
+                '#1d4ed8',
                 'Reading'
             );
 
             renderSkillTrendChart(
-                userProgress.writingAnalyses || {},
+                getMergedWritingTrendMap(),
                 'writingTrendCard',
                 'writingScoreChart',
                 'writingTrendMessage',
                 '#2e7d32',
                 'Writing'
             );
+        }
+
+        function getReadingChallengeSource(analysis) {
+            if (!analysis || typeof analysis !== 'object') return 'none';
+            if (analysis.isTiktokBased || analysis.sourceType === 'tiktok') return 'tiktok';
+            if (analysis.isSkipped || analysis.sourceType === 'skip') return 'skip';
+            return 'recording';
+        }
+
+        function getSpeakingScoreFromReadingAnalysis(analysis) {
+            if (!analysis || getReadingChallengeSource(analysis) !== 'recording') return 0;
+
+            const pronunciation = Number(analysis?.rubric?.pronunciation || 0);
+            if (Number.isFinite(pronunciation) && pronunciation > 0) return pronunciation;
+
+            const fallback = extractTrendScore(analysis);
+            return Number.isFinite(fallback) ? fallback : 0;
+        }
+
+        function getReadingScoreFromReadingAnalysis(analysis) {
+            if (!analysis) return 0;
+            const source = getReadingChallengeSource(analysis);
+
+            if (source === 'tiktok') {
+                const fluency = Number(analysis?.fluency || 0);
+                const clarity = Number(analysis?.clarity || 0);
+                const rhythm = Number(analysis?.rhythm || 0);
+                const parts = [fluency, clarity, rhythm].filter((score) => Number.isFinite(score) && score > 0);
+                if (parts.length) {
+                    return Math.round(parts.reduce((sum, score) => sum + score, 0) / parts.length);
+                }
+                const fallback = extractTrendScore(analysis);
+                return Number.isFinite(fallback) ? fallback : 0;
+            }
+
+            const accuracy = Number(analysis?.rubric?.accuracy || 0);
+            if (Number.isFinite(accuracy) && accuracy > 0) return accuracy;
+
+            const fallback = extractTrendScore(analysis);
+            return Number.isFinite(fallback) ? fallback : 0;
+        }
+
+        function getSpeakingTrendMap() {
+            const entries = Object.entries(userProgress?.readingAnalyses || {});
+            return entries.reduce((acc, [dayKey, analysis]) => {
+                const score = getSpeakingScoreFromReadingAnalysis(analysis);
+                if (score > 0) {
+                    acc[dayKey] = {
+                        overall: score,
+                        sourceType: 'recording',
+                    };
+                }
+                return acc;
+            }, {});
+        }
+
+        function getReadingTrendMap() {
+            const entries = Object.entries(userProgress?.readingAnalyses || {});
+            return entries.reduce((acc, [dayKey, analysis]) => {
+                const score = getReadingScoreFromReadingAnalysis(analysis);
+                if (score > 0) {
+                    acc[dayKey] = {
+                        overall: score,
+                        sourceType: getReadingChallengeSource(analysis),
+                    };
+                }
+                return acc;
+            }, {});
+        }
+
+        function countSpeakingRecordingDays() {
+            return Object.keys(getSpeakingTrendMap()).length;
+        }
+
+        function countReadingTiktokDays() {
+            const entries = Object.values(userProgress?.readingAnalyses || {});
+            return entries.filter((analysis) => getReadingChallengeSource(analysis) === 'tiktok').length;
+        }
+
+        function getWritingAnalysisForDay(dayValue) {
+            const safeDay = String(Math.max(1, Math.min(TOTAL_DAYS || 100, Number(dayValue) || 1)));
+            const direct = userProgress?.writingAnalyses?.[safeDay] || userProgress?.writingAnalyses?.[Number(safeDay)] || null;
+            if (direct) return direct;
+
+            const rewrite = userProgress?.rewriteAnalyses?.[safeDay] || userProgress?.rewriteAnalyses?.[Number(safeDay)] || null;
+            if (!rewrite) return null;
+
+            return {
+                ...rewrite,
+                mode: rewrite?.mode || 'rewrite',
+                overall: Number(rewrite?.overall || rewrite?.score || 0),
+                wordCount: Number(rewrite?.wordCount || tokenizeText(rewrite?.text || '').length || 0),
+                synthesizedFrom: 'rewrite',
+            };
+        }
+
+        function getMergedWritingTrendMap() {
+            const merged = { ...(userProgress?.writingAnalyses || {}) };
+            const rewriteAnalyses = userProgress?.rewriteAnalyses || {};
+
+            Object.entries(rewriteAnalyses).forEach(([dayKey, rewriteValue]) => {
+                const existingValue = merged[dayKey];
+                const existingScore = extractTrendScore(existingValue);
+                if (!existingValue || existingScore <= 0) {
+                    merged[dayKey] = rewriteValue;
+                }
+            });
+
+            return merged;
+        }
+
+        function extractTrendScore(value) {
+            if (value === null || value === undefined) return 0;
+
+            if (typeof value === 'number' && Number.isFinite(value)) {
+                return Math.max(0, Math.min(100, value));
+            }
+
+            if (typeof value !== 'object') return 0;
+
+            const directCandidates = [
+                value.overall,
+                value.score,
+                value.finalScore,
+                value.totalScore,
+                value.averageScore,
+                value.aiScore,
+            ];
+
+            for (const candidate of directCandidates) {
+                const numeric = Number(candidate);
+                if (Number.isFinite(numeric) && numeric > 0) {
+                    return Math.max(0, Math.min(100, numeric));
+                }
+            }
+
+            if (value.rubric && typeof value.rubric === 'object') {
+                const rubricScores = Object.values(value.rubric)
+                    .map((item) => Number(item))
+                    .filter((score) => Number.isFinite(score) && score > 0);
+                if (rubricScores.length) {
+                    const avg = rubricScores.reduce((sum, score) => sum + score, 0) / rubricScores.length;
+                    return Math.max(0, Math.min(100, avg));
+                }
+            }
+
+            if (value.rewrite || value.translation) {
+                const rewrite = Number(value?.rewrite?.score || 0);
+                const translation = Number(value?.translation?.score || 0);
+                const parts = [rewrite, translation].filter((score) => Number.isFinite(score) && score > 0);
+                if (parts.length) {
+                    const avg = parts.reduce((sum, score) => sum + score, 0) / parts.length;
+                    return Math.max(0, Math.min(100, avg));
+                }
+            }
+
+            return 0;
         }
 
         function renderSkillTrendChart(analysisMap, cardId, chartId, messageId, color, skillName) {
@@ -21086,7 +21611,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (!cardEl || !chartEl || !msgEl) return;
 
             const entries = Object.entries(analysisMap || {})
-                .map(([day, value]) => ({ day: Number(day), score: Number(value?.overall || 0) }))
+                .map(([day, value]) => ({ day: Number(day), score: extractTrendScore(value) }))
                 .filter((item) => Number.isFinite(item.day) && item.day > 0 && Number.isFinite(item.score) && item.score > 0)
                 .sort((a, b) => a.day - b.day);
 
@@ -21500,8 +22025,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const completedSet = new Set((userProgress.challengeStepProgress && userProgress.challengeStepProgress[dayKey]) || []);
             const listeningCount = Number((userProgress.listeningCounts && userProgress.listeningCounts[day]) || 0);
             const readingAnalysis = (userProgress.readingAnalyses && userProgress.readingAnalyses[day]) || null;
-            const writingAnalysis = (userProgress.writingAnalyses && userProgress.writingAnalyses[day]) || null;
-            const writingText = (userProgress.writingInputs && userProgress.writingInputs[day]) || '';
+            const writingAnalysis = getWritingAnalysisForDay(day);
+            const writingText = (userProgress.writingInputs && userProgress.writingInputs[day])
+                || (userProgress.rewriteInputs && userProgress.rewriteInputs[day])
+                || '';
             const savedReflection = (userProgress.reflectionResponses && userProgress.reflectionResponses[dayKey]) || null;
             const reflectionSurvey = meta.reflectionSurvey || savedReflection || null;
             const reflectionText = typeof reflectionSurvey === 'string'
@@ -21510,6 +22037,14 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const reflectionChecks = Array.isArray(reflectionSurvey?.checks) ? reflectionSurvey.checks : [];
             const reflectionConfidence = Number(reflectionSurvey?.confidence || 0);
             const reflectionEffort = Number(reflectionSurvey?.effort || 0);
+            const reflectionTomorrowFocusKey = String(reflectionSurvey?.tomorrowFocus || '').trim().toLowerCase();
+            const reflectionFocusLabelMap = {
+                listening: 'Listening',
+                speaking: 'Speaking',
+                reading: 'Reading',
+                writing: 'Writing',
+                consistency: 'Consistency'
+            };
 
             const weightSumRaw = Number(REFLECTION_SCORING_WEIGHTS.confidence || 0)
                 + Number(REFLECTION_SCORING_WEIGHTS.effort || 0)
@@ -21521,9 +22056,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 checklist: Number(REFLECTION_SCORING_WEIGHTS.checklist || 0) / weightSum
             };
 
-            const speakingScore = Math.round(Number(readingAnalysis?.rubric?.pronunciation || 0));
-            const readingScore = Math.round(Number(readingAnalysis?.rubric?.accuracy || 0));
-            const writingScore = Math.round(Number(writingAnalysis?.overall || 0));
+            const readingSource = getReadingChallengeSource(readingAnalysis);
+            const speakingScore = Math.round(Number(getSpeakingScoreFromReadingAnalysis(readingAnalysis) || 0));
+            const readingScore = Math.round(Number(getReadingScoreFromReadingAnalysis(readingAnalysis) || 0));
+            const writingScore = Math.round(Number(extractTrendScore(writingAnalysis) || 0));
             const listeningScore = Math.round(Math.min(100, listeningCount * 20));
             const confidencePct = Math.max(0, Math.min(100, (reflectionConfidence / 5) * 100));
             const effortPct = Math.max(0, Math.min(100, (reflectionEffort / 5) * 100));
@@ -21537,7 +22073,11 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 : (reflectionText ? 100 : (completedSet.has('reflection') ? 70 : 0));
 
             const readingWords = tokenizeText(readingAnalysis?.transcript || '').length;
-            const writingWords = Number(writingAnalysis?.wordCount || tokenizeText(writingText).length || 0);
+            const writingWords = Number(
+                writingAnalysis?.wordCount
+                || tokenizeText(writingAnalysis?.text || writingText).length
+                || 0
+            );
             const reflectionWords = tokenizeText(reflectionText).length;
 
             const listeningMin = listeningCount > 0 ? Math.max(2, listeningCount * 1.3) : 0;
@@ -21572,23 +22112,29 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     key: 'speaking',
                     icon: '🎤',
                     title: 'Speaking',
-                    completed: completedSet.has('reading'),
+                    completed: speakingScore > 0,
                     score: speakingScore,
                     timeMin: speakingMin,
                     xp: xpMap.speaking,
                     detailA: `${Number(readingAnalysis?.durationSec || 0)}s voice` ,
-                    detailB: `Pronunciation ${speakingScore || 0}%`
+                    detailB: speakingScore > 0
+                        ? `Recording score ${speakingScore || 0}%`
+                        : 'No recording score yet'
                 },
                 {
                     key: 'reading',
                     icon: '📖',
                     title: 'Reading',
-                    completed: completedSet.has('reading'),
+                    completed: readingSource === 'tiktok' || completedSet.has('reading'),
                     score: readingScore,
                     timeMin: readingMin,
                     xp: xpMap.reading,
-                    detailA: `${readingWords || 0} words read`,
-                    detailB: `Comprehension ${readingScore || 0}%`
+                    detailA: readingSource === 'tiktok'
+                        ? 'TikTok watched'
+                        : `${readingWords || 0} words read`,
+                    detailB: readingSource === 'tiktok'
+                        ? `TikTok score ${readingScore || 0}%`
+                        : `Comprehension ${readingScore || 0}%`
                 },
                 {
                     key: 'writing',
@@ -21626,9 +22172,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const strongest = scoredSkills.length
                 ? scoredSkills.reduce((a, b) => (a.score >= b.score ? a : b)).title
                 : 'Consistency';
-            const focus = scoredSkills.length
+            const scoreBasedFocus = scoredSkills.length
                 ? scoredSkills.reduce((a, b) => (a.score <= b.score ? a : b)).title
                 : 'Keep all skills active';
+            const focus = reflectionFocusLabelMap[reflectionTomorrowFocusKey] || scoreBasedFocus;
 
             const isElite = scoredSkills.length > 0 && scoredSkills.every((row) => row.score >= 90);
 
@@ -21639,6 +22186,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 totalStudyMinutes,
                 strongest,
                 focus,
+                reflectionTomorrowFocusKey,
                 isElite,
                 streak
             };
@@ -21710,6 +22258,16 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const overlay = document.createElement('div');
             overlay.id = 'challengeCelebrationOverlay';
             overlay.className = 'celebration-overlay';
+            overlay.dataset.day = String(day || 1);
+            overlay.dataset.streak = String(streak || 0);
+            overlay.dataset.xpGain = String(xpGain || 0);
+            overlay.dataset.totalXp = String(totalXP || 0);
+            overlay.dataset.progressAfter = String(progressAfter || 0);
+            overlay.dataset.completedDays = String(completedDays || 0);
+            overlay.dataset.totalDays = String(totalDays || 100);
+            overlay.dataset.strongest = String(summary.strongest || 'Consistency');
+            overlay.dataset.focus = String(summary.focus || 'Keep all skills active');
+            overlay.dataset.quote = String(quote || 'Consistency beats intensity.');
 
             const wave = document.createElement('div');
             wave.className = 'celebration-wave';
@@ -21820,6 +22378,15 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     </div>
 
                     <div class="celebration-actions">
+                        <div class="celebration-template-picker">
+                            <label for="celebrationTemplateSelect">Template Style</label>
+                            <select id="celebrationTemplateSelect" aria-label="Choose story template style">
+                                <option value="clean">Clean</option>
+                                <option value="bold">Bold</option>
+                                <option value="dark-luxe">Dark Luxe</option>
+                            </select>
+                        </div>
+                        <button class="btn secondary-action" id="celebrationDownloadImageBtn">📸 Download Story 1080x1920</button>
                         <button class="btn btn-primary" id="celebrationNextBtn">➡️ Continue Next Challenge</button>
                         <button class="btn ghost-action" id="celebrationFinishBtn">🌙 Finish for Today</button>
                     </div>
@@ -21908,8 +22475,18 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             document.addEventListener('keydown', onKeyDown);
 
             const closeBtn = document.getElementById('celebrationCloseBtn');
+            const templateSelectEl = document.getElementById('celebrationTemplateSelect');
+            const downloadBtn = document.getElementById('celebrationDownloadImageBtn');
             const nextBtn = document.getElementById('celebrationNextBtn');
             const finishBtn = document.getElementById('celebrationFinishBtn');
+
+            if (templateSelectEl) {
+                const savedTemplate = localStorage.getItem('celebrationStoryTemplate') || 'clean';
+                templateSelectEl.value = ['clean', 'bold', 'dark-luxe'].includes(savedTemplate) ? savedTemplate : 'clean';
+                templateSelectEl.addEventListener('change', () => {
+                    localStorage.setItem('celebrationStoryTemplate', templateSelectEl.value || 'clean');
+                });
+            }
 
             if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
             overlay.addEventListener('click', (event) => {
@@ -21933,6 +22510,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 });
             }
 
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', () => {
+                    downloadCelebrationStoryImage();
+                });
+            }
+
             if (finishBtn) {
                 finishBtn.addEventListener('click', () => {
                     closeOverlay();
@@ -21942,6 +22525,791 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             if (nextBtn) nextBtn.focus();
+        }
+
+        function downloadCelebrationStoryImage() {
+            const overlay = document.getElementById('challengeCelebrationOverlay');
+            if (!overlay) {
+                showNotification('Open celebration popup first to download the image.', 'warning');
+                return;
+            }
+
+            const width = 1080;
+            const height = 1920;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                showNotification('Failed to prepare image canvas.', 'error');
+                return;
+            }
+
+            const day = Number(overlay.dataset.day || 1);
+            const streak = Number(overlay.dataset.streak || 0);
+            const xpGain = Number(overlay.dataset.xpGain || 0);
+            const totalXp = Number(overlay.dataset.totalXp || 0);
+            const progressAfter = Number(overlay.dataset.progressAfter || 0);
+            const completedDays = Number(overlay.dataset.completedDays || 0);
+            const totalDays = Number(overlay.dataset.totalDays || 100);
+            const strongest = overlay.dataset.strongest || 'Consistency';
+            const focus = overlay.dataset.focus || 'Keep all skills active';
+            const quote = overlay.dataset.quote || 'Consistency beats intensity.';
+            const learnerName = (currentUser && currentUser.name) ? currentUser.name : 'MindShift Learner';
+            const stylePicker = document.getElementById('celebrationTemplateSelect');
+            const selectedTemplate = stylePicker ? stylePicker.value : (localStorage.getItem('celebrationStoryTemplate') || 'clean');
+            const safeTemplate = ['clean', 'bold', 'dark-luxe'].includes(selectedTemplate) ? selectedTemplate : 'clean';
+            localStorage.setItem('celebrationStoryTemplate', safeTemplate);
+
+            const nowLabel = new Date().toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+
+            function roundRectPath(x, y, w, h, r) {
+                const radius = Math.min(r, w / 2, h / 2);
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function fillRoundedRect(x, y, w, h, r, fillStyle) {
+                ctx.save();
+                roundRectPath(x, y, w, h, r);
+                ctx.fillStyle = fillStyle;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function drawWrappedText(text, x, y, maxWidth, lineHeight, maxLines = 4) {
+                const words = String(text || '').split(/\s+/).filter(Boolean);
+                let line = '';
+                let lineCount = 0;
+                let cursorY = y;
+
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line ? `${line} ${words[i]}` : words[i];
+                    if (ctx.measureText(testLine).width > maxWidth && line) {
+                        ctx.fillText(line, x, cursorY);
+                        lineCount += 1;
+                        cursorY += lineHeight;
+                        line = words[i];
+                        if (lineCount >= maxLines - 1) break;
+                    } else {
+                        line = testLine;
+                    }
+                }
+
+                if (lineCount < maxLines && line) {
+                    ctx.fillText(line, x, cursorY);
+                    cursorY += lineHeight;
+                }
+
+                return cursorY;
+            }
+
+            function drawAdaptiveWrappedText(text, x, y, maxWidth, lineHeight, maxLines, fontWeight, startSize, minSize, fontFamily, color) {
+                const words = String(text || '').split(/\s+/).filter(Boolean);
+                const family = fontFamily || 'Poppins, Arial, sans-serif';
+                let selectedSize = startSize;
+
+                const canFitAtSize = (size) => {
+                    ctx.font = `${fontWeight} ${size}px ${family}`;
+                    let lines = 1;
+                    let line = '';
+
+                    for (let i = 0; i < words.length; i++) {
+                        const testLine = line ? `${line} ${words[i]}` : words[i];
+                        if (ctx.measureText(testLine).width > maxWidth && line) {
+                            lines += 1;
+                            line = words[i];
+                            if (lines > maxLines) return false;
+                        } else {
+                            line = testLine;
+                        }
+                    }
+                    return true;
+                };
+
+                for (let size = startSize; size >= minSize; size--) {
+                    if (canFitAtSize(size)) {
+                        selectedSize = size;
+                        break;
+                    }
+                }
+
+                ctx.fillStyle = color;
+                ctx.font = `${fontWeight} ${selectedSize}px ${family}`;
+                drawWrappedText(text, x, y, maxWidth, lineHeight, maxLines);
+            }
+
+            const templateMap = {
+                clean: {
+                    bgStart: '#0f172a',
+                    bgMid: '#1d4ed8',
+                    bgEnd: '#0f766e',
+                    blobA: '#7dd3fc',
+                    blobB: '#6ee7b7',
+                    blobC: '#fde68a',
+                    frameFill: 'rgba(248, 250, 252, 0.95)',
+                    frameStroke: 'rgba(255,255,255,0.7)',
+                    ribbonStart: '#1e3a8a',
+                    ribbonEnd: '#2563eb',
+                    ribbonSmallText: '#bfdbfe',
+                    ribbonTitleText: '#ffffff',
+                    avatarBg: '#dbeafe',
+                    avatarText: '#1d4ed8',
+                    heading: '#0f172a',
+                    body: '#334155',
+                    quoteBg: '#eef2ff',
+                    meterBg: '#dbeafe',
+                    meterStart: '#2563eb',
+                    meterEnd: '#10b981',
+                    meterText: '#ffffff',
+                    insightBg: '#f8fafc',
+                    insightBorder: '#e2e8f0',
+                    footerBg: '#111827',
+                    footerTag: '#93c5fd',
+                    footerTitle: '#ffffff',
+                    footerMeta: '#475569',
+                    statLabelColor: '#64748b',
+                    statValueColor: '#0f172a',
+                    statPalettes: {
+                        xp: { bg: '#ecfdf5', border: '#86efac' },
+                        total: { bg: '#eff6ff', border: '#93c5fd' },
+                        streak: { bg: '#fffbeb', border: '#fcd34d' },
+                        progress: { bg: '#f5f3ff', border: '#c4b5fd' }
+                    }
+                },
+                bold: {
+                    bgStart: '#7f1d1d',
+                    bgMid: '#c2410c',
+                    bgEnd: '#7c2d12',
+                    blobA: '#fdba74',
+                    blobB: '#f0abfc',
+                    blobC: '#fcd34d',
+                    frameFill: 'rgba(255, 251, 245, 0.96)',
+                    frameStroke: 'rgba(255,255,255,0.86)',
+                    ribbonStart: '#7c2d12',
+                    ribbonEnd: '#ea580c',
+                    ribbonSmallText: '#fed7aa',
+                    ribbonTitleText: '#ffffff',
+                    avatarBg: '#ffedd5',
+                    avatarText: '#c2410c',
+                    heading: '#7c2d12',
+                    body: '#431407',
+                    quoteBg: '#fff7ed',
+                    meterBg: '#ffedd5',
+                    meterStart: '#ea580c',
+                    meterEnd: '#db2777',
+                    meterText: '#ffffff',
+                    insightBg: '#fff7ed',
+                    insightBorder: '#fed7aa',
+                    footerBg: '#7c2d12',
+                    footerTag: '#fdba74',
+                    footerTitle: '#fff7ed',
+                    footerMeta: '#9a3412',
+                    statLabelColor: '#9a3412',
+                    statValueColor: '#431407',
+                    statPalettes: {
+                        xp: { bg: '#fff7ed', border: '#fdba74' },
+                        total: { bg: '#fdf2f8', border: '#f9a8d4' },
+                        streak: { bg: '#fef3c7', border: '#f59e0b' },
+                        progress: { bg: '#ede9fe', border: '#a78bfa' }
+                    }
+                },
+                'dark-luxe': {
+                    bgStart: '#020617',
+                    bgMid: '#111827',
+                    bgEnd: '#0f172a',
+                    blobA: '#64748b',
+                    blobB: '#334155',
+                    blobC: '#a16207',
+                    frameFill: 'rgba(15, 23, 42, 0.94)',
+                    frameStroke: 'rgba(202, 138, 4, 0.55)',
+                    ribbonStart: '#3f2d03',
+                    ribbonEnd: '#a16207',
+                    ribbonSmallText: '#fcd34d',
+                    ribbonTitleText: '#fef3c7',
+                    avatarBg: '#3f3f46',
+                    avatarText: '#facc15',
+                    heading: '#fef3c7',
+                    body: '#e2e8f0',
+                    quoteBg: '#1e293b',
+                    meterBg: '#1e293b',
+                    meterStart: '#ca8a04',
+                    meterEnd: '#f59e0b',
+                    meterText: '#111827',
+                    insightBg: '#111827',
+                    insightBorder: '#334155',
+                    footerBg: '#0b1120',
+                    footerTag: '#facc15',
+                    footerTitle: '#fef9c3',
+                    footerMeta: '#94a3b8',
+                    statLabelColor: '#cbd5e1',
+                    statValueColor: '#f8fafc',
+                    statPalettes: {
+                        xp: { bg: '#1f2937', border: '#475569' },
+                        total: { bg: '#0f172a', border: '#334155' },
+                        streak: { bg: '#3f2d03', border: '#a16207' },
+                        progress: { bg: '#1e1b4b', border: '#4338ca' }
+                    }
+                }
+            };
+
+            const palette = templateMap[safeTemplate] || templateMap.clean;
+
+            const bgGrad = ctx.createLinearGradient(0, 0, width, height);
+            bgGrad.addColorStop(0, palette.bgStart);
+            bgGrad.addColorStop(0.45, palette.bgMid);
+            bgGrad.addColorStop(1, palette.bgEnd);
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.globalAlpha = 0.22;
+            fillRoundedRect(-160, -60, 560, 560, 280, palette.blobA);
+            fillRoundedRect(760, 80, 420, 420, 210, palette.blobB);
+            fillRoundedRect(80, 1500, 620, 620, 310, palette.blobC);
+            ctx.globalAlpha = 1;
+
+            const frameX = 58;
+            const frameY = 58;
+            const frameW = width - 116;
+            const frameH = height - 116;
+
+            fillRoundedRect(frameX, frameY, frameW, frameH, 46, palette.frameFill);
+            ctx.strokeStyle = palette.frameStroke;
+            ctx.lineWidth = 2;
+            roundRectPath(frameX, frameY, frameW, frameH, 46);
+            ctx.stroke();
+
+            const ribbonGrad = ctx.createLinearGradient(frameX, frameY, frameX + frameW, frameY + 130);
+            ribbonGrad.addColorStop(0, palette.ribbonStart);
+            ribbonGrad.addColorStop(1, palette.ribbonEnd);
+            fillRoundedRect(frameX + 28, frameY + 26, frameW - 56, 120, 24, ribbonGrad);
+
+            ctx.fillStyle = palette.ribbonSmallText;
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('DAILY CHALLENGE APPRECIATION', frameX + 58, frameY + 76);
+            ctx.fillStyle = palette.ribbonTitleText;
+            ctx.font = '800 42px Poppins, Arial, sans-serif';
+            ctx.fillText('MindShift English', frameX + 58, frameY + 122);
+
+            const avatarX = frameX + frameW - 150;
+            const avatarY = frameY + 86;
+            ctx.beginPath();
+            ctx.arc(avatarX, avatarY, 40, 0, Math.PI * 2);
+            ctx.fillStyle = palette.avatarBg;
+            ctx.fill();
+            ctx.fillStyle = palette.avatarText;
+            ctx.font = '800 30px Poppins, Arial, sans-serif';
+            const initials = String(learnerName || 'ML').split(' ').map((p) => p[0] || '').join('').slice(0, 2).toUpperCase();
+            ctx.fillText(initials || 'ML', avatarX - 20, avatarY + 10);
+
+            ctx.fillStyle = palette.heading;
+            ctx.font = '800 72px Poppins, Arial, sans-serif';
+            ctx.fillText('Great Job!', frameX + 62, frameY + 242);
+            drawAdaptiveWrappedText(
+                `${learnerName} completed Day ${day}`,
+                frameX + 62,
+                frameY + 288,
+                frameW - 124,
+                38,
+                2,
+                600,
+                32,
+                22,
+                'Poppins, Arial, sans-serif',
+                palette.body
+            );
+
+            fillRoundedRect(frameX + 48, frameY + 324, frameW - 96, 116, 20, palette.quoteBg);
+            ctx.fillStyle = palette.body;
+            ctx.font = '600 25px Poppins, Arial, sans-serif';
+            drawWrappedText(`"${quote}"`, frameX + 72, frameY + 368, frameW - 150, 34, 3);
+
+            function drawStatCard(x, y, w, h, title, value, statPalette) {
+                fillRoundedRect(x, y, w, h, 20, statPalette.bg);
+                ctx.strokeStyle = statPalette.border;
+                ctx.lineWidth = 2;
+                roundRectPath(x, y, w, h, 20);
+                ctx.stroke();
+
+                ctx.fillStyle = palette.statLabelColor;
+                ctx.font = '700 20px Poppins, Arial, sans-serif';
+                ctx.fillText(title.toUpperCase(), x + 20, y + 48);
+
+                ctx.fillStyle = palette.statValueColor;
+                ctx.font = '800 42px Poppins, Arial, sans-serif';
+                drawWrappedText(value, x + 20, y + 100, w - 40, 44, 2);
+            }
+
+            const cardsTop = frameY + 470;
+            const cardW = 398;
+            const cardH = 156;
+            const cardGap = 34;
+            const leftX = frameX + 48;
+            const rightX = leftX + cardW + cardGap;
+
+            drawStatCard(leftX, cardsTop, cardW, cardH, 'XP Gained', `+${xpGain} XP`, palette.statPalettes.xp);
+            drawStatCard(rightX, cardsTop, cardW, cardH, 'Total XP', `${totalXp} XP`, palette.statPalettes.total);
+            drawStatCard(leftX, cardsTop + cardH + 20, cardW, cardH, 'Streak', `🔥 ${streak} Days`, palette.statPalettes.streak);
+            drawStatCard(rightX, cardsTop + cardH + 20, cardW, cardH, 'Progress', `${progressAfter}%`, palette.statPalettes.progress);
+
+            const meterX = frameX + 48;
+            const meterY = frameY + 828;
+            const meterW = frameW - 96;
+            fillRoundedRect(meterX, meterY, meterW, 72, 18, palette.meterBg);
+
+            const meterFill = Math.round((meterW * Math.max(0, Math.min(100, progressAfter))) / 100);
+            const meterGrad = ctx.createLinearGradient(meterX, meterY, meterX + meterW, meterY);
+            meterGrad.addColorStop(0, palette.meterStart);
+            meterGrad.addColorStop(1, palette.meterEnd);
+            fillRoundedRect(meterX, meterY, meterFill, 72, 18, meterGrad);
+
+            ctx.fillStyle = palette.meterText;
+            ctx.font = '700 26px Poppins, Arial, sans-serif';
+            ctx.fillText(`${completedDays}/${totalDays} days completed`, meterX + 24, meterY + 46);
+
+            const insightX = frameX + 48;
+            const insightY = frameY + 932;
+            const insightW = frameW - 96;
+            const insightH = 282;
+            fillRoundedRect(insightX, insightY, insightW, insightH, 24, palette.insightBg);
+            ctx.strokeStyle = palette.insightBorder;
+            ctx.lineWidth = 2;
+            roundRectPath(insightX, insightY, insightW, insightH, 24);
+            ctx.stroke();
+
+            ctx.fillStyle = palette.heading;
+            ctx.font = '800 34px Poppins, Arial, sans-serif';
+            ctx.fillText('Performance Insight', insightX + 30, insightY + 56);
+
+            ctx.fillStyle = palette.body;
+            ctx.font = '600 27px Poppins, Arial, sans-serif';
+            drawWrappedText(`Strongest Skill: ${strongest}`, insightX + 30, insightY + 112, insightW - 60, 38, 2);
+            drawWrappedText(`Tomorrow Focus: ${focus}`, insightX + 30, insightY + 176, insightW - 60, 38, 3);
+
+            const footerX = frameX + 48;
+            const footerY = frameY + 1244;
+            const footerW = frameW - 96;
+            fillRoundedRect(footerX, footerY, footerW, 206, 24, palette.footerBg);
+
+            ctx.fillStyle = palette.footerTag;
+            ctx.font = '700 23px Poppins, Arial, sans-serif';
+            ctx.fillText('DAY COMPLETE ACHIEVEMENT', footerX + 30, footerY + 52);
+
+            ctx.fillStyle = palette.footerTitle;
+            ctx.font = '800 39px Poppins, Arial, sans-serif';
+            drawWrappedText(`Day ${day} complete. Keep the streak alive.`, footerX + 30, footerY + 108, footerW - 60, 46, 2);
+
+            ctx.fillStyle = palette.footerMeta;
+            ctx.font = '600 20px Poppins, Arial, sans-serif';
+            ctx.fillText(`Generated on ${nowLabel}`, frameX + 48, frameY + frameH - 54);
+            ctx.fillText('#MindShiftEnglish  #100DayChallenge  #DailyProgress', frameX + 48, frameY + frameH - 24);
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `mindshift-day-${day}-story-${safeTemplate}-1080x1920.png`;
+            link.click();
+
+            showNotification('Story image 1080x1920 downloaded successfully.', 'success');
+        }
+
+        function parseMetricNumber(value) {
+            const match = String(value || '').match(/-?\d+(\.\d+)?/);
+            return match ? Number(match[0]) : 0;
+        }
+
+        function getStoryLearnerName() {
+            return (currentUser && currentUser.name) ? currentUser.name : 'MindShift Learner';
+        }
+
+        function downloadStatisticsStoryImage() {
+            updateStatistics();
+
+            const width = 1080;
+            const height = 1920;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                showNotification('Failed to prepare image canvas.', 'error');
+                return;
+            }
+
+            const learnerName = getStoryLearnerName();
+            const completed = document.getElementById('totalDays')?.textContent || '0';
+            const remaining = document.getElementById('daysRemaining')?.textContent || '0';
+            const completionRate = document.getElementById('completionRate')?.textContent || '0%';
+            const streak = document.getElementById('currentStreak')?.textContent || '0';
+            const longest = document.getElementById('longestStreak')?.textContent || '0';
+            const quizzes = document.getElementById('quizzesCompleted')?.textContent || '0';
+            const listeningPct = document.getElementById('listeningPercent')?.textContent || '0%';
+            const speakingPct = document.getElementById('speakingPercent')?.textContent || '0%';
+            const readingPct = document.getElementById('readingPercent')?.textContent || '0%';
+            const writingPct = document.getElementById('writingPercent')?.textContent || '0%';
+            const quizPct = document.getElementById('quizPercent')?.textContent || '0%';
+            const progressRate = Math.max(0, Math.min(100, parseMetricNumber(completionRate)));
+
+            function roundRectPath(x, y, w, h, r) {
+                const radius = Math.min(r, w / 2, h / 2);
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function fillRoundedRect(x, y, w, h, r, fillStyle) {
+                ctx.save();
+                roundRectPath(x, y, w, h, r);
+                ctx.fillStyle = fillStyle;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function drawWrappedText(text, x, y, maxWidth, lineHeight, maxLines = 3) {
+                const words = String(text || '').split(/\s+/).filter(Boolean);
+                let line = '';
+                let count = 0;
+                let cursorY = y;
+
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line ? `${line} ${words[i]}` : words[i];
+                    if (ctx.measureText(testLine).width > maxWidth && line) {
+                        ctx.fillText(line, x, cursorY);
+                        count += 1;
+                        cursorY += lineHeight;
+                        line = words[i];
+                        if (count >= maxLines - 1) break;
+                    } else {
+                        line = testLine;
+                    }
+                }
+
+                if (count < maxLines && line) {
+                    ctx.fillText(line, x, cursorY);
+                }
+            }
+
+            function drawAdaptiveText(text, x, y, maxWidth, fontWeight, startSize, minSize, family, color) {
+                const safeText = String(text || '');
+                const fontFamily = family || 'Poppins, Arial, sans-serif';
+                let selected = startSize;
+
+                for (let size = startSize; size >= minSize; size--) {
+                    ctx.font = `${fontWeight} ${size}px ${fontFamily}`;
+                    if (ctx.measureText(safeText).width <= maxWidth) {
+                        selected = size;
+                        break;
+                    }
+                }
+
+                ctx.fillStyle = color;
+                ctx.font = `${fontWeight} ${selected}px ${fontFamily}`;
+                ctx.fillText(safeText, x, y);
+            }
+
+            function drawStatCard(x, y, w, h, title, value, bg, fg) {
+                fillRoundedRect(x, y, w, h, 20, bg);
+                ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                ctx.font = '700 20px Poppins, Arial, sans-serif';
+                ctx.fillText(title, x + 18, y + 38);
+                drawAdaptiveText(value, x + 18, y + 98, w - 36, 800, 44, 30, 'Poppins, Arial, sans-serif', fg);
+            }
+
+            function drawGoalRow(y, label, pctText, colorA, colorB) {
+                const pct = Math.max(0, Math.min(100, parseMetricNumber(pctText)));
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '700 24px Poppins, Arial, sans-serif';
+                ctx.fillText(label, 98, y + 8);
+                ctx.fillStyle = '#334155';
+                ctx.font = '700 22px Poppins, Arial, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(pctText, 980, y + 8);
+                ctx.textAlign = 'left';
+
+                fillRoundedRect(90, y + 22, 900, 20, 10, '#e2e8f0');
+                const fillWidth = Math.max(12, (900 * pct) / 100);
+                const grad = ctx.createLinearGradient(90, y + 22, 990, y + 22);
+                grad.addColorStop(0, colorA);
+                grad.addColorStop(1, colorB);
+                fillRoundedRect(90, y + 22, fillWidth, 20, 10, grad);
+            }
+
+            const bg = ctx.createLinearGradient(0, 0, width, height);
+            bg.addColorStop(0, '#0f172a');
+            bg.addColorStop(0.5, '#1d4ed8');
+            bg.addColorStop(1, '#0f766e');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            fillRoundedRect(46, 46, width - 92, height - 92, 40, 'rgba(248,250,252,0.95)');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 52px Poppins, Arial, sans-serif';
+            ctx.fillText('Statistics Story', 90, 142);
+            drawAdaptiveText(`${learnerName} • ${new Date().toLocaleDateString('en-GB')}`, 90, 182, 900, 600, 26, 20, 'Poppins, Arial, sans-serif', '#334155');
+
+            fillRoundedRect(90, 216, 900, 76, 16, '#dbeafe');
+            fillRoundedRect(90, 216, Math.max(16, (900 * progressRate) / 100), 76, 16, '#2563eb');
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 30px Poppins, Arial, sans-serif';
+            ctx.fillText(`Journey Progress ${completionRate}`, 118, 266);
+
+            const cardW = 430;
+            const cardH = 130;
+            const leftX = 90;
+            const rightX = 560;
+            let topY = 328;
+
+            drawStatCard(leftX, topY, cardW, cardH, 'Days Completed', completed, '#1d4ed8', '#ffffff');
+            drawStatCard(rightX, topY, cardW, cardH, 'Days Left', remaining, '#047857', '#ffffff');
+            topY += 150;
+            drawStatCard(leftX, topY, cardW, cardH, 'Current Streak', streak, '#c2410c', '#ffffff');
+            drawStatCard(rightX, topY, cardW, cardH, 'Longest Streak', longest, '#b45309', '#ffffff');
+            topY += 150;
+            drawStatCard(leftX, topY, cardW, cardH, 'Completion', completionRate, '#6d28d9', '#ffffff');
+            drawStatCard(rightX, topY, cardW, cardH, 'Quizzes Done', quizzes, '#be123c', '#ffffff');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 32px Poppins, Arial, sans-serif';
+            ctx.fillText('Skill Goal Completion', 90, 836);
+
+            drawGoalRow(886, 'Listening', listeningPct, '#22c55e', '#16a34a');
+            drawGoalRow(956, 'Speaking', speakingPct, '#06b6d4', '#0284c7');
+            drawGoalRow(1026, 'Reading', readingPct, '#3b82f6', '#2563eb');
+            drawGoalRow(1096, 'Writing', writingPct, '#f59e0b', '#d97706');
+            drawGoalRow(1166, 'Milestone Quiz', quizPct, '#a855f7', '#7e22ce');
+
+            fillRoundedRect(90, 1268, 900, 224, 22, '#111827');
+            ctx.fillStyle = '#93c5fd';
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('INSIGHT', 122, 1312);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 30px Poppins, Arial, sans-serif';
+            ctx.fillText(`Consistency Score: ${completionRate}`, 122, 1362);
+            ctx.fillText(`Streak Momentum: ${streak} days active`, 122, 1410);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '600 21px Poppins, Arial, sans-serif';
+            drawWrappedText('Keep showing up daily. Progress compounds over time.', 122, 1454, 840, 30, 2);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '600 19px Poppins, Arial, sans-serif';
+            ctx.fillText('#MindShiftEnglish  #Statistics  #DailyProgress', 90, 1810);
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'mindshift-statistics-story-1080x1920.png';
+            link.click();
+
+            showNotification('Statistics story image downloaded (1080x1920).', 'success');
+        }
+
+        function downloadHabitStoryImage() {
+            updateHabitDashboard();
+
+            const width = 1080;
+            const height = 1920;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                showNotification('Failed to prepare image canvas.', 'error');
+                return;
+            }
+
+            const learnerName = getStoryLearnerName();
+            const streak = document.getElementById('habitCurrentStreak')?.textContent || '0';
+            const habitStrength = document.getElementById('habitStrength')?.textContent || '0%';
+            const bestTime = document.getElementById('bestTime')?.textContent || '--:--';
+            const weekFreq = document.getElementById('weeklyFrequency')?.textContent || '0';
+            const routine = document.getElementById('routineStabilityBadge')?.textContent || 'Building';
+            const formation = document.getElementById('formationPercent')?.textContent || '0%';
+            const cefrLevel = document.getElementById('currentCefrLevel')?.textContent || 'Pre-A1';
+            const cefrLabel = document.getElementById('currentCefrLabel')?.textContent || '-';
+            const listeningPct = document.getElementById('listeningSkillPct')?.textContent || '0%';
+            const speakingPct = document.getElementById('speakingSkillPct')?.textContent || '0%';
+            const readingPct = document.getElementById('readingSkillPct')?.textContent || '0%';
+            const writingPct = document.getElementById('writingSkillPct')?.textContent || '0%';
+            const reflectionPct = document.getElementById('reflectionSkillPct')?.textContent || '0%';
+
+            function roundRectPath(x, y, w, h, r) {
+                const radius = Math.min(r, w / 2, h / 2);
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function fillRoundedRect(x, y, w, h, r, fillStyle) {
+                ctx.save();
+                roundRectPath(x, y, w, h, r);
+                ctx.fillStyle = fillStyle;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function drawWrappedText(text, x, y, maxWidth, lineHeight, maxLines = 3) {
+                const words = String(text || '').split(/\s+/).filter(Boolean);
+                let line = '';
+                let count = 0;
+                let cursorY = y;
+
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line ? `${line} ${words[i]}` : words[i];
+                    if (ctx.measureText(testLine).width > maxWidth && line) {
+                        ctx.fillText(line, x, cursorY);
+                        count += 1;
+                        cursorY += lineHeight;
+                        line = words[i];
+                        if (count >= maxLines - 1) break;
+                    } else {
+                        line = testLine;
+                    }
+                }
+
+                if (count < maxLines && line) {
+                    ctx.fillText(line, x, cursorY);
+                }
+            }
+
+            function drawAdaptiveText(text, x, y, maxWidth, fontWeight, startSize, minSize, family, color) {
+                const safeText = String(text || '');
+                const fontFamily = family || 'Poppins, Arial, sans-serif';
+                let selected = startSize;
+
+                for (let size = startSize; size >= minSize; size--) {
+                    ctx.font = `${fontWeight} ${size}px ${fontFamily}`;
+                    if (ctx.measureText(safeText).width <= maxWidth) {
+                        selected = size;
+                        break;
+                    }
+                }
+
+                ctx.fillStyle = color;
+                ctx.font = `${fontWeight} ${selected}px ${fontFamily}`;
+                ctx.fillText(safeText, x, y);
+            }
+
+            function drawRow(y, label, value, colorA, colorB) {
+                const pct = Math.max(0, Math.min(100, parseMetricNumber(value)));
+                ctx.fillStyle = '#0f172a';
+                ctx.font = '700 23px Poppins, Arial, sans-serif';
+                ctx.fillText(label, 98, y + 8);
+                ctx.fillStyle = '#334155';
+                ctx.font = '700 22px Poppins, Arial, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText(value, 980, y + 8);
+                ctx.textAlign = 'left';
+
+                fillRoundedRect(90, y + 22, 900, 20, 10, '#e2e8f0');
+                const fillWidth = Math.max(12, (900 * pct) / 100);
+                const grad = ctx.createLinearGradient(90, y + 22, 990, y + 22);
+                grad.addColorStop(0, colorA);
+                grad.addColorStop(1, colorB);
+                fillRoundedRect(90, y + 22, fillWidth, 20, 10, grad);
+            }
+
+            const bg = ctx.createLinearGradient(0, 0, width, height);
+            bg.addColorStop(0, '#0b1120');
+            bg.addColorStop(0.45, '#1e3a8a');
+            bg.addColorStop(1, '#0f766e');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            fillRoundedRect(46, 46, width - 92, height - 92, 40, 'rgba(248,250,252,0.95)');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 50px Poppins, Arial, sans-serif';
+            ctx.fillText('Habit Dashboard Story', 90, 142);
+            drawAdaptiveText(`${learnerName} • ${new Date().toLocaleDateString('en-GB')}`, 90, 182, 900, 600, 26, 20, 'Poppins, Arial, sans-serif', '#334155');
+
+            fillRoundedRect(90, 220, 900, 112, 18, '#e0f2fe');
+            ctx.fillStyle = '#0c4a6e';
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('Current CEFR Level', 120, 262);
+            drawAdaptiveText(`${cefrLevel} ${cefrLabel}`, 120, 308, 840, 800, 38, 26, 'Poppins, Arial, sans-serif', '#0c4a6e');
+
+            const cardW = 430;
+            const cardH = 138;
+            const leftX = 90;
+            const rightX = 560;
+            let topY = 360;
+
+            function drawStatCard(x, y, title, value, bgColor) {
+                fillRoundedRect(x, y, cardW, cardH, 20, bgColor);
+                ctx.fillStyle = 'rgba(255,255,255,0.86)';
+                ctx.font = '700 20px Poppins, Arial, sans-serif';
+                ctx.fillText(title, x + 18, y + 38);
+                drawAdaptiveText(value, x + 18, y + 98, cardW - 36, 800, 40, 24, 'Poppins, Arial, sans-serif', '#ffffff');
+            }
+
+            drawStatCard(leftX, topY, 'Current Streak', `${streak} d`, '#c2410c');
+            drawStatCard(rightX, topY, 'Habit Strength', habitStrength, '#047857');
+            topY += 150;
+            drawStatCard(leftX, topY, 'Weekly Frequency', `${weekFreq} days`, '#1d4ed8');
+            drawStatCard(rightX, topY, 'Formation', formation, '#6d28d9');
+            topY += 150;
+            drawStatCard(leftX, topY, 'Best Study Time', bestTime, '#0891b2');
+            drawStatCard(rightX, topY, 'Routine Stability', routine, '#b45309');
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 32px Poppins, Arial, sans-serif';
+            ctx.fillText('Integrated Skill Tracker', 90, 872);
+
+            drawRow(920, 'Listening', listeningPct, '#22c55e', '#16a34a');
+            drawRow(990, 'Speaking', speakingPct, '#06b6d4', '#0284c7');
+            drawRow(1060, 'Reading', readingPct, '#3b82f6', '#2563eb');
+            drawRow(1130, 'Writing', writingPct, '#f59e0b', '#d97706');
+            drawRow(1200, 'Reflection', reflectionPct, '#ec4899', '#be185d');
+
+            fillRoundedRect(90, 1304, 900, 188, 22, '#111827');
+            ctx.fillStyle = '#67e8f9';
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('HABIT INSIGHT', 122, 1348);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '700 30px Poppins, Arial, sans-serif';
+            drawWrappedText('Show up daily, even in short sessions.', 122, 1396, 840, 32, 2);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '600 21px Poppins, Arial, sans-serif';
+            drawWrappedText('Consistency builds fluency faster than intensity.', 122, 1442, 840, 28, 2);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '600 19px Poppins, Arial, sans-serif';
+            ctx.fillText('#MindShiftEnglish  #HabitTracker  #LearningJourney', 90, 1810);
+
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'mindshift-habit-story-1080x1920.png';
+            link.click();
+
+            showNotification('Habit story image downloaded (1080x1920).', 'success');
         }
 
         // ============ WRITING TYPE SYSTEM ============
@@ -22628,35 +23996,52 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             if (step === 'reading') {
-                // Allow completion via: recording + AI analysis, TikTok video watched, or skip
-                if (pathway.requiresReadingAi && !readingAiAnalysis && !tiktokVideoWatched && !readingRecordingSkipped) {
-                    // Show skip option if recording failed
+                const focus = getChallengeSkillFocus();
+                const requiresSpeaking = focus.speaking;
+                const requiresReading = focus.reading;
+                const hasSpeakingRecording = !!(readingAiAnalysis && !readingAiAnalysis.isTiktokBased && !readingAiAnalysis.isSkipped);
+                const hasReadingWatch = !!tiktokVideoWatched || !!readingAiAnalysis?.isTiktokBased;
+
+                if (requiresSpeaking && !hasSpeakingRecording) {
                     if (!readingIsRecording && document.getElementById('readingRecordingStatus')?.textContent.includes('blocked')) {
-                        document.getElementById('recordingSkipContainer').style.display = 'block';
-                        showNotification('Recording error detected. Try Skip option or watch TikTok instead.', 'warning');
-                        return;
+                        const skipContainer = document.getElementById('recordingSkipContainer');
+                        if (skipContainer) skipContainer.style.display = 'block';
                     }
-                    showNotification('Choose one: Record speaking, watch TikTok, or skip recording to continue.', 'warning');
+                    showNotification('Untuk fokus Speaking, selesaikan recording dan feedback AI terlebih dulu.', 'warning');
                     return;
                 }
 
-                const transcriptWordCount = tokenizeText(readingAiAnalysis?.transcript || '').length;
-                if (transcriptWordCount < (pathway.minReadingTranscriptWords || 0)) {
-                    // Reduced requirements for TikTok/skip paths
-                    if (readingAiAnalysis?.isTiktokBased || readingAiAnalysis?.isSkipped) {
-                        // TikTok and skip paths have lower word count requirements
-                        if (transcriptWordCount < 1) {
-                            showNotification('Unable to proceed - please try recording or watch TikTok.', 'warning');
-                            return;
-                        }
-                    } else {
-                        showNotification(`Untuk level ${pathway.label}, baca lebih lengkap dulu (minimal ${pathway.minReadingTranscriptWords} kata terdeteksi).`, 'warning');
+                if (requiresReading && !hasReadingWatch) {
+                    showNotification('Untuk fokus Reading, tandai dulu TikTok challenge sebagai sudah ditonton.', 'warning');
+                    return;
+                }
+
+                if (requiresSpeaking) {
+                    const transcriptWordCount = tokenizeText(readingAiAnalysis?.transcript || '').length;
+                    if (transcriptWordCount < (pathway.minReadingTranscriptWords || 0)) {
+                        showNotification(`Untuk fokus Speaking level ${pathway.label}, baca lebih lengkap dulu (minimal ${pathway.minReadingTranscriptWords} kata terdeteksi).`, 'warning');
                         return;
                     }
                 }
             }
 
             if (step === 'reflection') {
+                const prerequisiteSteps = requiredSteps.filter((requiredStep) => requiredStep !== 'reflection');
+                const dayKey = String(currentDay);
+                const dayProgress = (userProgress.challengeStepProgress && userProgress.challengeStepProgress[dayKey]) || [];
+                const nextMissingPrerequisite = prerequisiteSteps.find((requiredStep) => !dayProgress.includes(requiredStep));
+
+                if (nextMissingPrerequisite) {
+                    const stepLabelMap = {
+                        listening: 'Listening',
+                        reading: 'Reading/Speaking',
+                        writing: 'Writing'
+                    };
+                    showNotification(`Selesaikan dulu step ${stepLabelMap[nextMissingPrerequisite] || nextMissingPrerequisite} sebelum Reflection.`, 'warning');
+                    showChallengeStep(nextMissingPrerequisite, true);
+                    return;
+                }
+
                 const checks = Array.from(document.querySelectorAll('#step-reflection .reflection-check:checked'))
                     .map((node) => node.value);
                 const confidence = Number(document.getElementById('confidence')?.value || 0);
@@ -22778,6 +24163,11 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const latestStreak = calculateCurrentStreak();
 
             if ((userProgress.completedDayNumbers || []).includes(currentDay)) {
+                if (step !== 'reflection') {
+                    showNotification('Day ini sudah complete. Isi Reflection lagi jika ingin menampilkan apresiasi.', 'info');
+                    return;
+                }
+
                 showNotification('Semua step wajib untuk day ini sudah selesai. Kamu bisa lanjut eksplor step opsional.', 'success');
                 showChallengeCelebration(currentDay, latestStreak, {
                     requiredSteps,
@@ -22792,6 +24182,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             // Last required step done - complete the day
+                if (step !== 'reflection') {
+                    showNotification('Semua step utama sudah selesai. Lengkapi Reflection untuk menutup day dan menampilkan apresiasi.', 'info');
+                    showChallengeStep('reflection', true);
+                    return;
+                }
+
                 showNotification(`🎉 Excellent! Day ${currentDay} completed! All challenges done! 🏆`, 'success');
                 playUISound('success');
 
@@ -23456,20 +24852,24 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (pbFill) pbFill.style.width = completionPercent + '%';
 
             const listeningActiveDays = Object.keys(userProgress.listeningCounts || {}).length;
-            const readingAnalyzedDays = Object.keys(userProgress.readingAnalyses || {}).length;
-            const writingAnalyzedDays = Object.keys(userProgress.writingAnalyses || {}).length;
+            const speakingAnalyzedDays = countSpeakingRecordingDays();
+            const readingAnalyzedDays = countReadingTiktokDays() || Object.keys(getReadingTrendMap()).length;
+            const writingAnalyzedDays = Object.keys(getMergedWritingTrendMap()).length;
 
             const listeningGoalPercent = Math.min(100, Math.round((listeningActiveDays / TOTAL_DAYS) * 100));
+            const speakingGoalPercent = Math.min(100, Math.round((speakingAnalyzedDays / TOTAL_DAYS) * 100));
             const readingGoalPercent = Math.min(100, Math.round((readingAnalyzedDays / TOTAL_DAYS) * 100));
             const writingGoalPercent = Math.min(100, Math.round((writingAnalyzedDays / TOTAL_DAYS) * 100));
             const quizGoalPercent = Math.min(100, Math.round((quizzesDone / MILESTONE_DAYS.length) * 100));
 
             document.getElementById('listeningProgress').style.width = listeningGoalPercent + '%';
+            document.getElementById('speakingProgress').style.width = speakingGoalPercent + '%';
             document.getElementById('readingProgress').style.width = readingGoalPercent + '%';
             document.getElementById('writingProgress').style.width = writingGoalPercent + '%';
             document.getElementById('quizProgress').style.width = quizGoalPercent + '%';
             
             document.getElementById('listeningPercent').textContent = listeningGoalPercent + '%';
+            document.getElementById('speakingPercent').textContent = speakingGoalPercent + '%';
             document.getElementById('readingPercent').textContent = readingGoalPercent + '%';
             document.getElementById('writingPercent').textContent = writingGoalPercent + '%';
             document.getElementById('quizPercent').textContent = quizGoalPercent + '%';
@@ -23975,8 +25375,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (userProgress) {
                 const totalDaysConst = 100;
                 const listeningDays = Object.keys(userProgress.listeningCounts || {}).length;
-                const readingDays   = Object.keys(userProgress.readingAnalyses || {}).length;
-                const writingDays   = Object.keys(userProgress.writingAnalyses || {}).length;
+                const readingDays   = countReadingTiktokDays() || Object.keys(getReadingTrendMap()).length;
+                const writingDays   = Object.keys(getMergedWritingTrendMap()).length;
                 const reflectionDays = Object.keys(userProgress.reflectionResponses || {}).length;
 
                 const reflectionRecapCountEl = document.getElementById('reflectionSurveyCount');
@@ -24077,7 +25477,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     if (el) el.textContent = pct + '%';
                     if (bar) bar.style.width = pct + '%';
                 };
-                const speakingSessions = (JSON.parse(localStorage.getItem('speakingStats') || '{}')).totalSessions || 0;
+                const speakingSessions = countSpeakingRecordingDays();
 
                 setPct('listeningSkillPct', 'listeningSkillBar', listeningDays);
                 setPct('readingSkillPct',   'readingSkillBar',   readingDays);
@@ -24438,6 +25838,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (soundProfileSelect) {
                 soundProfileSelect.value = settings.soundProfile || 'arcade';
             }
+            syncChallengeFocusSelectors();
         }
 
         function updateSoundEffects() {
@@ -24464,6 +25865,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (!userProgress.settings.soundProfile) {
                 userProgress.settings.soundProfile = 'arcade';
             }
+            userProgress.settings.challengeSkillFocus = normalizeChallengeSkillFocus(userProgress.settings.challengeSkillFocus);
 
             syncSettingsUI();
 
@@ -24478,6 +25880,23 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 soundProfileSelect.addEventListener('change', updateSoundProfile);
                 soundProfileSelect.dataset.bound = '1';
             }
+
+            const focusBindings = [
+                ['focusSpeakingIntro', 'intro'],
+                ['focusReadingIntro', 'intro'],
+                ['focusWritingIntro', 'intro'],
+                ['focusSpeakingSetting', 'settings'],
+                ['focusReadingSetting', 'settings'],
+                ['focusWritingSetting', 'settings']
+            ];
+
+            focusBindings.forEach(([id, source]) => {
+                const input = document.getElementById(id);
+                if (input && !input.dataset.bound) {
+                    input.addEventListener('change', () => applyChallengeFocusSettings(source));
+                    input.dataset.bound = '1';
+                }
+            });
 
             refreshXpUnlockControls();
         }
@@ -24634,6 +26053,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         
         let speakingPracticeHistory = JSON.parse(localStorage.getItem('speakingPracticeHistory') || '[]');
         let speakingStats = JSON.parse(localStorage.getItem('speakingStats') || '{"totalSessions": 0, "totalSpeeches": 0, "totalMinutes": 0}');
+        let speakingCoachMemory = JSON.parse(localStorage.getItem('speakingCoachMemory') || '{}');
+        const SPEAKING_AI_ENABLED = false;
+        let speakingMode = localStorage.getItem('speakingMode') || 'qa';
         let speakRecognition = null;
         let isSpeakRecording = false;
         let speakSessionStart = null;
@@ -24649,6 +26071,18 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         let speakingFeedbackSessions = JSON.parse(localStorage.getItem('speakingFeedbackSessions') || '[]');
         let lastRenderedOverallScore = 0;
         let scoreAnimationFrame = null;
+        let speakingSessionMetrics = {
+            aiWords: 0,
+            userWords: 0,
+            aiTurns: 0,
+            userTurns: 0,
+            userLongestWords: 0,
+            sessionWords: 0,
+            grammarCorrections: [],
+            topicSignals: {},
+            recentTemplateKeys: [],
+            recentResponseSignatures: []
+        };
         let speakingRoleplayState = {
             active: false,
             scenario: 'hotel',
@@ -24657,6 +26091,61 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             targetFunction: 'agree_disagree',
             currentGrammarUnit: 1
         };
+
+        const SPEAKING_MODE_META = {
+            free: {
+                label: 'Free Conversation',
+                objective: 'Ngobrol santai dengan fokus kelancaran dan kepercayaan diri.'
+            },
+            roleplay: {
+                label: 'Role Play',
+                objective: 'Latihan situasi nyata seperti teacher, customer, interviewer, dan traveler.'
+            },
+            picture: {
+                label: 'Picture Speaking',
+                objective: 'Deskripsikan gambar secara detail: object, action, mood, dan opini.'
+            },
+            story: {
+                label: 'Storytelling',
+                objective: 'Buat cerita dengan alur awal-tengah-akhir dan lesson learned.'
+            },
+            qa: {
+                label: 'Question & Answer',
+                objective: 'Jawab pertanyaan terbuka dengan opinion + reason + example.'
+            },
+            shadowing: {
+                label: 'Shadowing',
+                objective: 'Tiru kalimat model lalu ulangi versi personal kamu sendiri.'
+            }
+        };
+
+        function ensureSpeakingStatsDefaults() {
+            speakingStats = speakingStats || {};
+            speakingStats.totalSessions = Number(speakingStats.totalSessions || 0);
+            speakingStats.totalSpeeches = Number(speakingStats.totalSpeeches || 0);
+            speakingStats.totalMinutes = Number(speakingStats.totalMinutes || 0);
+            speakingStats.totalWords = Number(speakingStats.totalWords || 0);
+            speakingStats.longestConversationWords = Number(speakingStats.longestConversationWords || 0);
+            speakingStats.conversationCompleted = Number(speakingStats.conversationCompleted || 0);
+            speakingStats.speakingStreak = Number(speakingStats.speakingStreak || 0);
+            speakingStats.lastSpeakingDate = speakingStats.lastSpeakingDate || '';
+            speakingStats.pronunciationTrend = Array.isArray(speakingStats.pronunciationTrend) ? speakingStats.pronunciationTrend : [];
+            speakingStats.grammarTrend = Array.isArray(speakingStats.grammarTrend) ? speakingStats.grammarTrend : [];
+            speakingStats.vocabularyTrend = Array.isArray(speakingStats.vocabularyTrend) ? speakingStats.vocabularyTrend : [];
+            speakingStats.confidenceTrend = Array.isArray(speakingStats.confidenceTrend) ? speakingStats.confidenceTrend : [];
+        }
+
+        function ensureSpeakingCoachMemoryDefaults() {
+            speakingCoachMemory = speakingCoachMemory || {};
+            speakingCoachMemory.favoriteTopics = speakingCoachMemory.favoriteTopics || {};
+            speakingCoachMemory.frequentCorrections = speakingCoachMemory.frequentCorrections || {};
+            speakingCoachMemory.lastWins = Array.isArray(speakingCoachMemory.lastWins) ? speakingCoachMemory.lastWins : [];
+            speakingCoachMemory.lastSummary = speakingCoachMemory.lastSummary || '';
+            speakingCoachMemory.lastMode = speakingCoachMemory.lastMode || 'qa';
+        }
+
+        ensureSpeakingStatsDefaults();
+        ensureSpeakingCoachMemoryDefaults();
 
         const GRAMMAR_UNITS = [
             {id: 1, title: 'Subject Pronouns, Verb to Be (Present)', target: 'introduce', patterns: ['i am', 'you are', 'he is', 'she is', 'it is', 'we are', 'they are'], examples: ['I am a student', 'You are kind', 'He is here']},
@@ -25000,6 +26489,245 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             };
         }
 
+        function updateSpeakingMode(modeValue) {
+            const safeMode = SPEAKING_MODE_META[modeValue] ? modeValue : 'qa';
+            speakingMode = safeMode;
+            localStorage.setItem('speakingMode', speakingMode);
+            speakingCoachMemory.lastMode = speakingMode;
+            localStorage.setItem('speakingCoachMemory', JSON.stringify(speakingCoachMemory));
+            refreshRoleplayUI();
+            showNotification(`Mode speaking: ${SPEAKING_MODE_META[speakingMode].label}`, 'success');
+        }
+
+        function getAdaptiveDifficultyBand(dayNum = getCurrentDay()) {
+            if (dayNum <= 30) return 'Beginner';
+            if (dayNum <= 70) return 'Intermediate';
+            return 'Advanced';
+        }
+
+        function updateSpeakingSessionGoalUI(dayNum = getCurrentDay()) {
+            const modeMeta = SPEAKING_MODE_META[speakingMode] || SPEAKING_MODE_META.qa;
+            const goalEl = document.getElementById('speakSessionGoal');
+            const ratioEl = document.getElementById('speakTalkRatioHint');
+            const level = getAdaptiveDifficultyBand(dayNum);
+            if (goalEl) {
+                goalEl.innerHTML = `<strong>Session Goal:</strong> ${modeMeta.objective} (${level})`;
+            }
+            if (ratioEl) {
+                ratioEl.innerHTML = `<strong>Talk Ratio:</strong> AI ${speakingSessionMetrics.aiWords || 0} words • You ${speakingSessionMetrics.userWords || 0} words (target AI 30% / You 70%)`;
+            }
+        }
+
+        function registerSpeakingTurn(role, text) {
+            const words = String(text || '').trim().split(/\s+/).filter(Boolean).length;
+            if (!words) return;
+
+            if (role === 'ai') {
+                speakingSessionMetrics.aiWords += words;
+                speakingSessionMetrics.aiTurns += 1;
+            } else {
+                speakingSessionMetrics.userWords += words;
+                speakingSessionMetrics.userTurns += 1;
+                speakingSessionMetrics.userLongestWords = Math.max(speakingSessionMetrics.userLongestWords, words);
+                speakingSessionMetrics.sessionWords += words;
+            }
+
+            updateSpeakingSessionGoalUI();
+        }
+
+        function extractTopicSignals(text) {
+            const lower = String(text || '').toLowerCase();
+            const tagMap = {
+                family: /(family|father|mother|parent|sister|brother|grandmother)/,
+                sports: /(sport|football|soccer|basketball|swim|gym|match)/,
+                school: /(school|class|teacher|student|homework|exam|study)/,
+                food: /(food|eat|cook|restaurant|meal|breakfast|dinner)/,
+                travel: /(travel|trip|vacation|hotel|airport|train|beach)/,
+                work: /(work|job|office|career|project|meeting)/
+            };
+
+            Object.entries(tagMap).forEach(([tag, regex]) => {
+                if (regex.test(lower)) {
+                    speakingSessionMetrics.topicSignals[tag] = (speakingSessionMetrics.topicSignals[tag] || 0) + 1;
+                }
+            });
+        }
+
+        function detectGentleRecast(text) {
+            const lower = String(text || '').toLowerCase();
+            const recastRules = [
+                {
+                    key: 'he_she_go',
+                    test: /\b(he|she|it)\s+go\b/,
+                    recast: 'Great effort. A more natural way is: "He/She goes ..."',
+                    repeat: 'Can you repeat that sentence with "goes"?'
+                },
+                {
+                    key: 'he_she_have',
+                    test: /\b(he|she|it)\s+have\b/,
+                    recast: 'Nice try. You can say: "He/She has ..."',
+                    repeat: 'Try once more using "has".'
+                },
+                {
+                    key: 'i_am_agree',
+                    test: /\bi\s+am\s+agree\b/,
+                    recast: 'Good idea. A smoother sentence is: "I agree."',
+                    repeat: 'Can you say: "I agree because ..."?'
+                },
+                {
+                    key: 'can_to',
+                    test: /\b(can|could)\s+to\s+/,
+                    recast: 'You are close. After "can", use base verb directly: "I can speak".',
+                    repeat: 'Please repeat with base verb only.'
+                }
+            ];
+
+            const found = recastRules.find((rule) => rule.test.test(lower));
+            if (!found) return null;
+
+            speakingSessionMetrics.grammarCorrections.push(found.key);
+            speakingCoachMemory.frequentCorrections[found.key] = (speakingCoachMemory.frequentCorrections[found.key] || 0) + 1;
+            return found;
+        }
+
+        function pickVariedTemplate(bucketKey, options) {
+            if (!Array.isArray(options) || options.length === 0) return '';
+
+            const recent = Array.isArray(speakingSessionMetrics.recentTemplateKeys)
+                ? speakingSessionMetrics.recentTemplateKeys
+                : [];
+            const keyed = options.map((text, idx) => ({ text, key: `${bucketKey}:${idx}` }));
+            const fresh = keyed.filter((item) => !recent.includes(item.key));
+            const pool = fresh.length > 0 ? fresh : keyed;
+            const chosen = pool[Math.floor(Math.random() * pool.length)];
+
+            recent.push(chosen.key);
+            speakingSessionMetrics.recentTemplateKeys = recent.slice(-10);
+            return chosen.text;
+        }
+
+        function buildNaturalMirrorSnippet(text, maxWords = 8) {
+            const clean = String(text || '')
+                .replace(/[\n\r]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            if (!clean) return '';
+
+            const sentence = clean.split(/[.!?]/)[0] || clean;
+            const words = sentence.split(' ').filter(Boolean);
+            return words.slice(0, maxWords).join(' ');
+        }
+
+        function detectSpeakingTopicLabel(lowerText) {
+            if (/(family|father|mother|parent|sister|brother|grandmother)/.test(lowerText)) return 'family';
+            if (/(food|eat|cooking|meal|restaurant|breakfast|dinner)/.test(lowerText)) return 'food';
+            if (/(travel|vacation|trip|airport|hotel|beach|country)/.test(lowerText)) return 'travel';
+            if (/(work|job|career|office|project|meeting)/.test(lowerText)) return 'work';
+            if (/(hobby|hobbies|music|movie|book|game|sport)/.test(lowerText)) return 'hobby';
+            if (/(school|class|teacher|student|homework|exam|study)/.test(lowerText)) return 'school';
+            if (/(feel|feeling|sad|happy|nervous|excited|worried)/.test(lowerText)) return 'emotion';
+            return 'general';
+        }
+
+        function detectSpeakingIntent(lowerText) {
+            if (/\?$/.test(lowerText) || /^(why|how|what|when|where|who)\b/.test(lowerText)) return 'question';
+            if (/(i think|in my opinion|i believe|for me)/.test(lowerText)) return 'opinion';
+            if (/(yesterday|last|when i|then i|after that|suddenly)/.test(lowerText)) return 'story';
+            if (/(because|so that|therefore|as a result)/.test(lowerText)) return 'explanation';
+            return 'sharing';
+        }
+
+        function buildResponseSignature(text) {
+            return String(text || '')
+                .toLowerCase()
+                .replace(/[^a-z\s]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .split(' ')
+                .filter((word) => word.length > 2)
+                .slice(0, 12)
+                .join(' ');
+        }
+
+        function isResponseTooSimilar(candidate) {
+            const signature = buildResponseSignature(candidate);
+            if (!signature) return false;
+
+            const recent = Array.isArray(speakingSessionMetrics.recentResponseSignatures)
+                ? speakingSessionMetrics.recentResponseSignatures
+                : [];
+            return recent.includes(signature);
+        }
+
+        function registerResponseSignature(text) {
+            const signature = buildResponseSignature(text);
+            if (!signature) return;
+
+            const recent = Array.isArray(speakingSessionMetrics.recentResponseSignatures)
+                ? speakingSessionMetrics.recentResponseSignatures
+                : [];
+            recent.push(signature);
+            speakingSessionMetrics.recentResponseSignatures = recent.slice(-8);
+        }
+
+        function buildCoachMemoryLine() {
+            const topTopic = Object.entries(speakingCoachMemory.favoriteTopics || {}).sort((a, b) => b[1] - a[1])[0];
+            const topCorrection = Object.entries(speakingCoachMemory.frequentCorrections || {}).sort((a, b) => b[1] - a[1])[0];
+
+            if (topTopic && topCorrection) {
+                return `Last time kamu banyak cerita tentang ${topTopic[0]}. Hari ini kita tetap pakai topik itu sambil rapikan grammar yang sering muncul.`;
+            }
+            if (topTopic) {
+                return `Aku ingat kamu suka topik ${topTopic[0]}. Yuk kita pakai topik itu lagi biar speaking lebih natural.`;
+            }
+            if (topCorrection) {
+                return 'Hari ini kita fokus gentle correction dulu, biar kalimat kamu makin natural tanpa bikin tegang.';
+            }
+            return 'Kita bangun confidence pelan-pelan: speak first, improve next.';
+        }
+
+        function saveSpeakingCoachMemory(feedbackModel = null) {
+            Object.entries(speakingSessionMetrics.topicSignals || {}).forEach(([topic, count]) => {
+                speakingCoachMemory.favoriteTopics[topic] = (speakingCoachMemory.favoriteTopics[topic] || 0) + Number(count || 0);
+            });
+
+            if (feedbackModel) {
+                const wins = [];
+                if (feedbackModel.rubric.fluency >= 70) wins.push('Fluency kamu makin stabil.');
+                if (feedbackModel.rubric.confidence >= 70) wins.push('Confidence kamu naik hari ini.');
+                if (feedbackModel.rubric.vocabulary >= 70) wins.push('Vocabulary kamu makin variatif.');
+                speakingCoachMemory.lastWins = wins.slice(0, 2);
+                speakingCoachMemory.lastSummary = `Day ${feedbackModel.dayNumber}: ${feedbackModel.overall}/100`;
+            }
+
+            speakingCoachMemory.lastMode = speakingMode;
+            localStorage.setItem('speakingCoachMemory', JSON.stringify(speakingCoachMemory));
+        }
+
+        function buildSpeakingSessionSummaryText(feedbackModel) {
+            if (!feedbackModel) return 'Session selesai. Keep showing up every day.';
+
+            const userWords = speakingSessionMetrics.userWords;
+            const aiWords = speakingSessionMetrics.aiWords;
+            const ratio = userWords + aiWords > 0
+                ? Math.round((userWords / (userWords + aiWords)) * 100)
+                : 0;
+
+            return `Summary Day ${feedbackModel.dayNumber}: kamu bicara ${feedbackModel.sessionMinutes} menit, ${userWords} kata, longest answer ${speakingSessionMetrics.userLongestWords} kata. User talk ratio ${ratio}%. Keep it up.`;
+        }
+
+        function buildCoachGrowthLine() {
+            const correctionKeys = Object.keys(speakingCoachMemory.frequentCorrections || {});
+            const latestWins = Array.isArray(speakingCoachMemory.lastWins) ? speakingCoachMemory.lastWins : [];
+            if (latestWins.length > 0) {
+                return `Growth note: ${latestWins[0]}`;
+            }
+            if (correctionKeys.length > 0 && speakingSessionMetrics.grammarCorrections.length === 0) {
+                return 'Growth note: hari ini hampir tanpa koreksi grammar. Great progress!';
+            }
+            return 'Growth note: setiap sesi membuat speaking kamu lebih natural. Keep going.';
+        }
+
         function detectFunctionLanguageUsage(text, targetKey, grammarPatterns) {
             const lower = (text || '').toLowerCase();
             
@@ -25249,6 +26977,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const hintEl = document.getElementById('speakFunctionHint');
             const scenarioTitleEl = document.getElementById('speakAutoScenarioTitle');
             const scenarioContextEl = document.getElementById('speakAutoScenarioContext');
+            const modeEl = document.getElementById('speakModeSelect');
             if (!levelEl || !targetEl || !hintEl) return;
 
             const currentDay = getCurrentDay();
@@ -25261,8 +26990,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             speakingRoleplayState.targetFunction = functionTarget.key;
             speakingRoleplayState.currentGrammarUnit = functionTarget.grammarUnit;
 
+            if (modeEl) {
+                modeEl.value = SPEAKING_MODE_META[speakingMode] ? speakingMode : 'qa';
+            }
+
             levelEl.textContent = `Day ${currentDay} • Unit ${functionTarget.grammarUnit}/100`;
-            targetEl.innerHTML = `<strong>${functionTarget.title}</strong><br/><small style="color: #666; font-weight: normal;">📚 ${functionTarget.dailyObjective}</small>`;
+            targetEl.innerHTML = `<strong>${functionTarget.title}</strong> • <strong>${SPEAKING_MODE_META[speakingMode].label}</strong><br/><small style="color: #666; font-weight: normal;">📚 ${functionTarget.dailyObjective}</small>`;
             hintEl.innerHTML = `<strong>Grammar Focus:</strong> ${functionTarget.hints.join(' | ')}<br/><strong>Try:</strong> "${functionTarget.examples[0]}"<br/><button onclick="startInteractiveRoleplay()" style="margin-top: 8px; padding: 6px 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">🎭 Start Interactive Mode</button>`;
 
             if (scenarioTitleEl) {
@@ -25271,6 +27004,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (scenarioContextEl) {
                 scenarioContextEl.textContent = scenarioPack.context;
             }
+
+            updateSpeakingSessionGoalUI(currentDay);
         }
 
         function startSpeakingRoleplay() {
@@ -25278,6 +27013,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const scenarioPack = getDailySpeakingScenarioPack(currentDay);
             const level = getSpeakingRoleplayLevel();
             const functionTarget = getFunctionLanguageTarget(currentDay);
+            const modeMeta = SPEAKING_MODE_META[speakingMode] || SPEAKING_MODE_META.qa;
 
             speakingRoleplayState = {
                 active: true,
@@ -25292,17 +27028,39 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             const openIdx = Math.min(scenarioPack.opener.length - 1, Math.max(0, Math.floor((level - 1) / 3)));
             const openingPrompt = scenarioPack.opener[openIdx];
+            const difficultyBand = getAdaptiveDifficultyBand(currentDay);
+            const modeInstruction = speakingMode === 'shadowing'
+                ? 'Part 2 Ice Breaker: jawab singkat dulu, lalu tirukan kalimat contoh dari coach.'
+                : speakingMode === 'picture'
+                    ? 'Part 2 Ice Breaker: bayangkan satu gambar terkait topik, lalu deskripsikan.'
+                    : speakingMode === 'story'
+                        ? 'Part 2 Ice Breaker: mulai dari satu kejadian kecil hari ini, lalu kembangkan jadi cerita.'
+                        : 'Part 2 Ice Breaker: jawab dengan kalimat natural, opinion + reason.';
             
             // Add grammar-focused introduction with daily objective
             const grammarIntro = `📚 Day ${currentDay} Focus:\n` +
                                 `🎯 Grammar: "${functionTarget.title}"\n` +
                                 `📖 Objective: "${functionTarget.dailyObjective}"\n` +
+                                `🧭 Mode: ${modeMeta.label} (${difficultyBand})\n` +
                                 `💡 Example: "${functionTarget.examples[0]}"\n\n`;
-            
-            addAIMessage(`${grammarIntro}🎭 ${scenarioPack.title} - ${scenarioPack.context}\n\n${openingPrompt}`, true);
+
+            // Keep full coaching details in chat, but use shorter TTS opening without grammar/objective lines.
+            addAIMessage(
+                `${grammarIntro}` +
+                `Part 1 - Warm Greeting complete.\n` +
+                `${modeInstruction}\n\n` +
+                `🎭 ${scenarioPack.title} - ${scenarioPack.context}\n\n${openingPrompt}`,
+                false
+            );
+
+            speakText(`Great. Let us start speaking practice. ${openingPrompt}`);
         }
 
         function openSpeakingModal() {
+            if (!SPEAKING_AI_ENABLED) {
+                return;
+            }
+
             const modal = document.getElementById('speakModal');
             if (!modal) return;
 
@@ -25322,12 +27080,26 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             // Initialize session
             try {
+                ensureSpeakingStatsDefaults();
+                ensureSpeakingCoachMemoryDefaults();
                 modal.classList.add('active');
                 isSpeakingModalOpen = true;
                 speakSessionStart = Date.now();
                 sessionSpeechCount = 0;
                 latestSpeakingTranscript = '';
                 conversationContext = [];
+                speakingSessionMetrics = {
+                    aiWords: 0,
+                    userWords: 0,
+                    aiTurns: 0,
+                    userTurns: 0,
+                    userLongestWords: 0,
+                    sessionWords: 0,
+                    grammarCorrections: [],
+                    topicSignals: {},
+                    recentTemplateKeys: [],
+                    recentResponseSignatures: []
+                };
                 loadSpeakingHistory();
                 updateSpeakingStats();
                 renderSpeakingFeedbackPanel();
@@ -25338,18 +27110,21 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 const hour = new Date().getHours();
                 let greeting = '';
                 if (hour < 12) {
-                    greeting = "Good morning! ☀️ How are you doing today? I'm really excited to practice English with you!";
+                    greeting = `Good morning, ${currentUser?.name || 'friend'}! ☀️ Welcome back to your speaking session.`;
                 } else if (hour < 18) {
-                    greeting = "Hey there! 👋 Good afternoon! Ready to have some fun practicing English together?";
+                    greeting = `Good afternoon, ${currentUser?.name || 'friend'}! 👋 Ready to practice with your AI speaking coach?`;
                 } else {
-                    greeting = "Hi! 🌙 Good evening! I hope you had a great day. Let's practice some English, shall we?";
+                    greeting = `Good evening, ${currentUser?.name || 'friend'}! 🌙 Great to see you again for speaking practice.`;
                 }
 
                 addAIMessage(greeting, true, () => {
                     const currentDay = getCurrentDay();
                     const dailyTheme = getThemeByDay(currentDay);
-                    const followUp = `Hari ini kita langsung pakai skenario Day ${currentDay}${dailyTheme ? `: ${dailyTheme.title}` : ''}. Fokusnya meaningful, mindful, dan joyful.`;
-                    addAIMessage(followUp, true);
+                    const modeLine = `Today mode: ${SPEAKING_MODE_META[speakingMode].label}.`;
+                    const followUp = `Hari ini kita pakai skenario Day ${currentDay}${dailyTheme ? `: ${dailyTheme.title}` : ''}. ${modeLine} ${buildCoachMemoryLine()}`;
+                    const shortVoiceFollowUp = `Today we practice Day ${currentDay}${dailyTheme ? `, ${dailyTheme.title}` : ''}. Are you ready?`;
+                    addAIMessage(followUp, false);
+                    speakText(shortVoiceFollowUp);
                 });
 
                 setTimeout(() => {
@@ -25384,6 +27159,24 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     const sessionMinutes = Math.round((Date.now() - speakSessionStart) / 60000);
                     speakingStats.totalMinutes += sessionMinutes;
                     speakingStats.totalSessions++;
+
+                    const todayKey = new Date().toISOString().slice(0, 10);
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayKey = yesterday.toISOString().slice(0, 10);
+                    if (speakingStats.lastSpeakingDate === yesterdayKey) {
+                        speakingStats.speakingStreak += 1;
+                    } else if (speakingStats.lastSpeakingDate !== todayKey) {
+                        speakingStats.speakingStreak = 1;
+                    }
+                    speakingStats.lastSpeakingDate = todayKey;
+
+                    speakingStats.totalWords += Number(speakingSessionMetrics.userWords || 0);
+                    speakingStats.longestConversationWords = Math.max(
+                        Number(speakingStats.longestConversationWords || 0),
+                        Number(speakingSessionMetrics.userLongestWords || 0)
+                    );
+
                     localStorage.setItem('speakingStats', JSON.stringify(speakingStats));
                     speakSessionStart = null;
                 }
@@ -25394,8 +27187,24 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 speakingRoleplayState.active = false;
                 
                 if (feedback) {
+                    speakingStats.conversationCompleted = Number(speakingStats.conversationCompleted || 0) + 1;
+                    speakingStats.pronunciationTrend.push(feedback.rubric.pronunciation);
+                    speakingStats.grammarTrend.push(feedback.rubric.grammar);
+                    speakingStats.vocabularyTrend.push(feedback.rubric.vocabulary);
+                    speakingStats.confidenceTrend.push(feedback.rubric.confidence);
+                    speakingStats.pronunciationTrend = speakingStats.pronunciationTrend.slice(-40);
+                    speakingStats.grammarTrend = speakingStats.grammarTrend.slice(-40);
+                    speakingStats.vocabularyTrend = speakingStats.vocabularyTrend.slice(-40);
+                    speakingStats.confidenceTrend = speakingStats.confidenceTrend.slice(-40);
+
+                    saveSpeakingCoachMemory(feedback);
                     saveSpeakingSessionFeedback(feedback);
+                    localStorage.setItem('speakingStats', JSON.stringify(speakingStats));
+
+                    const summaryText = buildSpeakingSessionSummaryText(feedback);
                     showNotification(`Mr. Anwari feedback ready: ${feedback.overall}/100 (${feedback.band})`, 'success');
+                    showNotification(summaryText, 'info');
+                    showNotification(buildCoachGrowthLine(), 'success');
                 }
                 
                 setTimeout(() => {
@@ -25433,6 +27242,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             `;
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
+            registerSpeakingTurn('ai', text);
             
             if (shouldSpeak && isSpeakingModalOpen && 'speechSynthesis' in window) {
                 speakText(text).then(() => {
@@ -25544,6 +27354,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             `;
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
+            registerSpeakingTurn('user', text);
+            extractTopicSignals(text);
 
             // Save to history
             speakingPracticeHistory.push({
@@ -25738,90 +27550,120 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             
             const wordCount = userText.split(' ').length;
             const lowerText = userText.toLowerCase();
-            
+            const recast = detectGentleRecast(userText);
+            const topicLabel = detectSpeakingTopicLabel(lowerText);
+            const intentLabel = detectSpeakingIntent(lowerText);
+            const mirrorSnippet = buildNaturalMirrorSnippet(userText, 10);
+
             let response = '';
-            let shouldAskFollowUp = true;
-            
-            // Natural conversation starters
-            if (lowerText.includes('hello') || lowerText.includes('hi') || lowerText.includes('hey')) {
-                const greetings = [
-                    "Hey! It's so nice to hear from you! How's your day been so far?",
-                    "Hello! I'm so glad you're here! Tell me, what's been on your mind lately?",
-                    "Hi there! Great to chat with you! So, what would you like to talk about today?"
-                ];
-                response = greetings[Math.floor(Math.random() * greetings.length)];
+
+            if (/(hello|hi|hey)\b/.test(lowerText)) {
+                response = pickVariedTemplate('speak-greet', [
+                    'Hey, good to hear your voice. How has your day been?',
+                    'Hi, welcome back. What are you in the mood to talk about today?',
+                    'Hello. Nice start. Tell me one real thing that happened today.'
+                ]);
+            } else if (/(thank|thanks)\b/.test(lowerText)) {
+                response = pickVariedTemplate('speak-thanks', [
+                    'You are welcome. Want to continue with one more idea?',
+                    'Anytime. I like this flow. What do you want to explore next?',
+                    'My pleasure. Keep going, you are expressing yourself clearly.'
+                ]);
+            } else {
+                const acknowledgements = {
+                    question: ['Good question.', 'I like that question.', 'Nice, that is a thoughtful question.'],
+                    opinion: ['I can follow your opinion.', 'Your point is clear.', 'That perspective makes sense.'],
+                    story: ['That sounds like a real story from your life.', 'I can picture that moment.', 'Nice storytelling flow.'],
+                    explanation: ['Your reason is understandable.', 'I can see the logic in that.', 'Good explanation so far.'],
+                    sharing: ['Thanks for sharing that.', 'I get what you mean.', 'Nice, keep going.']
+                };
+
+                const topicFollowUps = {
+                    family: [
+                        'What part of that matters most to you personally?',
+                        'Can you share one short family moment that really stayed with you?',
+                        'How did that situation affect your relationship at home?'
+                    ],
+                    food: [
+                        'What is one dish that represents your taste best, and why?',
+                        'Do you usually cook it yourself, or enjoy it outside?',
+                        'What memory do you connect with that food?'
+                    ],
+                    travel: [
+                        'What was the most memorable part of that trip for you?',
+                        'If you could revisit it, what would you do differently?',
+                        'What did that trip teach you about yourself?'
+                    ],
+                    work: [
+                        'Which part of your work feels most meaningful to you?',
+                        'What challenge are you improving right now?',
+                        'How has that experience changed your next goal?'
+                    ],
+                    hobby: [
+                        'How did you first get into it?',
+                        'What keeps you consistent with that hobby?',
+                        'If a friend wants to start, what first step would you suggest?'
+                    ],
+                    school: [
+                        'Which class or topic feels easiest for you now?',
+                        'What learning method helps you remember faster?',
+                        'What part still feels challenging, and why?'
+                    ],
+                    emotion: [
+                        'What helped you handle that feeling in the moment?',
+                        'If that feeling appears again, what will you do next?',
+                        'Who usually helps you when you feel like that?'
+                    ],
+                    general: [
+                        'Can you give one concrete example from your day?',
+                        'What made that important for you?',
+                        'How would you explain the same idea in a simpler way?'
+                    ]
+                };
+
+                const acknowledgement = pickVariedTemplate(`ack-${intentLabel}`, acknowledgements[intentLabel] || acknowledgements.sharing);
+                const mirrorLine = mirrorSnippet
+                    ? pickVariedTemplate('mirror-line', [
+                        `You said, "${mirrorSnippet}".`,
+                        `I heard this part clearly: "${mirrorSnippet}".`,
+                        `The key phrase from you was, "${mirrorSnippet}".`
+                    ])
+                    : '';
+
+                if (wordCount < 5) {
+                    response = `${acknowledgement} ${pickVariedTemplate('short-expand', [
+                        'Nice start. Add one reason and one example.',
+                        'Good. Can you expand it into two full sentences?',
+                        'Great. Now make it clearer with one real detail.'
+                    ])}`;
+                } else {
+                    const followUp = pickVariedTemplate(`topic-follow-${topicLabel}`, topicFollowUps[topicLabel] || topicFollowUps.general);
+                    response = `${acknowledgement} ${mirrorLine} ${followUp}`;
+                }
+
+                if (conversationContext.length > 3 && Math.random() > 0.55) {
+                    response += ` ${pickVariedTemplate('bridge-line', [
+                        'This also connects with what you mentioned earlier.',
+                        'I notice this links to your previous point too.',
+                        'Interesting, this is consistent with your earlier idea.'
+                    ])}`;
+                }
             }
-            
-            // Gratitude responses
-            else if (lowerText.includes('thank') || lowerText.includes('thanks')) {
-                const thanks = [
-                    "You're so welcome! I'm really enjoying our conversation. What else is on your mind?",
-                    "Aw, no problem at all! That's what I'm here for. Shall we keep chatting?",
-                    "My pleasure! I love helping you practice. Want to talk about something else?"
-                ];
-                response = thanks[Math.floor(Math.random() * thanks.length)];
+
+            if (recast && (wordCount <= 16 || Math.random() > 0.5)) {
+                response += ` ${recast.recast} ${recast.repeat}`;
             }
-            
-            // Topic detection - more natural conversation flow
-            else if (lowerText.includes('hobby') || lowerText.includes('hobbies')) {
-                response = `Oh, hobbies! I love this topic. So you mentioned ${userText.substring(0, 30)}... That sounds really interesting! Can you tell me more? Like, how did you get started with that? And what do you enjoy most about it?`;
+
+            response = response.replace(/\s+/g, ' ').trim();
+            if (isResponseTooSimilar(response)) {
+                response = pickVariedTemplate('anti-repeat', [
+                    'Let us shift angle a bit. Give me one specific example and one lesson you learned from it.',
+                    'I want to hear this in your own style. Explain it as if you are talking to a close friend.',
+                    'Try a sharper version: one clear opinion, one reason, one short example.'
+                ]);
             }
-            
-            else if (lowerText.includes('food') || lowerText.includes('eat') || lowerText.includes('cooking')) {
-                response = `Mmm, food talk! I'm getting hungry just thinking about it! 😄 So from what you said, it sounds like you really enjoy ${userText.substring(0, 30)}... Is that something you cook yourself, or do you prefer going out to eat? What's the story behind your favorite dish?`;
-            }
-            
-            else if (lowerText.includes('family') || lowerText.includes('parent') || lowerText.includes('sibling')) {
-                response = `Family is so important! I can hear in your voice that you care a lot about them. So, ${userText.substring(0, 30)}... That's really sweet! Do you spend a lot of time together? What's your favorite family memory?`;
-            }
-            
-            else if (lowerText.includes('work') || lowerText.includes('job') || lowerText.includes('career')) {
-                response = `Work and career - that's a big part of life! From what you said, ${userText.substring(0, 30)}... sounds like you're really dedicated! Tell me, what do you find most rewarding about what you do? And where do you see yourself going from here?`;
-            }
-            
-            else if (lowerText.includes('travel') || lowerText.includes('vacation') || lowerText.includes('trip')) {
-                response = `Oh wow, travel stories! These are always the best. So ${userText.substring(0, 30)}... I'm curious - what made you want to go there? And what was the most memorable moment from that experience?`;
-            }
-            
-            // Word count based responses - more conversational
-            else if (wordCount < 5) {
-                const shortResponses = [
-                    `Interesting! But I want to hear more from you. Can you expand on that a bit? Like, give me some details or examples?`,
-                    `I hear you, but let's dive deeper! What else can you tell me about that? I'm really curious!`,
-                    `Oh, that's a start! Now tell me the full story. Don't hold back - I want all the details!`
-                ];
-                response = shortResponses[Math.floor(Math.random() * shortResponses.length)];
-                shouldAskFollowUp = false;
-            }
-            
-            else if (wordCount >= 5 && wordCount < 15) {
-                const mediumResponses = [
-                    `That's great! I'm following along. So you said ${userText.substring(0, 35)}... Yeah, I get that! Can you give me a specific example? Like, when was the last time that happened?`,
-                    `Nice! I like how you're expressing yourself. ${userText.substring(0, 35)}... Really? That's interesting! What made you think that way?`,
-                    `I'm listening! So, ${userText.substring(0, 35)}... Mhmm, I see what you mean. Can you tell me more about your experience with that?`
-                ];
-                response = mediumResponses[Math.floor(Math.random() * mediumResponses.length)];
-            }
-            
-            else {
-                // Long responses - show genuine interest
-                const longResponses = [
-                    `Wow, I love how much you're sharing! So if I understand correctly, you're saying ${userText.substring(0, 40)}... That's really fascinating! I never thought about it that way. How did you come to realize that?`,
-                    `This is such a great conversation! You mentioned ${userText.substring(0, 40)}... and I totally see your point! Tell me, has that changed the way you approach things in your daily life?`,
-                    `I'm really enjoying hearing your thoughts on this! From what you said about ${userText.substring(0, 40)}... it sounds like you've given this a lot of thought. What inspired you to think so deeply about it?`
-                ];
-                response = longResponses[Math.floor(Math.random() * longResponses.length)];
-            }
-            
-            // Add contextual follow-ups occasionally
-            if (shouldAskFollowUp && conversationContext.length > 2 && Math.random() > 0.6) {
-                const followUps = [
-                    " By the way, earlier you mentioned something interesting. Has that had any impact on this?",
-                    " Oh, and one more thing - how does this relate to what we were talking about before?",
-                    " You know what, I'm curious - does this connect to your personal goals at all?"
-                ];
-                response += followUps[Math.floor(Math.random() * followUps.length)];
-            }
+
+            registerResponseSignature(response);
             
             addAIMessage(response, true);
             
@@ -25853,22 +27695,116 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const usedTarget = detectFunctionLanguageUsage(userText, functionTarget.key);
             const currentTurn = speakingRoleplayState.turn;
             const followUpPrompt = scenarioPack.followUps[currentTurn % scenarioPack.followUps.length];
+            const recast = detectGentleRecast(userText);
+            const mirrorSnippet = buildNaturalMirrorSnippet(userText, 12);
+            const difficultyBand = getAdaptiveDifficultyBand(currentDay);
 
             let coaching = '';
             if (usedTarget) {
-                coaching = `Excellent. You used ${functionTarget.title} naturally.`;
+                coaching = pickVariedTemplate('rp-used-target', [
+                    `Nice. You used ${functionTarget.title} in a natural way.`,
+                    `Good control of ${functionTarget.title}. Keep that pattern.`,
+                    `Strong move. Your ${functionTarget.title} usage sounds more fluid now.`
+                ]);
             } else {
-                coaching = `Try using ${functionTarget.title}. Example: ${functionTarget.hints[0]}`;
+                coaching = pickVariedTemplate('rp-miss-target', [
+                    `Try adding ${functionTarget.title}. Example: ${functionTarget.hints[0]}`,
+                    `Let us bring in ${functionTarget.title} this turn. You can start with: ${functionTarget.hints[0]}`,
+                    `You are close. Add one sentence with ${functionTarget.title} to make it stronger.`
+                ]);
             }
 
-            let response = `${coaching} Follow-up question: ${followUpPrompt}`;
-            if (speakingRoleplayState.level >= 8) {
-                response += ' Respond with concise professional language and a short summary at the end.';
-            } else if (speakingRoleplayState.level >= 4) {
-                response += ' Answer with opinion + reason + one concrete example.';
-            } else {
-                response += ' Use simple clear sentences and speak confidently.';
+            if (currentTurn === 0) {
+                coaching = pickVariedTemplate('rp-turn-0', [
+                    'Great start. Ice breaking is done. Now let us go deeper.',
+                    'Nice opening. Now enter the main conversation with more detail.',
+                    'Solid first turn. Let us move to the core discussion.'
+                ]);
+            } else if (currentTurn === 3) {
+                coaching = pickVariedTemplate('rp-turn-3', [
+                    'Awesome progress. Time for the challenge question.',
+                    'You are doing well. Now I will push you with a harder question.',
+                    'Great flow so far. Let us test your reasoning in the next turn.'
+                ]);
+            } else if (currentTurn >= 5) {
+                coaching = pickVariedTemplate('rp-turn-5', [
+                    'Excellent effort. We are entering the wrap-up stage.',
+                    'Nice stamina. Let us close this roleplay with a clear final point.',
+                    'Good consistency. Time to wrap up with your strongest message.'
+                ]);
             }
+
+            let modePrompt = '';
+            if (speakingMode === 'shadowing') {
+                modePrompt = pickVariedTemplate('rp-mode-shadowing', [
+                    `Shadowing drill: repeat after me, "I usually wake up at six o'clock." Then make one personal version.`,
+                    `Quick shadowing: "I usually wake up at six o'clock." Repeat it, then adapt it to your real routine.`,
+                    `Shadow now: "I usually wake up at six o'clock." Copy first, then personalize.`
+                ]);
+            } else if (speakingMode === 'story') {
+                modePrompt = pickVariedTemplate('rp-mode-story', [
+                    'Tell it as a sequence: beginning, conflict, ending, then lesson learned.',
+                    'Build the story step by step: setup, problem, response, and result.',
+                    'Keep the narrative clear: what happened first, what changed, and what you learned.'
+                ]);
+            } else if (speakingMode === 'picture') {
+                modePrompt = pickVariedTemplate('rp-mode-picture', [
+                    'Describe one imagined picture: objects, actions, feelings, then your opinion.',
+                    'Paint the scene verbally: who is there, what is happening, and what mood you feel.',
+                    'Give a visual description first, then your personal interpretation.'
+                ]);
+            } else if (speakingMode === 'roleplay') {
+                modePrompt = pickVariedTemplate('rp-mode-roleplay', [
+                    'Stay in character and answer like this is a real situation.',
+                    'Keep the role alive and react naturally, not like a textbook answer.',
+                    'Respond as your character with realistic tone and intent.'
+                ]);
+            } else if (speakingMode === 'free') {
+                modePrompt = pickVariedTemplate('rp-mode-free', [
+                    'Speak naturally: share a personal experience, then ask one question back.',
+                    'Use free-flow speaking: one opinion, one story, one question to continue the talk.',
+                    'Keep it conversational: personal detail first, then invite response with a question.'
+                ]);
+            } else {
+                modePrompt = pickVariedTemplate('rp-mode-qa', [
+                    'Answer with opinion + reason + one concrete example from your real life.',
+                    'Use this frame: point, reason, then real evidence from your experience.',
+                    'Give one clear stance, explain why, and support it with a practical example.'
+                ]);
+            }
+
+            const leadIn = pickVariedTemplate('rp-leadin', [
+                'Next prompt:',
+                'Let us continue with this:',
+                'Your next challenge:'
+            ]);
+
+            let response = `${coaching}`;
+            if (mirrorSnippet && currentTurn <= 4) {
+                response += ` I noted this from you: "${mirrorSnippet}".`;
+            }
+            if (recast) {
+                response += ` ${recast.recast} ${recast.repeat}`;
+            }
+            response += ` ${leadIn} ${followUpPrompt} ${modePrompt}`;
+
+            if (speakingRoleplayState.level >= 8) {
+                response += ` Keep your answer concise and professional (${difficultyBand}). End with a one-line summary.`;
+            } else if (speakingRoleplayState.level >= 4) {
+                response += ` Keep a simple structure (${difficultyBand}): opinion, reason, one example.`;
+            } else {
+                response += ` Use simple clear sentences (${difficultyBand}) and speak confidently.`;
+            }
+
+            response = response.replace(/\s+/g, ' ').trim();
+            if (isResponseTooSimilar(response)) {
+                response = pickVariedTemplate('rp-anti-repeat', [
+                    `Different angle now: ${followUpPrompt} Use your own words and give one fresh example.`,
+                    `Let us avoid repeating patterns. ${followUpPrompt} Keep it direct and personal.`,
+                    `Try a sharper response this turn. ${followUpPrompt} Focus on clarity and detail.`
+                ]);
+            }
+            registerResponseSignature(response);
 
             speakingRoleplayState.turn += 1;
             addAIMessage(response, true);
@@ -25885,6 +27821,14 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 timestamp: Date.now()
             });
             localStorage.setItem('speakingPracticeHistory', JSON.stringify(speakingPracticeHistory.slice(-50)));
+
+            if (speakingRoleplayState.turn >= 6) {
+                speakingRoleplayState.active = false;
+                const liveFeedback = buildSpeakingFeedbackModel(latestSpeakingTranscript || userText || '');
+                const summary = buildSpeakingSessionSummaryText(liveFeedback);
+                addAIMessage(`Session wrap-up: ${summary}`, true);
+                renderSpeakingFeedbackPanel(latestSpeakingTranscript || userText || '');
+            }
         }
 
         function getSpeakingTopic() {
@@ -26187,7 +28131,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     <div class="speak-coach-avatar">🧑‍🏫</div>
                     <div>
                         <h3>Mr. Anwari - Your AI Speaking Partner</h3>
-                        <p>Live coaching with instant rubric feedback after each response.</p>
+                        <p>Live coaching with human-like conversation, gentle correction, and confidence support.</p>
                     </div>
                 </div>
 
@@ -26217,6 +28161,17 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         <strong>Auto Daily Roleplay</strong>
                         <span class="speak-roleplay-badge" id="speakRoleplayLevelBadge">Level 1</span>
                     </div>
+                    <div style="margin-bottom: 10px;">
+                        <label for="speakModeSelect">Speaking Mode</label>
+                        <select id="speakModeSelect" class="speak-roleplay-select" onchange="updateSpeakingMode(this.value)">
+                            <option value="free">Mode 1 - Free Conversation</option>
+                            <option value="roleplay">Mode 2 - Role Play</option>
+                            <option value="picture">Mode 3 - Picture Speaking</option>
+                            <option value="story">Mode 4 - Storytelling</option>
+                            <option value="qa" selected>Mode 5 - Question & Answer</option>
+                            <option value="shadowing">Mode 6 - Shadowing</option>
+                        </select>
+                    </div>
                     <div class="speak-roleplay-grid">
                         <div>
                             <label>Scenario (auto-aligned dengan Day aktif)</label>
@@ -26228,6 +28183,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         <div><strong>Scenario Context:</strong> <span id="speakAutoScenarioContext">Roleplay harian otomatis disesuaikan objective challenge.</span></div>
                         <div><strong>Target Function Language:</strong> <span id="speakFunctionTarget">Agree / Disagree</span></div>
                         <div id="speakFunctionHint">I agree because... | I see your point, but...</div>
+                        <div id="speakSessionGoal" style="margin-top: 6px;"><strong>Session Goal:</strong> Speak 5-10 menit, jawab dengan alasan + contoh nyata.</div>
+                        <div id="speakTalkRatioHint"><strong>Talk Ratio:</strong> AI 30% • You 70% (target)</div>
                     </div>
 
                     <div id="speakRoleplayPanel" style="margin-top: 10px;"></div>
