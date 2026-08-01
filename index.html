@@ -9722,6 +9722,32 @@
             <div class="grid-2">
                 <div class="card">
                     <h2>👤 Profile Information</h2>
+                    <div style="display:flex; gap:14px; align-items:center; padding:12px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; margin-bottom:14px;">
+                        <img id="profilePhotoPreview" src="" alt="Profile photo" style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:2px solid #cbd5e1; background:#e2e8f0;" />
+                        <div style="flex:1;">
+                            <div style="font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">Photo for ID Card</div>
+                            <input type="file" id="profilePhotoInput" accept="image/*" onchange="handleProfilePhotoUpload(event)" style="width:100%; font-size:12px;" />
+                            <div style="font-size:11px; color:#64748b; margin-top:6px;">Setelah pilih foto, geser dulu untuk atur framing agar hasil ID card lebih pas.</div>
+                            <button class="btn btn-secondary btn-small" type="button" onclick="removeProfilePhoto()" style="margin-top:8px;">Remove Photo</button>
+                        </div>
+                    </div>
+                    <div id="profilePhotoCropModal" style="display:none; position:fixed; inset:0; z-index:2500; background:rgba(2,6,23,0.74); align-items:center; justify-content:center; padding:18px;">
+                        <div style="width:100%; max-width:440px; background:#ffffff; border-radius:18px; box-shadow:0 20px 55px rgba(2,6,23,0.35); padding:16px;">
+                            <h3 style="margin:0 0 6px; font-size:18px; color:#0f172a;">Adjust Photo Position</h3>
+                            <p style="margin:0 0 12px; font-size:12px; color:#475569;">Geser foto untuk atur posisi wajah. Gunakan zoom bila diperlukan.</p>
+                            <div style="display:flex; justify-content:center;">
+                                <canvas id="profilePhotoCropCanvas" width="320" height="320" style="width:320px; height:320px; max-width:100%; border-radius:14px; border:2px solid #cbd5e1; background:#e2e8f0; touch-action:none; cursor:grab;"></canvas>
+                            </div>
+                            <div class="form-group" style="margin-top:12px; margin-bottom:10px;">
+                                <label for="profilePhotoCropZoom" style="font-size:12px;">Zoom</label>
+                                <input type="range" id="profilePhotoCropZoom" min="1" max="3" step="0.01" value="1" oninput="updateProfilePhotoCropZoom(this.value)" />
+                            </div>
+                            <div style="display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;">
+                                <button class="btn btn-secondary btn-small" type="button" onclick="closeProfilePhotoCropModal(true)">Cancel</button>
+                                <button class="btn btn-primary btn-small" type="button" onclick="applyProfilePhotoCrop()">Apply Photo</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Full Name</label>
                         <input type="text" id="profileName" />
@@ -9735,10 +9761,23 @@
                         <input type="tel" id="profilePhone" placeholder="+62 xxx xxxx xxxx" />
                     </div>
                     <div class="form-group">
+                        <label>ID Number</label>
+                        <input type="text" id="profileIdNumber" placeholder="MS-2026-0001" />
+                    </div>
+                    <div class="form-group">
                         <label>Avatar (XP Unlock)</label>
                         <select id="profileAvatarSelect" onchange="updateSelectedAvatar(this.value)"></select>
                     </div>
+                    <div class="form-group">
+                        <label>ID Card Style Template</label>
+                        <select id="profileIdCardTemplateSelect" onchange="setProfileIdCardTemplate(this.value)">
+                            <option value="clean">Clean</option>
+                            <option value="bold">Bold</option>
+                            <option value="dark-luxe">Dark Luxe</option>
+                        </select>
+                    </div>
                     <button class="btn btn-primary" onclick="updateProfile()">Save Changes</button>
+                    <button class="btn btn-secondary" onclick="downloadProfileIdCardImage()" style="margin-top:10px;">📸 Download ID CARD 1080x1920</button>
                 </div>
 
                 <div class="card">
@@ -9749,6 +9788,7 @@
                         <p><strong>Current Level:</strong> <span id="currentLevel">Beginner</span></p>
                         <p><strong>Total Words:</strong> <span id="totalWords">0</span></p>
                         <p><strong>Total XP:</strong> <span id="profileTotalXP">0</span></p>
+                        <p><strong>ID Number:</strong> <span id="profileIdDisplay">-</span></p>
                         <p><strong style="color: #F59E0B;">🎁 Bonus Points:</strong> <span id="profileBonusPoints" style="color: #F59E0B; font-weight: bold;">0</span></p>
                         <p><strong>Current Avatar:</strong> <span id="profileCurrentAvatar">🙂 Starter</span></p>
                         <p><strong>Badges Earned:</strong> <span id="totalBadges">0/10</span></p>
@@ -25539,10 +25579,677 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         }
 
         // ============ PROFILE ============
+        function createInitialsAvatarDataUrl(name = 'MindShift Learner') {
+            const safeName = String(name || 'MindShift Learner').trim();
+            const initials = safeName
+                .split(/\s+/)
+                .map((part) => part[0] || '')
+                .join('')
+                .slice(0, 2)
+                .toUpperCase() || 'ML';
+
+            const svg = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 220 220">
+                    <defs>
+                        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#1d4ed8"/>
+                            <stop offset="100%" stop-color="#0f766e"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="220" height="220" rx="110" fill="url(#g)"/>
+                    <text x="110" y="126" text-anchor="middle" fill="#ffffff" font-size="84" font-weight="800" font-family="Poppins, Arial, sans-serif">${initials}</text>
+                </svg>
+            `;
+            return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        }
+
+        function renderProfilePhotoPreview(photoDataUrl) {
+            const img = document.getElementById('profilePhotoPreview');
+            if (!img) return;
+            const fallback = createInitialsAvatarDataUrl(currentUser?.name || 'MindShift Learner');
+            img.src = photoDataUrl || fallback;
+        }
+
+        function getSafeProfileIdCardTemplate(templateName) {
+            return ['clean', 'bold', 'dark-luxe'].includes(templateName) ? templateName : 'clean';
+        }
+
+        function getCurrentProfileIdCardTemplate() {
+            const selectEl = document.getElementById('profileIdCardTemplateSelect');
+            const savedTemplate = (currentUser?.idCardTemplate || localStorage.getItem('profileIdCardTemplate') || 'clean');
+            const safeTemplate = getSafeProfileIdCardTemplate(selectEl?.value || savedTemplate);
+            if (selectEl) {
+                selectEl.value = safeTemplate;
+            }
+            return safeTemplate;
+        }
+
+        function setProfileIdCardTemplate(templateName) {
+            const safeTemplate = getSafeProfileIdCardTemplate(templateName || 'clean');
+            const selectEl = document.getElementById('profileIdCardTemplateSelect');
+            if (selectEl) {
+                selectEl.value = safeTemplate;
+            }
+            localStorage.setItem('profileIdCardTemplate', safeTemplate);
+            if (currentUser) {
+                currentUser.idCardTemplate = safeTemplate;
+                saveUserData();
+            }
+        }
+
+        const profilePhotoCropRuntime = {
+            sourceImage: null,
+            zoom: 1,
+            baseScale: 1,
+            offsetX: 0,
+            offsetY: 0,
+            dragging: false,
+            dragStartX: 0,
+            dragStartY: 0,
+            dragOffsetX: 0,
+            dragOffsetY: 0
+        };
+
+        function getProfileCropCanvas() {
+            return document.getElementById('profilePhotoCropCanvas');
+        }
+
+        function getProfileCropModal() {
+            return document.getElementById('profilePhotoCropModal');
+        }
+
+        function getProfileCropZoomInput() {
+            return document.getElementById('profilePhotoCropZoom');
+        }
+
+        function getProfileCropDisplayRect() {
+            const canvas = getProfileCropCanvas();
+            const image = profilePhotoCropRuntime.sourceImage;
+            if (!canvas || !image) return null;
+
+            const cropSize = canvas.width;
+            const scale = profilePhotoCropRuntime.baseScale * profilePhotoCropRuntime.zoom;
+            const drawW = image.width * scale;
+            const drawH = image.height * scale;
+            const centerX = (cropSize - drawW) / 2;
+            const centerY = (cropSize - drawH) / 2;
+
+            return {
+                cropSize,
+                drawW,
+                drawH,
+                x: centerX + profilePhotoCropRuntime.offsetX,
+                y: centerY + profilePhotoCropRuntime.offsetY,
+                minOffsetX: centerX,
+                maxOffsetX: -centerX,
+                minOffsetY: centerY,
+                maxOffsetY: -centerY
+            };
+        }
+
+        function clampProfilePhotoOffsets() {
+            const rect = getProfileCropDisplayRect();
+            if (!rect) return;
+            profilePhotoCropRuntime.offsetX = Math.min(rect.maxOffsetX, Math.max(rect.minOffsetX, profilePhotoCropRuntime.offsetX));
+            profilePhotoCropRuntime.offsetY = Math.min(rect.maxOffsetY, Math.max(rect.minOffsetY, profilePhotoCropRuntime.offsetY));
+        }
+
+        function drawProfilePhotoCropper() {
+            const canvas = getProfileCropCanvas();
+            const image = profilePhotoCropRuntime.sourceImage;
+            if (!canvas || !image) return;
+
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            clampProfilePhotoOffsets();
+            const rect = getProfileCropDisplayRect();
+            if (!rect) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const bg = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            bg.addColorStop(0, '#dbeafe');
+            bg.addColorStop(1, '#c7d2fe');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(image, rect.x, rect.y, rect.drawW, rect.drawH);
+
+            ctx.strokeStyle = 'rgba(15,23,42,0.55)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+        }
+
+        function updateProfilePhotoCropZoom(value) {
+            const numericZoom = Number(value);
+            if (!Number.isFinite(numericZoom)) return;
+            profilePhotoCropRuntime.zoom = Math.max(1, Math.min(3, numericZoom));
+            drawProfilePhotoCropper();
+        }
+
+        function beginProfilePhotoDrag(event) {
+            if (!profilePhotoCropRuntime.sourceImage) return;
+            profilePhotoCropRuntime.dragging = true;
+            profilePhotoCropRuntime.dragStartX = event.clientX;
+            profilePhotoCropRuntime.dragStartY = event.clientY;
+            profilePhotoCropRuntime.dragOffsetX = profilePhotoCropRuntime.offsetX;
+            profilePhotoCropRuntime.dragOffsetY = profilePhotoCropRuntime.offsetY;
+            const canvas = getProfileCropCanvas();
+            if (canvas) canvas.style.cursor = 'grabbing';
+            if (canvas && typeof canvas.setPointerCapture === 'function') {
+                canvas.setPointerCapture(event.pointerId);
+            }
+        }
+
+        function moveProfilePhotoDrag(event) {
+            if (!profilePhotoCropRuntime.dragging) return;
+            const dx = event.clientX - profilePhotoCropRuntime.dragStartX;
+            const dy = event.clientY - profilePhotoCropRuntime.dragStartY;
+            profilePhotoCropRuntime.offsetX = profilePhotoCropRuntime.dragOffsetX + dx;
+            profilePhotoCropRuntime.offsetY = profilePhotoCropRuntime.dragOffsetY + dy;
+            drawProfilePhotoCropper();
+        }
+
+        function endProfilePhotoDrag(event) {
+            if (!profilePhotoCropRuntime.dragging) return;
+            profilePhotoCropRuntime.dragging = false;
+            const canvas = getProfileCropCanvas();
+            if (canvas) canvas.style.cursor = 'grab';
+            if (canvas && typeof canvas.releasePointerCapture === 'function') {
+                try {
+                    canvas.releasePointerCapture(event.pointerId);
+                } catch (error) {
+                    // Ignore pointer capture release issues on some browsers.
+                }
+            }
+        }
+
+        function initProfilePhotoCropperBindings() {
+            const canvas = getProfileCropCanvas();
+            if (!canvas || canvas.dataset.bound === '1') return;
+
+            canvas.addEventListener('pointerdown', beginProfilePhotoDrag);
+            canvas.addEventListener('pointermove', moveProfilePhotoDrag);
+            canvas.addEventListener('pointerup', endProfilePhotoDrag);
+            canvas.addEventListener('pointercancel', endProfilePhotoDrag);
+            canvas.addEventListener('pointerleave', endProfilePhotoDrag);
+
+            canvas.dataset.bound = '1';
+        }
+
+        function openProfilePhotoCropModal() {
+            const modal = getProfileCropModal();
+            if (!modal) return;
+            modal.style.display = 'flex';
+        }
+
+        function closeProfilePhotoCropModal(resetInput = false) {
+            const modal = getProfileCropModal();
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            profilePhotoCropRuntime.dragging = false;
+            profilePhotoCropRuntime.sourceImage = null;
+            if (resetInput) {
+                const input = document.getElementById('profilePhotoInput');
+                if (input) input.value = '';
+            }
+        }
+
+        async function loadProfilePhotoForCropping(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const image = new Image();
+                    image.onload = () => resolve(image);
+                    image.onerror = () => reject(new Error('Failed to load image for cropper'));
+                    image.src = String(reader.result || '');
+                };
+                reader.onerror = () => reject(new Error('Failed to read selected file'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function applyProfilePhotoCrop() {
+            const image = profilePhotoCropRuntime.sourceImage;
+            const canvas = getProfileCropCanvas();
+            if (!image || !canvas || !currentUser) {
+                showNotification('No photo to apply.', 'warning');
+                return;
+            }
+
+            const rect = getProfileCropDisplayRect();
+            if (!rect) return;
+
+            const outputSize = 960;
+            const outCanvas = document.createElement('canvas');
+            outCanvas.width = outputSize;
+            outCanvas.height = outputSize;
+            const outCtx = outCanvas.getContext('2d');
+            if (!outCtx) {
+                showNotification('Failed to process cropped image.', 'error');
+                return;
+            }
+
+            const scaleFactor = outputSize / rect.cropSize;
+            outCtx.imageSmoothingEnabled = true;
+            outCtx.imageSmoothingQuality = 'high';
+            outCtx.save();
+            outCtx.scale(scaleFactor, scaleFactor);
+            outCtx.drawImage(image, rect.x, rect.y, rect.drawW, rect.drawH);
+            outCtx.restore();
+
+            const croppedDataUrl = outCanvas.toDataURL('image/jpeg', 0.92);
+            currentUser.profilePhoto = croppedDataUrl;
+            renderProfilePhotoPreview(croppedDataUrl);
+            saveUserData();
+
+            closeProfilePhotoCropModal(true);
+            showNotification('Photo position saved successfully.', 'success');
+        }
+
+        function createCroppedSquarePhotoDataUrl(file, outputSize = 960) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const image = new Image();
+                    image.onload = () => {
+                        const sourceSize = Math.min(image.width, image.height);
+                        const sx = Math.round((image.width - sourceSize) / 2);
+                        const sy = Math.round((image.height - sourceSize) / 2);
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = outputSize;
+                        canvas.height = outputSize;
+                        const ctx = canvas.getContext('2d');
+                        if (!ctx) {
+                            reject(new Error('Canvas context unavailable'));
+                            return;
+                        }
+
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(image, sx, sy, sourceSize, sourceSize, 0, 0, outputSize, outputSize);
+                        resolve(canvas.toDataURL('image/jpeg', 0.92));
+                    };
+                    image.onerror = () => reject(new Error('Failed to load selected image'));
+                    image.src = String(reader.result || '');
+                };
+                reader.onerror = () => reject(new Error('Failed to read selected file'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function handleProfilePhotoUpload(event) {
+            const input = event?.target;
+            const file = input?.files?.[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please choose a valid image file.', 'warning');
+                return;
+            }
+
+            try {
+                initProfilePhotoCropperBindings();
+                const image = await loadProfilePhotoForCropping(file);
+                const canvas = getProfileCropCanvas();
+                if (!canvas) {
+                    throw new Error('Crop canvas not found');
+                }
+                profilePhotoCropRuntime.sourceImage = image;
+                profilePhotoCropRuntime.zoom = 1;
+                profilePhotoCropRuntime.offsetX = 0;
+                profilePhotoCropRuntime.offsetY = 0;
+                profilePhotoCropRuntime.baseScale = Math.max(canvas.width / image.width, canvas.height / image.height);
+                const zoomInput = getProfileCropZoomInput();
+                if (zoomInput) {
+                    zoomInput.value = '1';
+                }
+                openProfilePhotoCropModal();
+                drawProfilePhotoCropper();
+            } catch (error) {
+                console.error('Profile photo upload error:', error);
+                showNotification('Failed to open photo crop editor.', 'error');
+            }
+        }
+
+        function removeProfilePhoto() {
+            if (!currentUser) return;
+            currentUser.profilePhoto = '';
+            const input = document.getElementById('profilePhotoInput');
+            if (input) input.value = '';
+            renderProfilePhotoPreview('');
+            saveUserData();
+            showNotification('Profile photo removed.', 'success');
+        }
+
+        function loadImageElement(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        async function downloadProfileIdCardImage() {
+            if (!currentUser) {
+                showNotification('Please login first.', 'warning');
+                return;
+            }
+
+            const width = 1080;
+            const height = 1920;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                showNotification('Failed to prepare image canvas.', 'error');
+                return;
+            }
+
+            const learnerName = String(currentUser.name || 'MindShift Learner');
+            const email = String(currentUser.email || '-');
+            const phone = String(currentUser.phone || '-');
+            const idNumber = String(currentUser.idNumber || 'MS-UNASSIGNED');
+            const joinedDate = currentUser.joinedAt ? new Date(currentUser.joinedAt).toLocaleDateString('en-GB') : '-';
+            const xp = Number(userProgress.totalXP || 0);
+            const streak = calculateCurrentStreak();
+            const completedDays = (userProgress.completedDayNumbers || []).length;
+            const activeAvatar = getAvatarById(userProgress.selectedAvatar || 'starter');
+            const photoUrl = currentUser.profilePhoto || createInitialsAvatarDataUrl(learnerName);
+            const safeTemplate = getCurrentProfileIdCardTemplate();
+            setProfileIdCardTemplate(safeTemplate);
+
+            const templateMap = {
+                clean: {
+                    bgStops: ['#e0f2fe', '#dbeafe', '#ecfeff'],
+                    deco: ['#93c5fd', '#67e8f9', '#fcd34d'],
+                    shell: 'rgba(255,255,255,0.95)',
+                    topStops: ['#0f172a', '#1d4ed8'],
+                    topMeta: '#93c5fd',
+                    topTitle: '#ffffff',
+                    idTop: '#dbeafe',
+                    infoBg: '#f8fafc',
+                    infoStroke: '#e2e8f0',
+                    textPrimary: '#0f172a',
+                    textMuted: '#334155',
+                    memberBg: '#0f172a',
+                    memberLabel: '#93c5fd',
+                    memberTitle: '#ffffff',
+                    memberBody: '#cbd5e1',
+                    verifyLabel: '#e2e8f0',
+                    verifyCode: '#ffffff',
+                    verifySub: '#94a3b8',
+                    qrBg: '#ffffff',
+                    qrFill: '#0f172a',
+                    avatarStroke: '#ffffff',
+                    footer: '#475569',
+                    metricColors: [
+                        ['#2563eb', '#1d4ed8'],
+                        ['#ea580c', '#c2410c'],
+                        ['#059669', '#047857']
+                    ]
+                },
+                bold: {
+                    bgStops: ['#7c2d12', '#dc2626', '#f59e0b'],
+                    deco: ['#fb7185', '#facc15', '#fde68a'],
+                    shell: 'rgba(255,250,240,0.96)',
+                    topStops: ['#111827', '#b91c1c'],
+                    topMeta: '#fde68a',
+                    topTitle: '#ffffff',
+                    idTop: '#fef3c7',
+                    infoBg: '#fff7ed',
+                    infoStroke: '#fed7aa',
+                    textPrimary: '#431407',
+                    textMuted: '#7c2d12',
+                    memberBg: '#7f1d1d',
+                    memberLabel: '#fde68a',
+                    memberTitle: '#ffffff',
+                    memberBody: '#fecaca',
+                    verifyLabel: '#fee2e2',
+                    verifyCode: '#ffffff',
+                    verifySub: '#fecaca',
+                    qrBg: '#ffffff',
+                    qrFill: '#111827',
+                    avatarStroke: '#fff7ed',
+                    footer: '#7c2d12',
+                    metricColors: [
+                        ['#1d4ed8', '#1e40af'],
+                        ['#be123c', '#881337'],
+                        ['#15803d', '#166534']
+                    ]
+                },
+                'dark-luxe': {
+                    bgStops: ['#020617', '#111827', '#1f2937'],
+                    deco: ['#334155', '#475569', '#1e293b'],
+                    shell: 'rgba(15,23,42,0.95)',
+                    topStops: ['#111827', '#a16207'],
+                    topMeta: '#facc15',
+                    topTitle: '#f8fafc',
+                    idTop: '#fde68a',
+                    infoBg: '#0b1220',
+                    infoStroke: '#334155',
+                    textPrimary: '#f8fafc',
+                    textMuted: '#cbd5e1',
+                    memberBg: '#020617',
+                    memberLabel: '#facc15',
+                    memberTitle: '#ffffff',
+                    memberBody: '#94a3b8',
+                    verifyLabel: '#cbd5e1',
+                    verifyCode: '#ffffff',
+                    verifySub: '#94a3b8',
+                    qrBg: '#f8fafc',
+                    qrFill: '#0f172a',
+                    avatarStroke: '#facc15',
+                    footer: '#cbd5e1',
+                    metricColors: [
+                        ['#2563eb', '#1e3a8a'],
+                        ['#f59e0b', '#b45309'],
+                        ['#10b981', '#065f46']
+                    ]
+                }
+            };
+            const palette = templateMap[safeTemplate] || templateMap.clean;
+
+            function roundRectPath(x, y, w, h, r) {
+                const radius = Math.min(r, w / 2, h / 2);
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + w - radius, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+                ctx.lineTo(x + w, y + h - radius);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+                ctx.lineTo(x + radius, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
+            function fillRoundedRect(x, y, w, h, r, fillStyle) {
+                ctx.save();
+                roundRectPath(x, y, w, h, r);
+                ctx.fillStyle = fillStyle;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function drawAdaptiveText(text, x, y, maxWidth, fontWeight, startSize, minSize, color) {
+                const safeText = String(text || '');
+                let selected = startSize;
+                for (let size = startSize; size >= minSize; size--) {
+                    ctx.font = `${fontWeight} ${size}px Poppins, Arial, sans-serif`;
+                    if (ctx.measureText(safeText).width <= maxWidth) {
+                        selected = size;
+                        break;
+                    }
+                }
+                ctx.fillStyle = color;
+                ctx.font = `${fontWeight} ${selected}px Poppins, Arial, sans-serif`;
+                ctx.fillText(safeText, x, y);
+            }
+
+            const bg = ctx.createLinearGradient(0, 0, width, height);
+            bg.addColorStop(0, palette.bgStops[0]);
+            bg.addColorStop(0.5, palette.bgStops[1]);
+            bg.addColorStop(1, palette.bgStops[2]);
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.globalAlpha = 0.18;
+            fillRoundedRect(-120, -40, 520, 520, 260, palette.deco[0]);
+            fillRoundedRect(770, 60, 360, 360, 180, palette.deco[1]);
+            fillRoundedRect(120, 1450, 620, 620, 300, palette.deco[2]);
+            ctx.globalAlpha = 1;
+
+            fillRoundedRect(56, 56, width - 112, height - 112, 40, palette.shell);
+
+            const topGrad = ctx.createLinearGradient(84, 84, width - 84, 236);
+            topGrad.addColorStop(0, palette.topStops[0]);
+            topGrad.addColorStop(1, palette.topStops[1]);
+            fillRoundedRect(84, 84, width - 168, 170, 24, topGrad);
+            ctx.fillStyle = palette.topMeta;
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('OFFICIAL LEARNER ID CARD', 120, 146);
+            ctx.fillStyle = palette.topTitle;
+            ctx.font = '800 44px Poppins, Arial, sans-serif';
+            ctx.fillText('MindShift English', 120, 202);
+
+            ctx.fillStyle = palette.idTop;
+            ctx.font = '700 24px Poppins, Arial, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText(idNumber, width - 124, 204);
+            ctx.textAlign = 'left';
+
+            let profileImage = null;
+            try {
+                profileImage = await loadImageElement(photoUrl);
+            } catch (error) {
+                profileImage = await loadImageElement(createInitialsAvatarDataUrl(learnerName));
+            }
+
+            const avatarCx = 248;
+            const avatarCy = 430;
+            const avatarR = 132;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(avatarCx, avatarCy, avatarR, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            ctx.drawImage(profileImage, avatarCx - avatarR, avatarCy - avatarR, avatarR * 2, avatarR * 2);
+            ctx.restore();
+            ctx.strokeStyle = palette.avatarStroke;
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.arc(avatarCx, avatarCy, avatarR, 0, Math.PI * 2);
+            ctx.stroke();
+
+            drawAdaptiveText(learnerName, 424, 410, 500, 800, 48, 30, palette.textPrimary);
+            ctx.fillStyle = palette.textMuted;
+            ctx.font = '600 24px Poppins, Arial, sans-serif';
+            ctx.fillText(`Avatar: ${activeAvatar.emoji} ${activeAvatar.label}`, 424, 448);
+            ctx.fillText(`Joined: ${joinedDate}`, 424, 484);
+
+            fillRoundedRect(84, 584, width - 168, 204, 24, palette.infoBg);
+            ctx.strokeStyle = palette.infoStroke;
+            ctx.lineWidth = 2;
+            roundRectPath(84, 584, width - 168, 204, 24);
+            ctx.stroke();
+
+            ctx.fillStyle = palette.textPrimary;
+            ctx.font = '700 23px Poppins, Arial, sans-serif';
+            ctx.fillText('Email', 120, 636);
+            drawAdaptiveText(email, 250, 636, 670, 600, 22, 16, palette.textMuted);
+            ctx.fillStyle = palette.textPrimary;
+            ctx.font = '700 23px Poppins, Arial, sans-serif';
+            ctx.fillText('Phone', 120, 694);
+            drawAdaptiveText(phone, 250, 694, 670, 600, 22, 16, palette.textMuted);
+            ctx.fillStyle = palette.textPrimary;
+            ctx.font = '700 23px Poppins, Arial, sans-serif';
+            ctx.fillText('ID Number', 120, 752);
+            drawAdaptiveText(idNumber, 290, 752, 630, 700, 24, 17, palette.topStops[1]);
+
+            function drawMetricCard(x, y, w, h, title, value, colorA, colorB) {
+                const grad = ctx.createLinearGradient(x, y, x + w, y + h);
+                grad.addColorStop(0, colorA);
+                grad.addColorStop(1, colorB);
+                fillRoundedRect(x, y, w, h, 18, grad);
+                ctx.fillStyle = 'rgba(255,255,255,0.86)';
+                ctx.font = '700 18px Poppins, Arial, sans-serif';
+                ctx.fillText(title, x + 16, y + 36);
+                drawAdaptiveText(value, x + 16, y + 84, w - 32, 800, 36, 24, '#ffffff');
+            }
+
+            const metricY = 828;
+            drawMetricCard(84, metricY, 292, 120, 'Completed Days', `${completedDays}/100`, palette.metricColors[0][0], palette.metricColors[0][1]);
+            drawMetricCard(394, metricY, 292, 120, 'Current Streak', `${streak} days`, palette.metricColors[1][0], palette.metricColors[1][1]);
+            drawMetricCard(704, metricY, 292, 120, 'Total XP', `${xp} XP`, palette.metricColors[2][0], palette.metricColors[2][1]);
+
+            fillRoundedRect(84, 982, width - 168, 420, 24, palette.memberBg);
+            ctx.fillStyle = palette.memberLabel;
+            ctx.font = '700 22px Poppins, Arial, sans-serif';
+            ctx.fillText('MEMBER STATUS', 122, 1030);
+            ctx.fillStyle = palette.memberTitle;
+            ctx.font = '800 36px Poppins, Arial, sans-serif';
+            ctx.fillText('Active 100-Day Challenger', 122, 1080);
+            ctx.fillStyle = palette.memberBody;
+            ctx.font = '600 24px Poppins, Arial, sans-serif';
+            ctx.fillText('This card represents your commitment to daily English growth.', 122, 1128);
+
+            const qrX = 122;
+            const qrY = 1162;
+            fillRoundedRect(qrX, qrY, 164, 164, 16, palette.qrBg);
+            ctx.fillStyle = palette.qrFill;
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    if ((r + c + idNumber.length) % 3 === 0) {
+                        ctx.fillRect(qrX + 14 + c * 17, qrY + 14 + r * 17, 12, 12);
+                    }
+                }
+            }
+
+            ctx.fillStyle = palette.verifyLabel;
+            ctx.font = '700 21px Poppins, Arial, sans-serif';
+            ctx.fillText('Verification Code', 312, 1210);
+            ctx.fillStyle = palette.verifyCode;
+            ctx.font = '800 30px Poppins, Arial, sans-serif';
+            drawAdaptiveText(idNumber, 312, 1260, 580, 800, 30, 20, palette.verifyCode);
+            ctx.fillStyle = palette.verifySub;
+            ctx.font = '600 18px Poppins, Arial, sans-serif';
+            ctx.fillText(`Template: ${safeTemplate.toUpperCase()} • Generated by MindShift English`, 312, 1304);
+
+            ctx.fillStyle = palette.footer;
+            ctx.font = '600 18px Poppins, Arial, sans-serif';
+            ctx.fillText('#MindShiftEnglish  #LearnerID  #100DayChallenge', 84, 1810);
+
+            const safeName = learnerName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 32) || 'learner';
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `mindshift-id-card-${safeName}-1080x1920.png`;
+            link.click();
+
+            showNotification(`ID CARD image downloaded (1080x1920) • ${safeTemplate}.`, 'success');
+        }
+
         function updateProfilePage() {
             if (!currentUser) return;
             document.getElementById('profileName').value = currentUser.name;
             document.getElementById('profileEmail').value = currentUser.email;
+            document.getElementById('profilePhone').value = currentUser.phone || '';
+            document.getElementById('profileIdNumber').value = currentUser.idNumber || '';
+            document.getElementById('profileIdDisplay').textContent = currentUser.idNumber || '-';
+            renderProfilePhotoPreview(currentUser.profilePhoto || '');
+            initProfilePhotoCropperBindings();
+            const templateSelect = document.getElementById('profileIdCardTemplateSelect');
+            if (templateSelect) {
+                templateSelect.value = getSafeProfileIdCardTemplate(currentUser.idCardTemplate || localStorage.getItem('profileIdCardTemplate') || 'clean');
+            }
             document.getElementById('joinedDate').textContent = new Date(currentUser.joinedAt).toLocaleDateString();
             
             const completedDayCount = (userProgress.completedDayNumbers || []).length;
@@ -25813,6 +26520,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         function updateProfile() {
             currentUser.name = document.getElementById('profileName').value;
             currentUser.phone = document.getElementById('profilePhone').value;
+            currentUser.idNumber = document.getElementById('profileIdNumber').value;
+            currentUser.idCardTemplate = getCurrentProfileIdCardTemplate();
+            document.getElementById('profileIdDisplay').textContent = currentUser.idNumber || '-';
+            renderProfilePhotoPreview(currentUser.profilePhoto || '');
             saveUserData();
             showNotification('Profile updated! ✓', 'success');
         }
