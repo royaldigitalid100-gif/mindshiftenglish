@@ -19134,8 +19134,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const transcriptEl = document.getElementById('readingTranscript');
             const btnEl = document.getElementById('readingRecordBtn');
 
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showNotification('Microphone recording is not supported in this browser.', 'error');
+            const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognitionCtor) {
+                showNotification('Speech recognition is not supported in this browser. Please type your transcript or use a Chrome-based browser.', 'error');
                 return;
             }
 
@@ -19143,55 +19144,85 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (transcriptEl) transcriptEl.textContent = 'Listening and transcribing... please read clearly.';
 
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                readingChunks = [];
-                readingRecordedBlob = null;
                 readingTranscript = '';
                 readingRecognitionConfidence = 0;
                 readingDurationSec = 0;
 
-                readingRecorder = new MediaRecorder(stream);
-                readingRecorder.ondataavailable = (event) => {
-                    if (event.data && event.data.size > 0) readingChunks.push(event.data);
-                };
+                let confidenceSum = 0;
+                let confidenceCount = 0;
+                let recognitionSessionId = 0;
 
-                readingRecorder.onstop = () => {
-                    readingRecordedBlob = new Blob(readingChunks, { type: 'audio/webm' });
-                    stream.getTracks().forEach((track) => track.stop());
-                    analyzeReadingWithAI();
-                };
+                const startSpeechCapture = () => {
+                    if (!readingIsRecording) return;
+                    recognitionSessionId += 1;
+                    const sessionId = recognitionSessionId;
 
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (SpeechRecognition) {
-                    let confidenceSum = 0;
-                    let confidenceCount = 0;
-                    readingRecognition = new SpeechRecognition();
-                    readingRecognition.lang = 'en-US';
-                    readingRecognition.interimResults = true;
-                    readingRecognition.continuous = true;
+                    try {
+                        readingRecognition = new SpeechRecognitionCtor();
+                        readingRecognition.lang = 'en-US';
+                        readingRecognition.interimResults = true;
+                        readingRecognition.continuous = false;
 
-                    readingRecognition.onresult = (event) => {
-                        let combinedTranscript = '';
-                        for (let i = 0; i < event.results.length; i++) {
-                            const result = event.results[i];
-                            combinedTranscript += result[0].transcript + ' ';
-                            if (result.isFinal && typeof result[0].confidence === 'number') {
-                                confidenceSum += result[0].confidence;
-                                confidenceCount++;
+                        readingRecognition.onstart = () => {
+                            if (statusEl) statusEl.textContent = 'Status: recording...';
+                        };
+
+                        readingRecognition.onresult = (event) => {
+                            let combinedTranscript = '';
+                            for (let i = event.resultIndex; i < event.results.length; i++) {
+                                const result = event.results[i];
+                                combinedTranscript += `${result[0].transcript} `;
+                                if (result.isFinal && typeof result[0].confidence === 'number') {
+                                    confidenceSum += result[0].confidence;
+                                    confidenceCount += 1;
+                                }
                             }
-                        }
-                        readingTranscript = combinedTranscript.trim();
-                        readingRecognitionConfidence = confidenceCount > 0 ? (confidenceSum / confidenceCount) : readingRecognitionConfidence;
-                        if (transcriptEl) transcriptEl.textContent = readingTranscript || 'Listening...';
-                    };
 
-                    readingRecognition.onerror = () => {
-                        // Keep recording audio even if speech recognition fails.
-                    };
-                    readingRecognition.start();
-                }
+                            const nextTranscript = `${readingTranscript} ${combinedTranscript}`.replace(/\s+/g, ' ').trim();
+                            if (nextTranscript) {
+                                readingTranscript = nextTranscript;
+                            }
+                            if (confidenceCount > 0) {
+                                readingRecognitionConfidence = confidenceSum / confidenceCount;
+                            }
+                            if (transcriptEl) transcriptEl.textContent = readingTranscript || 'Listening...';
+                        };
 
-                readingRecorder.start();
+                        readingRecognition.onerror = (event) => {
+                            console.warn('Reading speech recognition error:', event?.error || event);
+                            // Keep the session alive on transient mobile recognition glitches.
+                            if (readingIsRecording && sessionId === recognitionSessionId) {
+                                setTimeout(() => {
+                                    if (readingIsRecording && sessionId === recognitionSessionId) {
+                                        startSpeechCapture();
+                                    }
+                                }, 350);
+                            }
+                        };
+
+                        readingRecognition.onend = () => {
+                            readingRecognition = null;
+                            if (readingIsRecording && sessionId === recognitionSessionId) {
+                                if (!readingTranscript || readingTranscript.length < 2) {
+                                    setTimeout(() => {
+                                        if (readingIsRecording && sessionId === recognitionSessionId) {
+                                            startSpeechCapture();
+                                        }
+                                    }, 250);
+                                    return;
+                                }
+                            }
+                        };
+
+                        readingRecognition.start();
+                    } catch (recognitionError) {
+                        console.error('Reading recognition start error:', recognitionError);
+                        if (statusEl) statusEl.textContent = 'Status: microphone blocked';
+                        showNotification('Unable to start speech recognition. Please allow microphone access or try Chrome/Edge.', 'error');
+                        stopReadingRecording();
+                    }
+                };
+
                 readingIsRecording = true;
                 readingStartTime = Date.now();
 
@@ -19205,6 +19236,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     const elapsed = Math.floor((Date.now() - readingStartTime) / 1000);
                     if (timerEl) timerEl.textContent = `Duration: ${elapsed}s`;
                 }, 250);
+
+                startSpeechCapture();
             } catch (error) {
                 console.error('Recording start error:', error);
                 showNotification('Unable to access microphone. Please allow permission.', 'error');
@@ -19237,11 +19270,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 readingRecognition = null;
             }
 
-            if (readingRecorder && readingRecorder.state !== 'inactive') {
-                readingRecorder.stop();
-            } else {
-                analyzeReadingWithAI();
-            }
+            analyzeReadingWithAI();
         }
 
         function skipRecordingExercise() {
