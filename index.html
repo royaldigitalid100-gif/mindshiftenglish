@@ -17301,11 +17301,18 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         const LAST_ACTIVE_USER_EMAIL_KEY = 'mindshift_last_active_user_email';
         const RECENT_ACCOUNTS_KEY = 'mindshift_recent_accounts';
         const MAX_RECENT_ACCOUNTS = 5;
-        const SPREADSHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbzcQV9CNxVQvYZUlM3fQPX2edG-BxJQrcdWBUoCTTwSYVlhfd9SBTyJ83u9zuNxuU7a8g/exec';
+        const SPREADSHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbyLo5HUth4Cgs_2OQYqFqG2h1QJ733FZabDE5Pow14w1lYoZStr-q0x-ow1IEmv-6_FRA/exec';
         const SPREADSHEET_SYNC_API_KEY = '';
         const SPREADSHEET_AUTO_SYNC_ENABLED = true;
         const SPREADSHEET_SYNC_DEBOUNCE_MS = 2500;
         const SPREADSHEET_SYNC_QUEUE_KEY = 'mindshift_spreadsheet_sync_queue';
+        const SPREADSHEET_RUNTIME_SHEETS = {
+            UsersRuntime: ['timestamp', 'email', 'name', 'phone', 'region', 'idNumber', 'joinedAt', 'hasPhoto', 'idCardTemplate'],
+            ProgressRuntime: ['timestamp', 'email', 'completedDays', 'totalXP', 'totalBonusPoints', 'badgesCount', 'certificatesCount', 'currentStreak', 'longestStreak'],
+            SpeakingRuntime: ['timestamp', 'email', 'mode', 'totalSessions', 'totalSpeeches', 'totalMinutes', 'practiceCount', 'feedbackCount'],
+            PreferencesRuntime: ['timestamp', 'email', 'preferredStudyTime', 'celebrationStoryTemplate', 'soundProfile', 'challengeTheme'],
+            CoverageRuntime: ['timestamp', 'email', 'completedTasksCount', 'quizHistoryCount', 'dailyReflectionsCount', 'readingAnalysesCount', 'writingAnalysesCount', 'dayCompletionDatesCount', 'recentAccountsCount', 'lastActiveEmail', 'selectedAvatar']
+        };
         const OVERVIEW_TUTORIAL_DURATION = 60;
         const OVERVIEW_TUTORIAL_SCENES = [
             {
@@ -17419,6 +17426,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             return {
                 generatedAt: new Date().toISOString(),
                 source: 'index-html-runtime',
+                eventType: 'runtime_sync',
+                sheetTemplatesRuntime: SPREADSHEET_RUNTIME_SHEETS,
                 user: {
                     email: String(profile.email || '').toLowerCase(),
                     name: profile.name || '',
@@ -17476,9 +17485,15 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
             const response = await fetch(endpoint, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                // Use a simple request to avoid CORS preflight failures on Apps Script endpoints.
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
+
+            if (response.type === 'opaque') {
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error(`Spreadsheet sync HTTP ${response.status}`);
@@ -17500,9 +17515,15 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     queue.shift();
                     setSpreadsheetSyncQueue(queue);
                 }
+                if (currentUser && !currentUser.isGuest) {
+                    setSaveSyncStatus('saved', `Synced ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
+                }
             } catch (error) {
                 console.warn('Spreadsheet sync pending:', error);
                 setSpreadsheetSyncQueue(queue);
+                if (currentUser && !currentUser.isGuest) {
+                    setSaveSyncStatus('offline', 'Sync pending');
+                }
             } finally {
                 spreadsheetSyncInFlight = false;
             }
@@ -17617,6 +17638,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         overviewPage.classList.add('active');
                     }
                     updateListeningStats();
+                    if (!currentUser.isGuest) {
+                        scheduleSpreadsheetSync();
+                    }
                     setTimeout(() => showOnboardingIfNeeded(false), 450);
                 } else {
                     // Auto-start safe guest session so every page and feature is immediately usable.
