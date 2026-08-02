@@ -19328,6 +19328,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 readingTranscript = '';
                 readingRecognitionConfidence = 0;
                 readingDurationSec = 0;
+                let finalizedTranscript = '';
+                const processedFinalResultIndices = new Set();
 
                 let confidenceSum = 0;
                 let confidenceCount = 0;
@@ -19355,17 +19357,27 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                                 readingNoResultTimer = null;
                             }
 
-                            let combinedTranscript = '';
+                            let interimTranscript = '';
                             for (let i = event.resultIndex; i < event.results.length; i++) {
                                 const result = event.results[i];
-                                combinedTranscript += `${result[0].transcript} `;
-                                if (result.isFinal && typeof result[0].confidence === 'number') {
-                                    confidenceSum += result[0].confidence;
-                                    confidenceCount += 1;
+                                const piece = String(result[0]?.transcript || '').trim();
+                                if (!piece) continue;
+
+                                if (result.isFinal) {
+                                    if (!processedFinalResultIndices.has(i)) {
+                                        finalizedTranscript = `${finalizedTranscript} ${piece}`.replace(/\s+/g, ' ').trim();
+                                        processedFinalResultIndices.add(i);
+                                        if (typeof result[0].confidence === 'number') {
+                                            confidenceSum += result[0].confidence;
+                                            confidenceCount += 1;
+                                        }
+                                    }
+                                } else {
+                                    interimTranscript = `${interimTranscript} ${piece}`.replace(/\s+/g, ' ').trim();
                                 }
                             }
 
-                            const nextTranscript = `${readingTranscript} ${combinedTranscript}`.replace(/\s+/g, ' ').trim();
+                            const nextTranscript = `${finalizedTranscript} ${interimTranscript}`.replace(/\s+/g, ' ').trim();
                             if (nextTranscript) {
                                 readingTranscript = nextTranscript;
                             }
