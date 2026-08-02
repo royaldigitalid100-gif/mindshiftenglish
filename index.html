@@ -24650,8 +24650,22 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 const focus = getChallengeSkillFocus();
                 const requiresSpeaking = focus.speaking;
                 const requiresReading = focus.reading;
-                const hasSpeakingRecording = !!(readingAiAnalysis && !readingAiAnalysis.isTiktokBased && !readingAiAnalysis.isSkipped);
-                const hasReadingWatch = !!tiktokVideoWatched || !!readingAiAnalysis?.isTiktokBased;
+                const savedDayReadingAnalysis = (userProgress.readingAnalyses && userProgress.readingAnalyses[currentDay]) || null;
+                const activeReadingAnalysis = readingAiAnalysis || savedDayReadingAnalysis;
+                const manualFallbackText = String(document.getElementById('readingTranscriptFallback')?.value || '').trim();
+
+                if (!readingAiAnalysis && savedDayReadingAnalysis) {
+                    readingAiAnalysis = savedDayReadingAnalysis;
+                }
+
+                if (requiresSpeaking && !activeReadingAnalysis && manualFallbackText) {
+                    readingTranscript = manualFallbackText;
+                    analyzeReadingWithAI();
+                }
+
+                const finalReadingAnalysis = readingAiAnalysis || ((userProgress.readingAnalyses && userProgress.readingAnalyses[currentDay]) || null);
+                const hasSpeakingRecording = !!(finalReadingAnalysis && !finalReadingAnalysis.isTiktokBased && !finalReadingAnalysis.isSkipped);
+                const hasReadingWatch = !!tiktokVideoWatched || !!finalReadingAnalysis?.isTiktokBased;
 
                 if (requiresSpeaking && !hasSpeakingRecording) {
                     if (!readingIsRecording && document.getElementById('readingRecordingStatus')?.textContent.includes('blocked')) {
@@ -24668,7 +24682,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 }
 
                 if (requiresSpeaking) {
-                    const transcriptWordCount = tokenizeText(readingAiAnalysis?.transcript || '').length;
+                    const transcriptWordCount = tokenizeText(finalReadingAnalysis?.transcript || '').length;
                     if (transcriptWordCount < (pathway.minReadingTranscriptWords || 0)) {
                         showNotification(`Untuk fokus Speaking level ${pathway.label}, baca lebih lengkap dulu (minimal ${pathway.minReadingTranscriptWords} kata terdeteksi).`, 'warning');
                         return;
