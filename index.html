@@ -929,6 +929,150 @@
             .grid-2, .grid-3 {
                 grid-template-columns: 1fr;
             }
+            #readingRecordingPanel {
+                padding: 14px !important;
+            }
+            #readingRecordingPanel > p:first-child {
+                font-size: 13px !important;
+                margin-bottom: 8px !important;
+            }
+            #readingRecordingPanel > p:nth-of-type(2) {
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+                margin-bottom: 10px !important;
+            }
+            #readingRecordingControls {
+                display: grid !important;
+                grid-template-columns: 1fr auto;
+                gap: 6px 10px !important;
+                align-items: center;
+                padding: 8px 10px !important;
+                margin-bottom: 10px !important;
+                background: rgba(255,255,255,0.78);
+                border: 1px solid #d9e6f7;
+                border-radius: 16px;
+                box-shadow: 0 6px 18px rgba(29, 79, 145, 0.06);
+                position: sticky;
+                top: 8px;
+                z-index: 4;
+                backdrop-filter: blur(6px);
+            }
+            #readingRecordingControls #readingRecordBtn {
+                grid-column: 1 / -1;
+                width: 100%;
+                justify-content: center;
+                padding: 10px 14px !important;
+                font-size: 12px !important;
+                border-radius: 999px !important;
+                box-shadow: 0 8px 18px rgba(29, 79, 145, 0.14);
+            }
+            #readingRecordingControls #readingRecordingStatus,
+            #readingRecordingControls #readingRecordingTimer {
+                font-size: 11px !important;
+                line-height: 1.3;
+                white-space: nowrap;
+            }
+            #readingRecordingControls #readingRecordingStatus {
+                grid-column: 1;
+                text-align: left;
+            }
+            #readingRecordingControls #readingRecordingTimer {
+                grid-column: 2;
+                text-align: right;
+            }
+            #readingManualHint {
+                padding: 8px 10px !important;
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+                margin-bottom: 10px !important;
+                border-radius: 12px;
+            }
+            #readingTranscript {
+                min-height: 48px !important;
+                max-height: 92px !important;
+                padding: 9px !important;
+                font-size: 12px !important;
+                line-height: 1.45 !important;
+            }
+            #readingFallbackCard {
+                margin-top: 0 !important;
+                padding: 0 !important;
+                background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+                border: 0 solid #d9e6f7;
+                border-radius: 14px;
+                box-shadow: 0 8px 20px rgba(29, 79, 145, 0.05);
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                pointer-events: none;
+                transform: translateY(-4px);
+                transition: max-height 0.28s ease, opacity 0.24s ease, transform 0.24s ease;
+            }
+            #readingFallbackCardInner {
+                overflow: hidden;
+                min-height: 0;
+            }
+            #readingFallbackToggle {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 8px;
+                border: 1px solid #bfdbfe;
+                border-radius: 999px;
+                background: #eff6ff;
+                color: #1e3a8a;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+                padding: 7px 11px;
+            }
+            #readingFallbackToggle span:last-child {
+                font-size: 13px;
+                line-height: 1;
+                transition: transform 0.2s ease;
+            }
+            #readingFallbackWrap[data-open="1"] #readingFallbackToggle span:last-child {
+                transform: rotate(180deg);
+            }
+            #readingFallbackWrap[data-open="1"] #readingFallbackCard {
+                max-height: 240px;
+                opacity: 1;
+                pointer-events: auto;
+                transform: translateY(0);
+                margin-top: 8px !important;
+                padding: 9px !important;
+                border-width: 1px;
+            }
+            #readingFallbackCard label[for="readingTranscriptFallback"] {
+                font-size: 11px !important;
+                margin-bottom: 5px !important;
+                letter-spacing: 0.02em;
+                text-transform: uppercase;
+            }
+            #readingTranscriptFallback {
+                min-height: 58px !important;
+                max-height: 84px !important;
+                font-size: 12px !important;
+                padding: 8px 9px !important;
+                resize: none;
+            }
+            #readingFallbackActions {
+                gap: 6px !important;
+                margin-top: 7px !important;
+            }
+            #readingFallbackActions .btn {
+                flex: 1 1 0;
+                padding: 7px 10px !important;
+                font-size: 12px !important;
+            }
+            #readingAiResult {
+                padding: 10px !important;
+            }
+            #recordingSkipContainer {
+                margin-top: 12px !important;
+            }
 
             .header {
                 flex-direction: column;
@@ -8928,8 +9072,11 @@
                     <div id="readingRecordingPanel" style="margin-top: 15px; padding: 18px; background: #eef8ff; border: 1px solid #d0e7ff; border-radius: 10px;" class="challenge-support challenge-surface">
                         <p style="margin: 0 0 10px 0; font-weight: 700; color: var(--blue-700); font-family: 'Poppins',sans-serif; font-size: 14px;">🎙️ Speaking Recording & AI Rubric</p>
                         <p style="margin: 0 0 12px 0; color: var(--gray-600); font-size: 13px;">Record your voice while reading this passage. After you stop, AI will automatically analyze your speaking with a rubric.</p>
+                        <div id="readingManualHint" style="display:none; margin: 0 0 12px 0; padding: 10px 12px; background: #fff7ed; border: 1px solid #fdba74; border-radius: 8px; color: #9a3412; font-size: 13px; line-height: 1.5;">
+                            If voice recognition is unstable on your device, type the transcript below and tap <strong>Use This Text</strong>.
+                        </div>
 
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px;">
+                        <div id="readingRecordingControls" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px;">
                             <button id="readingRecordBtn" class="btn btn-primary" onclick="toggleReadingRecording()" style="padding: 8px 14px;">⏺️ Start Recording</button>
                             <span id="readingRecordingStatus" style="font-size: 13px; color: #555;">Status: idle</span>
                             <span id="readingRecordingTimer" style="font-size: 13px; color: #1d4f91; font-weight: 600;"></span>
@@ -8938,6 +9085,22 @@
                         <div style="margin: 10px 0;">
                             <p style="margin: 0 0 8px 0; font-size: 13px; color: #666;"><strong>Transcript:</strong></p>
                             <div id="readingTranscript" style="min-height: 70px; max-height: 170px; overflow-y: auto; background: white; border: 1px solid #d9e6f7; border-radius: 8px; padding: 10px; font-size: 13px; line-height: 1.6; color: #333;">Your speech transcript will appear here after recording.</div>
+                            <div id="readingFallbackWrap" data-open="0" style="margin-top: 10px; display: none;">
+                                <button type="button" id="readingFallbackToggle" onclick="toggleReadingFallbackCard()" aria-expanded="false">
+                                    <span>Manual transcript fallback</span>
+                                    <span>▾</span>
+                                </button>
+                                <div id="readingFallbackCard" style="margin-top: 10px;" aria-hidden="true">
+                                    <div id="readingFallbackCardInner">
+                                        <label for="readingTranscriptFallback" style="display:block; margin-bottom:6px; font-size:12px; font-weight:700; color:#1d4f91;">Manual transcript fallback</label>
+                                        <textarea id="readingTranscriptFallback" placeholder="If voice recognition is unreliable on mobile, type what you read here. AI analysis will use this text." style="width:100%; min-height:88px; resize:vertical; border:1px solid #d9e6f7; border-radius:8px; padding:10px; font-size:13px; line-height:1.5; color:#1f2937; background:#fff;"></textarea>
+                                        <div id="readingFallbackActions" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+                                            <button type="button" class="btn btn-secondary" onclick="syncReadingTranscriptFallbackToAnalysis()" style="padding:8px 12px;">Use This Text</button>
+                                            <button type="button" class="btn btn-secondary" onclick="clearReadingTranscriptFallback()" style="padding:8px 12px;">Clear Text</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div id="readingAiResult" style="display: none; margin-top: 10px; background: white; border: 1px solid #d9e6f7; border-radius: 10px; padding: 12px;"></div>
@@ -17282,6 +17445,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         let readingRecognitionConfidence = 0;
         let readingTimerInterval = null;
         let readingNoResultTimer = null;
+        let readingFallbackAutoOpenRequested = false;
         let readingAiAnalysis = null;
         let readingRecordingSkipped = false;
         let tiktokVideoWatched = false;
@@ -17680,6 +17844,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 updateOverviewFlow();
                 updateAuthButton();
                 renderRecentAccountsDropdown();
+                updateReadingManualFallbackUX();
                 flushSpreadsheetSyncQueue();
             } catch (error) {
                 console.error('DOMContentLoaded error:', error);
@@ -19053,6 +19218,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             readingTranscript = '';
             readingRecognitionConfidence = 0;
             readingDurationSec = 0;
+            readingFallbackAutoOpenRequested = false;
             readingAiAnalysis = null;
             readingRecordingSkipped = false;
             tiktokVideoWatched = false;
@@ -19060,6 +19226,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const statusEl = document.getElementById('readingRecordingStatus');
             const timerEl = document.getElementById('readingRecordingTimer');
             const transcriptEl = document.getElementById('readingTranscript');
+            const fallbackEl = document.getElementById('readingTranscriptFallback');
             const resultEl = document.getElementById('readingAiResult');
             const btnEl = document.getElementById('readingRecordBtn');
             const skipContainer = document.getElementById('recordingSkipContainer');
@@ -19069,6 +19236,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (statusEl) statusEl.textContent = 'Status: idle';
             if (timerEl) timerEl.textContent = '';
             if (transcriptEl) transcriptEl.textContent = 'Your speech transcript will appear here after recording.';
+            if (fallbackEl) fallbackEl.value = '';
             if (resultEl) {
                 resultEl.style.display = 'none';
                 resultEl.innerHTML = '';
@@ -19080,6 +19248,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (skipContainer) skipContainer.style.display = 'none';
             if (tiktokStatus) tiktokStatus.style.display = 'none';
             if (tiktokMarkDoneBtn) tiktokMarkDoneBtn.style.display = 'block';
+            setReadingFallbackVisibility(false);
+            setReadingFallbackCardState(false, false);
         }
 
         function resetWritingAnalysisState() {
@@ -19142,10 +19312,16 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognitionCtor) {
                 showNotification('Speech recognition is not supported in this browser. Please type your transcript or use a Chrome-based browser.', 'error');
+                readingFallbackAutoOpenRequested = true;
+                setReadingFallbackVisibility(true);
+                setReadingFallbackCardState(true, false);
                 return;
             }
 
             readingAiAnalysis = null;
+            readingFallbackAutoOpenRequested = false;
+            setReadingFallbackVisibility(false);
+            setReadingFallbackCardState(false, false);
             if (transcriptEl) transcriptEl.textContent = 'Listening and transcribing... please read clearly.';
 
             try {
@@ -19197,12 +19373,20 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                                 readingRecognitionConfidence = confidenceSum / confidenceCount;
                             }
                             if (transcriptEl) transcriptEl.textContent = readingTranscript || 'Listening...';
+                            if (readingTranscript && readingTranscript.trim().length > 1) {
+                                readingFallbackAutoOpenRequested = false;
+                                setReadingFallbackVisibility(false);
+                                setReadingFallbackCardState(false, false);
+                            }
                         };
 
                         readingRecognition.onerror = (event) => {
                             console.warn('Reading speech recognition error:', event?.error || event);
                             if (event?.error === 'no-speech' && transcriptEl && readingIsRecording) {
                                 transcriptEl.textContent = 'No speech detected yet. Speak louder or closer to the mic, then tap Stop and try again.';
+                                readingFallbackAutoOpenRequested = true;
+                                setReadingFallbackVisibility(true);
+                                setReadingFallbackCardState(true, false);
                             }
                         };
 
@@ -19210,6 +19394,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                             readingRecognition = null;
                             if (readingIsRecording && sessionId === recognitionSessionId && !readingTranscript) {
                                 if (statusEl) statusEl.textContent = 'Status: no speech detected';
+                                readingFallbackAutoOpenRequested = true;
+                                setReadingFallbackVisibility(true);
+                                setReadingFallbackCardState(true, false);
                             }
                         };
 
@@ -19241,6 +19428,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     if (!readingTranscript || readingTranscript.length < 2) {
                         if (statusEl) statusEl.textContent = 'Status: no speech detected';
                         if (transcriptEl) transcriptEl.textContent = 'No speech detected yet. Speak louder or closer to the mic, then tap Stop and try again.';
+                        readingFallbackAutoOpenRequested = true;
+                        setReadingFallbackVisibility(true);
+                        setReadingFallbackCardState(true, false);
                     }
                 }, 4000);
 
@@ -19276,6 +19466,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 clearTimeout(readingNoResultTimer);
                 readingNoResultTimer = null;
             }
+            if (readingNoResultTimer) {
+                clearTimeout(readingNoResultTimer);
+                readingNoResultTimer = null;
+            }
 
             const statusEl = document.getElementById('readingRecordingStatus');
             const btnEl = document.getElementById('readingRecordBtn');
@@ -19292,6 +19486,28 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             }
 
             analyzeReadingWithAI();
+        }
+
+        function syncReadingTranscriptFallbackToAnalysis() {
+            const fallbackEl = document.getElementById('readingTranscriptFallback');
+            const transcriptEl = document.getElementById('readingTranscript');
+            const value = String(fallbackEl?.value || '').trim();
+            if (!value) {
+                showNotification('Type a transcript first.', 'warning');
+                return;
+            }
+            readingTranscript = value;
+            if (transcriptEl) transcriptEl.textContent = value;
+            readingFallbackAutoOpenRequested = false;
+            setReadingFallbackVisibility(false);
+            setReadingFallbackCardState(false, false);
+            showNotification('Manual transcript applied. You can now analyze it.', 'success');
+        }
+
+        function clearReadingTranscriptFallback() {
+            const fallbackEl = document.getElementById('readingTranscriptFallback');
+            if (fallbackEl) fallbackEl.value = '';
+            showNotification('Manual transcript cleared.', 'info');
         }
 
         function skipRecordingExercise() {
@@ -19754,20 +19970,29 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             const statusEl = document.getElementById('readingRecordingStatus');
             const resultEl = document.getElementById('readingAiResult');
             const transcriptEl = document.getElementById('readingTranscript');
+            const fallbackTranscript = document.getElementById('readingTranscriptFallback')?.value || '';
 
             const expectedText = document.getElementById('readingContent')?.textContent || '';
             const expectedWords = tokenizeText(expectedText);
-            const spokenWords = tokenizeText(readingTranscript);
+            const activeTranscript = String(readingTranscript || fallbackTranscript || '').trim();
+            const spokenWords = tokenizeText(activeTranscript);
 
             if (!spokenWords.length) {
                 if (statusEl) statusEl.textContent = 'Status: no speech detected';
                 if (transcriptEl) transcriptEl.textContent = 'No clear speech detected. Please record again and speak closer to the mic.';
+                readingFallbackAutoOpenRequested = true;
+                setReadingFallbackVisibility(true);
+                setReadingFallbackCardState(true, false);
                 if (resultEl) {
                     resultEl.style.display = 'block';
                     resultEl.innerHTML = '<p style="margin: 0; color: #b71c1c; font-weight: 600;">AI Analysis: No valid transcript captured yet.</p>';
                 }
                 return;
             }
+
+            readingFallbackAutoOpenRequested = false;
+            setReadingFallbackVisibility(false);
+            setReadingFallbackCardState(false, false);
 
             const expectedSet = new Set(expectedWords);
             let matchedCount = 0;
@@ -19815,7 +20040,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (completenessScore < 70) improve.push('Try to read the full passage to completion.');
 
             readingAiAnalysis = {
-                transcript: readingTranscript,
+                transcript: activeTranscript,
                 durationSec: readingDurationSec,
                 wpm: wordsPerMinute,
                 recognitionConfidence: confidenceScore,
@@ -20245,6 +20470,116 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             return labels.join(' • ');
         }
 
+        function getReadingFallbackPreferenceStorageKey() {
+            const email = currentUser && currentUser.email ? currentUser.email : 'guest';
+            const safeEmail = typeof normalizeEmailKey === 'function'
+                ? normalizeEmailKey(email)
+                : String(email || 'guest').trim().toLowerCase();
+            return `mindshift_reading_fallback_open_${safeEmail || 'guest'}`;
+        }
+
+        function readReadingFallbackPreference() {
+            try {
+                const raw = localStorage.getItem(getReadingFallbackPreferenceStorageKey());
+                if (raw === '1') return true;
+                if (raw === '0') return false;
+            } catch (error) {
+                console.warn('Cannot read reading fallback preference:', error);
+            }
+            return null;
+        }
+
+        function saveReadingFallbackPreference(isOpen) {
+            try {
+                localStorage.setItem(getReadingFallbackPreferenceStorageKey(), isOpen ? '1' : '0');
+            } catch (error) {
+                console.warn('Cannot save reading fallback preference:', error);
+            }
+        }
+
+        function setReadingFallbackVisibility(isVisible) {
+            const wrap = document.getElementById('readingFallbackWrap');
+            if (!wrap) return;
+
+            const visible = Boolean(isVisible);
+            wrap.style.display = visible ? '' : 'none';
+
+            if (!visible) {
+                wrap.dataset.open = '0';
+                const card = document.getElementById('readingFallbackCard');
+                const toggle = document.getElementById('readingFallbackToggle');
+                if (card) card.setAttribute('aria-hidden', 'true');
+                if (toggle) toggle.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function setReadingFallbackCardState(isOpen, persistPreference = false) {
+            const wrap = document.getElementById('readingFallbackWrap');
+            const card = document.getElementById('readingFallbackCard');
+            const toggle = document.getElementById('readingFallbackToggle');
+            if (!wrap || !card || !toggle) return;
+
+            const open = Boolean(isOpen);
+            wrap.dataset.open = open ? '1' : '0';
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            card.setAttribute('aria-hidden', open ? 'false' : 'true');
+
+            if (persistPreference) {
+                saveReadingFallbackPreference(open);
+            }
+        }
+
+        function toggleReadingFallbackCard(forceOpen = null) {
+            const wrap = document.getElementById('readingFallbackWrap');
+            if (!wrap) return;
+
+            const isOpen = wrap.dataset.open === '1';
+            const nextOpen = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
+            setReadingFallbackCardState(nextOpen, true);
+        }
+
+        function updateReadingManualFallbackUX() {
+            const recordingPanel = document.getElementById('readingRecordingPanel');
+            const recordButton = document.getElementById('readingRecordBtn');
+            const statusEl = document.getElementById('readingRecordingStatus');
+            const timerEl = document.getElementById('readingRecordingTimer');
+            const transcriptFallback = document.getElementById('readingTranscriptFallback');
+            const transcriptBox = document.getElementById('readingTranscript');
+            const speechSupported = Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+            const transcriptText = String(readingTranscript || '').trim();
+            const hasDetectedTranscript = transcriptText.length > 1 && !/no\s+clear\s+speech\s+detected/i.test(transcriptText);
+            const shouldOpenFallback = readingFallbackAutoOpenRequested && !hasDetectedTranscript;
+
+            if (transcriptFallback) {
+                transcriptFallback.placeholder = speechSupported
+                    ? 'If voice recognition is unreliable, type the transcript here as fallback.'
+                    : 'Speech recognition is unavailable. Type the transcript here.';
+            }
+            setReadingFallbackVisibility(shouldOpenFallback);
+            setReadingFallbackCardState(shouldOpenFallback, false);
+            if (recordButton) {
+                recordButton.style.display = '';
+            }
+            if (statusEl) {
+                statusEl.style.display = '';
+            }
+            if (timerEl) {
+                timerEl.style.display = '';
+            }
+            if (transcriptBox) {
+                transcriptBox.dataset.mobileHintShown = '1';
+            }
+
+            const manualHint = document.getElementById('readingManualHint');
+            if (manualHint) {
+                manualHint.style.display = (!speechSupported || readingFallbackAutoOpenRequested) ? '' : 'none';
+            }
+
+            if (recordingPanel) {
+                recordingPanel.dataset.mobileFallback = speechSupported ? '0' : '1';
+            }
+        }
+
         function updateChallengeReadingPanelsVisibility(focusInput = null) {
             const focus = normalizeChallengeSkillFocus(focusInput || getChallengeSkillFocus());
             const recordingPanel = document.getElementById('readingRecordingPanel');
@@ -20267,6 +20602,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (focusChip) {
                 focusChip.textContent = `Focus aktif: ${getChallengeSkillFocusSummary(focus).replaceAll(' • ', ' + ')}`;
             }
+
+            updateReadingManualFallbackUX();
         }
 
         function syncChallengeFocusSelectors() {
