@@ -17301,7 +17301,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         const LAST_ACTIVE_USER_EMAIL_KEY = 'mindshift_last_active_user_email';
         const RECENT_ACCOUNTS_KEY = 'mindshift_recent_accounts';
         const MAX_RECENT_ACCOUNTS = 5;
-        const SPREADSHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbyLo5HUth4Cgs_2OQYqFqG2h1QJ733FZabDE5Pow14w1lYoZStr-q0x-ow1IEmv-6_FRA/exec';
+        const SPREADSHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbzMvJNfb7K5Rt8xlERY9eRyETKvWTVHvmd3ANiBHcn4YhQM2ifzVyX8RDipfibN51HRSQ/exec';
         const SPREADSHEET_SYNC_API_KEY = '';
         const SPREADSHEET_AUTO_SYNC_ENABLED = true;
         const SPREADSHEET_SYNC_DEBOUNCE_MS = 2500;
@@ -17387,6 +17387,27 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
         let spreadsheetSyncTimer = null;
         let spreadsheetSyncInFlight = false;
+
+        function isGithubPagesHost() {
+            const host = String(window.location.hostname || '').toLowerCase();
+            return host.endsWith('github.io');
+        }
+
+        function encodePayloadForQuery(payload) {
+            try {
+                return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
+            } catch (error) {
+                return '';
+            }
+        }
+
+        function buildSpreadsheetEndpoint() {
+            const targetUrl = String(SPREADSHEET_SYNC_URL || '').trim();
+            if (!targetUrl) return '';
+            return SPREADSHEET_SYNC_API_KEY
+                ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}key=${encodeURIComponent(SPREADSHEET_SYNC_API_KEY)}`
+                : targetUrl;
+        }
 
         function parseJsonSafely(rawValue, fallbackValue) {
             if (typeof rawValue !== 'string') return fallbackValue;
@@ -17476,12 +17497,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         }
 
         async function postSpreadsheetPayload(payload) {
-            const targetUrl = String(SPREADSHEET_SYNC_URL || '').trim();
-            if (!targetUrl) return;
-
-            const endpoint = SPREADSHEET_SYNC_API_KEY
-                ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}key=${encodeURIComponent(SPREADSHEET_SYNC_API_KEY)}`
-                : targetUrl;
+            const endpoint = buildSpreadsheetEndpoint();
+            if (!endpoint) return;
 
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -17492,6 +17509,13 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             });
 
             if (response.type === 'opaque') {
+                if (isGithubPagesHost()) {
+                    const encodedPayload = encodePayloadForQuery(payload);
+                    if (encodedPayload) {
+                        const fallbackUrl = `${endpoint}${endpoint.includes('?') ? '&' : '?'}transport=get&payload=${encodedPayload}`;
+                        fetch(fallbackUrl, { method: 'GET', mode: 'no-cors', cache: 'no-store' }).catch(() => {});
+                    }
+                }
                 return;
             }
 
