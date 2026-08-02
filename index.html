@@ -19315,6 +19315,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 readingFallbackAutoOpenRequested = true;
                 setReadingFallbackVisibility(true);
                 setReadingFallbackCardState(true, false);
+                if (autofillReadingFallbackFromScript()) {
+                    showNotification('Recording unavailable. Fallback transcript has been auto-filled from reading script.', 'info');
+                }
                 return;
             }
 
@@ -19399,6 +19402,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                                 readingFallbackAutoOpenRequested = true;
                                 setReadingFallbackVisibility(true);
                                 setReadingFallbackCardState(true, false);
+                                autofillReadingFallbackFromScript();
                             }
                         };
 
@@ -19409,6 +19413,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                                 readingFallbackAutoOpenRequested = true;
                                 setReadingFallbackVisibility(true);
                                 setReadingFallbackCardState(true, false);
+                                autofillReadingFallbackFromScript();
                             }
                         };
 
@@ -19417,6 +19422,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         console.error('Reading recognition start error:', recognitionError);
                         if (statusEl) statusEl.textContent = 'Status: microphone blocked';
                         showNotification('Unable to start speech recognition. Please allow microphone access or try Chrome/Edge.', 'error');
+                        autofillReadingFallbackFromScript();
                         stopReadingRecording();
                     }
                 };
@@ -19443,6 +19449,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         readingFallbackAutoOpenRequested = true;
                         setReadingFallbackVisibility(true);
                         setReadingFallbackCardState(true, false);
+                        autofillReadingFallbackFromScript();
                     }
                 }, 4000);
 
@@ -19461,6 +19468,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 console.error('Recording start error:', error);
                 showNotification('Unable to access microphone. Please allow permission.', 'error');
                 if (statusEl) statusEl.textContent = 'Status: microphone blocked';
+                readingFallbackAutoOpenRequested = true;
+                setReadingFallbackVisibility(true);
+                setReadingFallbackCardState(true, false);
+                autofillReadingFallbackFromScript();
             }
         }
 
@@ -19995,6 +20006,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 readingFallbackAutoOpenRequested = true;
                 setReadingFallbackVisibility(true);
                 setReadingFallbackCardState(true, false);
+                autofillReadingFallbackFromScript();
                 if (resultEl) {
                     resultEl.style.display = 'block';
                     resultEl.innerHTML = '<p style="margin: 0; color: #b71c1c; font-weight: 600;">AI Analysis: No valid transcript captured yet.</p>';
@@ -20523,6 +20535,18 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 if (card) card.setAttribute('aria-hidden', 'true');
                 if (toggle) toggle.setAttribute('aria-expanded', 'false');
             }
+        }
+
+        function autofillReadingFallbackFromScript() {
+            const fallbackEl = document.getElementById('readingTranscriptFallback');
+            const readingContentEl = document.getElementById('readingContent');
+            if (!fallbackEl || !readingContentEl) return false;
+
+            const scriptText = String(readingContentEl.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!scriptText || /today's reading content will appear here\.?/i.test(scriptText)) return false;
+
+            fallbackEl.value = scriptText;
+            return true;
         }
 
         function setReadingFallbackCardState(isOpen, persistPreference = false) {
