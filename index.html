@@ -19166,7 +19166,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         readingRecognition = new SpeechRecognitionCtor();
                         readingRecognition.lang = 'en-US';
                         readingRecognition.interimResults = true;
-                        readingRecognition.continuous = false;
+                        readingRecognition.continuous = true;
+                        readingRecognition.maxAlternatives = 1;
 
                         readingRecognition.onstart = () => {
                             if (statusEl) statusEl.textContent = 'Status: recording...';
@@ -19200,27 +19201,15 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
                         readingRecognition.onerror = (event) => {
                             console.warn('Reading speech recognition error:', event?.error || event);
-                            // Keep the session alive on transient mobile recognition glitches.
-                            if (readingIsRecording && sessionId === recognitionSessionId) {
-                                setTimeout(() => {
-                                    if (readingIsRecording && sessionId === recognitionSessionId) {
-                                        startSpeechCapture();
-                                    }
-                                }, 350);
+                            if (event?.error === 'no-speech' && transcriptEl && readingIsRecording) {
+                                transcriptEl.textContent = 'No speech detected yet. Speak louder or closer to the mic, then tap Stop and try again.';
                             }
                         };
 
                         readingRecognition.onend = () => {
                             readingRecognition = null;
-                            if (readingIsRecording && sessionId === recognitionSessionId) {
-                                if (!readingTranscript || readingTranscript.length < 2) {
-                                    setTimeout(() => {
-                                        if (readingIsRecording && sessionId === recognitionSessionId) {
-                                            startSpeechCapture();
-                                        }
-                                    }, 250);
-                                    return;
-                                }
+                            if (readingIsRecording && sessionId === recognitionSessionId && !readingTranscript) {
+                                if (statusEl) statusEl.textContent = 'Status: no speech detected';
                             }
                         };
 
