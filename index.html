@@ -9761,6 +9761,10 @@
                         <input type="tel" id="profilePhone" placeholder="+62 xxx xxxx xxxx" />
                     </div>
                     <div class="form-group">
+                        <label>Asal Daerah</label>
+                        <input type="text" id="profileRegion" placeholder="Contoh: Bandung, Jawa Barat" />
+                    </div>
+                    <div class="form-group">
                         <label>ID Number</label>
                         <input type="text" id="profileIdNumber" placeholder="MS-2026-0001" />
                     </div>
@@ -9788,6 +9792,7 @@
                         <p><strong>Current Level:</strong> <span id="currentLevel">Beginner</span></p>
                         <p><strong>Total Words:</strong> <span id="totalWords">0</span></p>
                         <p><strong>Total XP:</strong> <span id="profileTotalXP">0</span></p>
+                        <p><strong>Asal Daerah:</strong> <span id="profileRegionDisplay">-</span></p>
                         <p><strong>ID Number:</strong> <span id="profileIdDisplay">-</span></p>
                         <p><strong style="color: #F59E0B;">🎁 Bonus Points:</strong> <span id="profileBonusPoints" style="color: #F59E0B; font-weight: bold;">0</span></p>
                         <p><strong>Current Avatar:</strong> <span id="profileCurrentAvatar">🙂 Starter</span></p>
@@ -10384,7 +10389,7 @@ firestore root
   { day: 43, title: 'At the zoo', category: 'Leisure', description: 'Zoo animals and wildlife', keyVocabulary: ['animal', 'zoo', 'lion', 'elephant', 'monkey', 'bird', 'habitat', 'endangered'], scenarioDescription: 'Visiting a zoo and learning about animals', listeningTopic: 'Listen to zoo guide talking about different animals', readingExample: 'Lions are carnivores. They live in Africa and Asia.', writingPrompt: 'Write about your favorite zoo animals and their characteristics.', emotionModes: ['curious', 'amazed', 'educational'] },
   { day: 44, title: 'Going out in the evening', category: 'Leisure', description: 'Evening entertainment and social activities', keyVocabulary: ['evening', 'go out', 'movie', 'dinner', 'friends', 'enjoy', 'late', 'fun'], scenarioDescription: 'Planning and discussing evening activities with friends', listeningTopic: 'Listen to friends planning an evening out', readingExample: 'Would you like to go out this evening? We could see a movie or have dinner.', writingPrompt: 'Write a dialogue planning a fun evening with friends.', emotionModes: ['excited', 'friendly', 'enthusiastic'] },
   { day: 45, title: 'At the cinema', category: 'Leisure', description: 'Movie theater experience and film discussion', keyVocabulary: ['cinema', 'movie', 'film', 'ticket', 'popcorn', 'screen', 'actor', 'trailer'], scenarioDescription: 'Watching movies at the cinema', listeningTopic: 'Listen to movie discussions and cinema conversations', readingExample: 'The movie was fantastic! I loved the special effects.', writingPrompt: 'Write a movie review of your favorite film.', emotionModes: ['enthusiastic', 'expressive', 'imaginative'] },
-  { day: 46, title: 'In the discotic', category: 'Leisure', description: 'Nightlife, dancing, and music venues', keyVocabulary: ['disco', 'dance', 'music', 'DJ', 'party', 'loud', 'dance floor', 'fun'], scenarioDescription: 'Going out dancing and enjoying nightlife', listeningTopic: 'Listen to conversations in a nightclub', readingExample: 'The music is very loud in the disco. People are dancing.', writingPrompt: 'Describe a fun night out at a music venue.', emotionModes: ['energetic', 'excited', 'lively'] },
+    { day: 46, title: 'In the Live Music Café', category: 'Leisure', description: 'Nightlife, dancing, and music venues', keyVocabulary: ['disco', 'dance', 'music', 'DJ', 'party', 'loud', 'dance floor', 'fun'], scenarioDescription: 'Going out dancing and enjoying nightlife', listeningTopic: 'Listen to conversations in a nightclub', readingExample: 'The music is very loud in the disco. People are dancing.', writingPrompt: 'Describe a fun night out at a music venue.', emotionModes: ['energetic', 'excited', 'lively'] },
   { day: 47, title: 'Preparing a trip', category: 'Travel', description: 'Planning and preparing for travel', keyVocabulary: ['trip', 'prepare', 'pack', 'luggage', 'plan', 'itinerary', 'document', 'budget'], scenarioDescription: 'Getting ready for a vacation or trip', listeningTopic: 'Listen to people planning a trip', readingExample: 'I am preparing for my trip to Spain. I need to pack my luggage.', writingPrompt: 'Write a detailed packing list and travel itinerary.', emotionModes: ['organized', 'excited', 'thoughtful'] },
   { day: 48, title: 'Vacation activities', category: 'Travel', description: 'Things to do while on vacation', keyVocabulary: ['vacation', 'relax', 'beach', 'swimming', 'explore', 'sightseeing', 'souvenir'], scenarioDescription: 'Enjoying vacation and trying new experiences', listeningTopic: 'Listen to people describing their vacation activities', readingExample: 'On vacation, I relaxed on the beach and went swimming.', writingPrompt: 'Write about your dream vacation and ideal activities.', emotionModes: ['relaxed', 'excited', 'adventurous'] },
   { day: 49, title: 'Sports', category: 'Leisure', description: 'Sports, fitness, and athletic activities', keyVocabulary: ['sport', 'play', 'team', 'win', 'lose', 'exercise', 'athlete', 'coach'], scenarioDescription: 'Discussing favorite sports and athletic activities', listeningTopic: 'Listen to sports commentaries and athlete interviews', readingExample: 'I play soccer twice a week. My team is very competitive.', writingPrompt: 'Write about your favorite sport and why you enjoy it.', emotionModes: ['energetic', 'competitive', 'passionate'] },
@@ -14848,7 +14853,7 @@ I walk out slowly.
 Another day, another story.`,
   },
   46: {
-    theme: "In the Discotic (From Outside) - Lingkungan malam, refleksi diri, dan menjaga prinsip",
+    theme: "In the Live Music Café (From Outside) - Lingkungan malam, refleksi diri, dan menjaga prinsip",
     passage: `At night, I go out.
 I walk through the city.
 I see a discotic.
@@ -16984,7 +16989,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     { id: 3, question: 'Day 43 (Zoo): What device has a low battery?', options: ['Phone', 'Camera', 'Video camera', 'Watch'], correct: 'Video camera' },
                     { id: 4, question: 'Day 44 (Evening): Where does the narrator want to sit in the cinema?', options: ['At the front', 'In the middle', 'At the back', 'On the side'], correct: 'At the back' },
                     { id: 5, question: 'Day 45 (Cinema): What was better than the film?', options: ['The music', 'The actors', 'The book', 'The popcorn'], correct: 'The book' },
-                    { id: 6, question: 'Day 46 (Discotic): Why does the narrator NOT enter the disco?', options: ['No money', 'Too tired', 'Personal values/Muslim', 'Closed'], correct: 'Personal values/Muslim' },
+                    { id: 6, question: 'Day 46 (Live Music Café): Why does the narrator NOT enter the venue?', options: ['No money', 'Too tired', 'Personal values/Muslim', 'Closed'], correct: 'Personal values/Muslim' },
                     { id: 7, question: 'Day 47 (Trip Prep): What is NOT mentioned in the packing list?', options: ['Passport', 'Ticket', 'Umbrella', 'Computer'], correct: 'Computer' },
                     { id: 8, question: 'Day 48 (Vacation): What activity does the narrator want to try?', options: ['Skiing', 'Surfing or Diving', 'Hiking', 'Fishing'], correct: 'Surfing or Diving' },
                     { id: 9, question: 'Day 49 (Sports): Which teams are playing football?', options: ['Brazil vs Spain', 'German vs English', 'Italy vs France', 'Local teams'], correct: 'German vs English' },
@@ -17296,6 +17301,11 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         const LAST_ACTIVE_USER_EMAIL_KEY = 'mindshift_last_active_user_email';
         const RECENT_ACCOUNTS_KEY = 'mindshift_recent_accounts';
         const MAX_RECENT_ACCOUNTS = 5;
+        const SPREADSHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbzcQV9CNxVQvYZUlM3fQPX2edG-BxJQrcdWBUoCTTwSYVlhfd9SBTyJ83u9zuNxuU7a8g/exec';
+        const SPREADSHEET_SYNC_API_KEY = '';
+        const SPREADSHEET_AUTO_SYNC_ENABLED = true;
+        const SPREADSHEET_SYNC_DEBOUNCE_MS = 2500;
+        const SPREADSHEET_SYNC_QUEUE_KEY = 'mindshift_spreadsheet_sync_queue';
         const OVERVIEW_TUTORIAL_DURATION = 60;
         const OVERVIEW_TUTORIAL_SCENES = [
             {
@@ -17367,6 +17377,154 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 desc: 'Nyalakan reminder sesuai jam belajarmu agar streak tidak putus. Kamu siap mulai!'
             }
         ];
+
+        let spreadsheetSyncTimer = null;
+        let spreadsheetSyncInFlight = false;
+
+        function parseJsonSafely(rawValue, fallbackValue) {
+            if (typeof rawValue !== 'string') return fallbackValue;
+            try {
+                return JSON.parse(rawValue);
+            } catch (error) {
+                return fallbackValue;
+            }
+        }
+
+        function getSpreadsheetSyncQueue() {
+            const queue = parseJsonSafely(localStorage.getItem(SPREADSHEET_SYNC_QUEUE_KEY), []);
+            return Array.isArray(queue) ? queue : [];
+        }
+
+        function setSpreadsheetSyncQueue(queue) {
+            const safeQueue = Array.isArray(queue) ? queue.slice(-20) : [];
+            localStorage.setItem(SPREADSHEET_SYNC_QUEUE_KEY, JSON.stringify(safeQueue));
+        }
+
+        function buildIndexSpreadsheetPayload() {
+            if (!currentUser || !currentUser.email || currentUser.isGuest) return null;
+
+            const profile = currentUser || {};
+            const progress = userProgress || {};
+            const speakingStats = parseJsonSafely(localStorage.getItem('speakingStats'), { totalSessions: 0, totalSpeeches: 0, totalMinutes: 0 });
+            const speakingPracticeHistory = parseJsonSafely(localStorage.getItem('speakingPracticeHistory'), []);
+            const speakingFeedbackSessions = parseJsonSafely(localStorage.getItem('speakingFeedbackSessions'), []);
+            const speakingMode = localStorage.getItem('speakingMode') || 'qa';
+            const preferredStudyTime = localStorage.getItem('preferredStudyTime') || 'morning';
+            const celebrationStoryTemplate = localStorage.getItem('celebrationStoryTemplate') || 'clean';
+
+            const completedDays = Array.isArray(progress.completedDayNumbers) ? progress.completedDayNumbers.length : 0;
+            const totalBadges = Array.isArray(progress.unlockedBadges) ? progress.unlockedBadges.length : 0;
+            const certificateCount = typeof getUnlockedCertificates === 'function' ? getUnlockedCertificates(completedDays).length : 0;
+
+            return {
+                generatedAt: new Date().toISOString(),
+                source: 'index-html-runtime',
+                user: {
+                    email: String(profile.email || '').toLowerCase(),
+                    name: profile.name || '',
+                    phone: profile.phone || '',
+                    region: profile.region || '',
+                    idNumber: profile.idNumber || '',
+                    joinedAt: profile.joinedAt || '',
+                    hasPhoto: Boolean(profile.profilePhoto),
+                    idCardTemplate: profile.idCardTemplate || localStorage.getItem('profileIdCardTemplate') || 'clean'
+                },
+                progressSummary: {
+                    completedDays,
+                    totalXP: Number(progress.totalXP || 0),
+                    totalBonusPoints: Number(progress.totalBonusPoints || 0),
+                    badgesCount: totalBadges,
+                    certificatesCount: certificateCount,
+                    currentStreak: Number(progress.currentStreak || calculateCurrentStreak() || 0),
+                    longestStreak: Number(progress.longestStreak || 0)
+                },
+                speaking: {
+                    mode: speakingMode,
+                    stats: speakingStats,
+                    practiceCount: Array.isArray(speakingPracticeHistory) ? speakingPracticeHistory.length : 0,
+                    feedbackCount: Array.isArray(speakingFeedbackSessions) ? speakingFeedbackSessions.length : 0
+                },
+                preferences: {
+                    preferredStudyTime,
+                    celebrationStoryTemplate,
+                    soundProfile: progress?.settings?.soundProfile || 'arcade',
+                    challengeTheme: progress.selectedChallengeTheme || 'classic-indigo'
+                },
+                dataCoverage: {
+                    completedTasksCount: Object.keys(progress.completedTasks || {}).length,
+                    quizHistoryCount: Array.isArray(progress.quizHistory) ? progress.quizHistory.length : 0,
+                    dailyReflectionsCount: Array.isArray(progress.dailyReflections) ? progress.dailyReflections.length : 0,
+                    readingAnalysesCount: Object.keys(progress.readingAnalyses || {}).length,
+                    writingAnalysesCount: Object.keys(progress.writingAnalyses || {}).length,
+                    dayCompletionDatesCount: Array.isArray(dayCompletionDates) ? dayCompletionDates.length : 0
+                },
+                rawSignals: {
+                    recentAccountsCount: parseJsonSafely(localStorage.getItem(RECENT_ACCOUNTS_KEY), []).length,
+                    lastActiveEmail: normalizeEmailKey(localStorage.getItem(LAST_ACTIVE_USER_EMAIL_KEY) || ''),
+                    selectedAvatar: progress.selectedAvatar || 'starter'
+                }
+            };
+        }
+
+        async function postSpreadsheetPayload(payload) {
+            const targetUrl = String(SPREADSHEET_SYNC_URL || '').trim();
+            if (!targetUrl) return;
+
+            const endpoint = SPREADSHEET_SYNC_API_KEY
+                ? `${targetUrl}${targetUrl.includes('?') ? '&' : '?'}key=${encodeURIComponent(SPREADSHEET_SYNC_API_KEY)}`
+                : targetUrl;
+
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Spreadsheet sync HTTP ${response.status}`);
+            }
+        }
+
+        async function flushSpreadsheetSyncQueue() {
+            if (!SPREADSHEET_AUTO_SYNC_ENABLED || spreadsheetSyncInFlight) return;
+            if (!navigator.onLine) return;
+
+            const queue = getSpreadsheetSyncQueue();
+            if (!queue.length) return;
+
+            spreadsheetSyncInFlight = true;
+            try {
+                while (queue.length) {
+                    const item = queue[0];
+                    await postSpreadsheetPayload(item);
+                    queue.shift();
+                    setSpreadsheetSyncQueue(queue);
+                }
+            } catch (error) {
+                console.warn('Spreadsheet sync pending:', error);
+                setSpreadsheetSyncQueue(queue);
+            } finally {
+                spreadsheetSyncInFlight = false;
+            }
+        }
+
+        function scheduleSpreadsheetSync() {
+            if (!SPREADSHEET_AUTO_SYNC_ENABLED) return;
+            const payload = buildIndexSpreadsheetPayload();
+            if (!payload) return;
+
+            const queue = getSpreadsheetSyncQueue();
+            queue.push(payload);
+            setSpreadsheetSyncQueue(queue);
+
+            if (spreadsheetSyncTimer) {
+                clearTimeout(spreadsheetSyncTimer);
+            }
+
+            spreadsheetSyncTimer = setTimeout(() => {
+                flushSpreadsheetSyncQueue();
+            }, SPREADSHEET_SYNC_DEBOUNCE_MS);
+        }
 
         // ============ SIDEBAR TOGGLE ============
         function toggleSidebar() {
@@ -17473,9 +17631,14 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 updateOverviewFlow();
                 updateAuthButton();
                 renderRecentAccountsDropdown();
+                flushSpreadsheetSyncQueue();
             } catch (error) {
                 console.error('DOMContentLoaded error:', error);
             }
+        });
+
+        window.addEventListener('online', () => {
+            flushSpreadsheetSyncQueue();
         });
 
         // ============ AUTHENTICATION ============
@@ -17800,6 +17963,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             localStorage.setItem('mindshift_user', JSON.stringify(currentUser));
             localStorage.setItem('mindshift_progress', JSON.stringify(userProgress));
             localStorage.setItem('dayCompletionDates', JSON.stringify(dayCompletionDates));
+            scheduleSpreadsheetSync();
             
             setTimeout(() => {
                 setSaveSyncStatus('saved', `Saved ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
@@ -26242,6 +26406,8 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             document.getElementById('profileName').value = currentUser.name;
             document.getElementById('profileEmail').value = currentUser.email;
             document.getElementById('profilePhone').value = currentUser.phone || '';
+            document.getElementById('profileRegion').value = currentUser.region || '';
+            document.getElementById('profileRegionDisplay').textContent = currentUser.region || '-';
             document.getElementById('profileIdNumber').value = currentUser.idNumber || '';
             document.getElementById('profileIdDisplay').textContent = currentUser.idNumber || '-';
             renderProfilePhotoPreview(currentUser.profilePhoto || '');
@@ -26520,7 +26686,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         function updateProfile() {
             currentUser.name = document.getElementById('profileName').value;
             currentUser.phone = document.getElementById('profilePhone').value;
+            currentUser.region = document.getElementById('profileRegion').value;
             currentUser.idNumber = document.getElementById('profileIdNumber').value;
+            document.getElementById('profileRegionDisplay').textContent = currentUser.region || '-';
             currentUser.idCardTemplate = getCurrentProfileIdCardTemplate();
             document.getElementById('profileIdDisplay').textContent = currentUser.idNumber || '-';
             renderProfilePhotoPreview(currentUser.profilePhoto || '');
@@ -29112,6 +29280,109 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             </div>
         </div>
     </div>
+
+        <script id="mindshift-export-config" type="application/json">
+{
+    "exportId": "mindshift-index-export-v1",
+    "description": "Config for extracting MindShift data from index.html and companion data files into Google Sheets.",
+    "updatedAt": "2026-08-02",
+    "source": {
+        "entryHtml": "index.html",
+        "linkedDataFiles": [
+            "readingChallenges.data.js"
+        ]
+    },
+    "datasets": {
+        "themes": {
+            "type": "jsArray",
+            "from": "index.html",
+            "startMarker": "const THEMES = [",
+            "endMarker": "];\n\n        // ============ WRITING CHALLENGES CONTENT",
+            "arrayVariableName": "THEMES"
+        },
+        "quizData": {
+            "type": "jsObject",
+            "from": "index.html",
+            "startMarker": "const QUIZ_DATA = {",
+            "endMarker": "};\n\n        // Deploy-safe immutable snapshot for milestone quiz content.",
+            "objectVariableName": "QUIZ_DATA"
+        },
+        "readingChallenges": {
+            "type": "jsArray",
+            "from": "readingChallenges.data.js",
+            "startMarker": "window.READING_CHALLENGES_DATA = [",
+            "endMarker": "];",
+            "arrayVariableName": "READING_CHALLENGES_DATA"
+        }
+    },
+    "sheetTemplates": {
+        "Metadata": {
+            "columns": [
+                "sync_timestamp",
+                "export_id",
+                "entry_html",
+                "linked_files",
+                "themes_count",
+                "quiz_milestones_count",
+                "quiz_questions_total",
+                "reading_count"
+            ]
+        },
+        "Themes": {
+            "columns": [
+                "day",
+                "title",
+                "category",
+                "description",
+                "scenario_description",
+                "listening_topic",
+                "reading_example",
+                "writing_prompt",
+                "key_vocabulary_csv",
+                "emotion_modes_csv"
+            ]
+        },
+        "Quiz": {
+            "columns": [
+                "milestone_day",
+                "quiz_title",
+                "quiz_badge",
+                "question_id",
+                "question_text",
+                "options_csv",
+                "correct_answer"
+            ]
+        },
+        "Reading": {
+            "columns": [
+                "day",
+                "theme",
+                "title",
+                "level",
+                "category",
+                "text",
+                "key_focus",
+                "vocabulary_csv",
+                "skills_csv"
+            ]
+        },
+        "AdminLikeSummary": {
+            "columns": [
+                "metric_key",
+                "metric_label",
+                "metric_value",
+                "notes"
+            ],
+            "defaultRows": [
+                ["themes_total", "Total Themes", "", "Count of themes entries"],
+                ["quiz_milestones_total", "Total Quiz Milestones", "", "Count of milestone quiz groups"],
+                ["quiz_questions_total", "Total Quiz Questions", "", "Sum of all milestone questions"],
+                ["reading_total", "Total Reading Challenges", "", "Count of reading challenge entries"]
+            ]
+        }
+    }
+}
+        </script>
 
 </body>
 </html>
