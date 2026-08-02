@@ -17281,6 +17281,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         let readingTranscript = '';
         let readingRecognitionConfidence = 0;
         let readingTimerInterval = null;
+        let readingNoResultTimer = null;
         let readingAiAnalysis = null;
         let readingRecordingSkipped = false;
         let tiktokVideoWatched = false;
@@ -19041,6 +19042,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 clearInterval(readingTimerInterval);
                 readingTimerInterval = null;
             }
+            if (readingNoResultTimer) {
+                clearTimeout(readingNoResultTimer);
+                readingNoResultTimer = null;
+            }
 
             readingIsRecording = false;
             readingChunks = [];
@@ -19128,7 +19133,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             startReadingRecording();
         }
 
-        async function startReadingRecording() {
+        function startReadingRecording() {
             const statusEl = document.getElementById('readingRecordingStatus');
             const timerEl = document.getElementById('readingRecordingTimer');
             const transcriptEl = document.getElementById('readingTranscript');
@@ -19168,6 +19173,11 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                         };
 
                         readingRecognition.onresult = (event) => {
+                            if (readingNoResultTimer) {
+                                clearTimeout(readingNoResultTimer);
+                                readingNoResultTimer = null;
+                            }
+
                             let combinedTranscript = '';
                             for (let i = event.resultIndex; i < event.results.length; i++) {
                                 const result = event.results[i];
@@ -19237,7 +19247,25 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                     if (timerEl) timerEl.textContent = `Duration: ${elapsed}s`;
                 }, 250);
 
+                readingNoResultTimer = setTimeout(() => {
+                    if (!readingIsRecording) return;
+                    if (!readingTranscript || readingTranscript.length < 2) {
+                        if (statusEl) statusEl.textContent = 'Status: no speech detected';
+                        if (transcriptEl) transcriptEl.textContent = 'No speech detected yet. Speak louder or closer to the mic, then tap Stop and try again.';
+                    }
+                }, 4000);
+
                 startSpeechCapture();
+
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ audio: true })
+                        .then((micStream) => {
+                            micStream.getTracks().forEach((track) => track.stop());
+                        })
+                        .catch((micError) => {
+                            console.warn('Mic permission hint failed:', micError);
+                        });
+                }
             } catch (error) {
                 console.error('Recording start error:', error);
                 showNotification('Unable to access microphone. Please allow permission.', 'error');
@@ -19254,6 +19282,10 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             if (readingTimerInterval) {
                 clearInterval(readingTimerInterval);
                 readingTimerInterval = null;
+            }
+            if (readingNoResultTimer) {
+                clearTimeout(readingNoResultTimer);
+                readingNoResultTimer = null;
             }
 
             const statusEl = document.getElementById('readingRecordingStatus');
