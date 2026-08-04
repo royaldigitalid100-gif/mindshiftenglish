@@ -9032,17 +9032,21 @@
                     <!-- Listening Practice Counter -->
                     <div class="listening-counter-box challenge-support challenge-surface" style="margin-top: 18px;">
                         <p style="color: var(--gray-600); font-weight: 700; margin-bottom: 14px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">📊 Track Your Audio Shadowing</p>
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
                             <span style="color: var(--gray-400); font-size: 13px; font-weight: 600;">Shadowing Repetitions:</span>
-                            <div style="background: white; padding: 12px 24px; border-radius: 14px; box-shadow: var(--shadow-md); border: 1px solid var(--gray-200);">
-                                <span id="listeningCountDisplay" class="listening-count-display">0</span>
-                                <span style="color: var(--gray-400); font-size: 13px; margin-left: 6px; font-weight: 600;">times</span>
+                            <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 10px 12px; border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--gray-200);">
+                                <button type="button" onclick="decrementListeningCount()" aria-label="Kurangi shadowing repetitions" style="width: 40px; height: 40px; border: none; border-radius: 12px; background: #FEE2E2; color: #B91C1C; font-size: 22px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background 0.15s ease;">−</button>
+                                <span id="listeningCountDisplay" class="listening-count-display" style="min-width: 56px; text-align: center;">0</span>
+                                <button type="button" onclick="incrementListeningCount()" aria-label="Tambah shadowing repetitions" style="width: 40px; height: 40px; border: none; border-radius: 12px; background: #DCFCE7; color: #166534; font-size: 22px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: transform 0.15s ease, background 0.15s ease;">+</button>
                             </div>
+                            <span style="color: var(--gray-400); font-size: 13px; font-weight: 600;">times</span>
                         </div>
-                        <button class="btn btn-primary" onclick="incrementListeningCount()" style="font-size: 14px; padding: 11px 28px; border-radius: 12px;">
-                            ✓ Imitasi Audio Selesai (Shadowing)
-                        </button>
-                        <p style="color: var(--gray-400); font-size: 12px; margin-top: 10px; font-style: italic; font-weight: 500;">Klik setiap kali kamu memutar audio lalu menirukan pengucapannya.</p>
+                        <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                            <button class="btn btn-primary" onclick="incrementListeningCount()" style="font-size: 14px; padding: 11px 28px; border-radius: 12px;">
+                                ✓ Imitasi Audio Selesai (Shadowing)
+                            </button>
+                        </div>
+                        <p style="color: var(--gray-400); font-size: 12px; margin-top: 10px; font-style: italic; font-weight: 500; text-align: center;">Gunakan tombol + atau − untuk menyesuaikan jumlah shadowing yang benar-benar kamu lakukan.</p>
                     </div>
                     
                     <div class="challenge-action-row">
@@ -16607,7 +16611,7 @@ It has only just begun.`,
   43: 'https://drive.google.com/file/d/1EzCtU6KrB70KnXw-1ZitiId88a7puiif/view?usp=sharing',
   44: 'https://drive.google.com/file/d/1F0uUXp4hRBy_LEgwTxqWCJ_G6aJO8cp_/view?usp=sharing',
   45: 'https://drive.google.com/file/d/1F46LIBPGd205g4lA75vYG9fL2ejSSVo-/view?usp=sharing',
-  46: 'https://drive.google.com/file/d/1F7WyvnMiAo7PsaLUts3fEen-nQjKB28P/view?usp=sharing',
+  46: 'https://drive.google.com/file/d/1I9O2tjx318saRSJ4hjYz7mUtxyFnDIlK/view?usp=sharing',
   47: 'https://drive.google.com/file/d/1F7mF3mnl_yuXrCr41_DXTUCHI4KqJh1m/view?usp=sharing',
   48: 'https://drive.google.com/file/d/1F8_cUKC3Ad_FRUAdTD7yYqTtQB-0waWt/view?usp=sharing',
   49: 'https://drive.google.com/file/d/1F8_tcHl9Jm8A8VA6O3qcHF_s9glClTu3/view?usp=sharing',
@@ -21537,34 +21541,49 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
         }
 
         // ============ LISTENING PRACTICE COUNTER ============
-        function incrementListeningCount() {
+        function setListeningCountForCurrentDay(nextCount) {
             if (!currentUser) {
                 showNotification('Please log in first!', 'error');
-                return;
+                return null;
             }
 
             const currentDay = selectedChallengeDay || 1;
-            
-            // Initialize if not exists
+            const safeCount = Math.max(0, Number(nextCount) || 0);
+
             if (!userProgress.listeningCounts) {
                 userProgress.listeningCounts = {};
             }
-            
-            // Increment count for current day
-            if (!userProgress.listeningCounts[currentDay]) {
-                userProgress.listeningCounts[currentDay] = 0;
-            }
-            userProgress.listeningCounts[currentDay]++;
-            
-            // Update display
+
+            userProgress.listeningCounts[currentDay] = safeCount;
             updateListeningDisplay();
-            
-            // Save data
             saveUserData();
-            
-            // Show feedback
-            const count = userProgress.listeningCounts[currentDay];
-            showNotification(`🎧 Great! Practice #${count} recorded for Day ${currentDay}!`, 'success');
+
+            return { currentDay, count: safeCount };
+        }
+
+        function incrementListeningCount() {
+            const currentDay = selectedChallengeDay || 1;
+            const currentCount = Number((userProgress.listeningCounts && userProgress.listeningCounts[currentDay]) || 0);
+            const result = setListeningCountForCurrentDay(currentCount + 1);
+
+            if (result) {
+                showNotification(`🎧 Great! Practice #${result.count} recorded for Day ${result.currentDay}!`, 'success');
+            }
+        }
+
+        function decrementListeningCount() {
+            const currentDay = selectedChallengeDay || 1;
+            const currentCount = Number((userProgress.listeningCounts && userProgress.listeningCounts[currentDay]) || 0);
+
+            if (currentCount <= 0) {
+                showNotification('Shadowing repetitions cannot go below 0.', 'info');
+                return;
+            }
+
+            const result = setListeningCountForCurrentDay(currentCount - 1);
+            if (result) {
+                showNotification(`↩️ Practice adjusted to #${result.count} for Day ${result.currentDay}.`, 'success');
+            }
         }
 
         function updateListeningDisplay() {
