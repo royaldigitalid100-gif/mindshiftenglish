@@ -19206,6 +19206,43 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             renderTypeBTranslationSource(dayValue);
         }
 
+        function ensureReadingWatchedDays() {
+            if (!userProgress) return {};
+            if (!userProgress.readingWatchedDays || typeof userProgress.readingWatchedDays !== 'object') {
+                userProgress.readingWatchedDays = {};
+            }
+            return userProgress.readingWatchedDays;
+        }
+
+        function isReadingWatchedForDay(dayValue) {
+            const dayKey = String(Math.max(1, Number(dayValue) || 1));
+            const watchedDays = ensureReadingWatchedDays();
+            if (watchedDays[dayKey] === true) return true;
+
+            const savedAnalysis = (userProgress.readingAnalyses && userProgress.readingAnalyses[dayKey]) || null;
+            return Boolean(savedAnalysis?.isTiktokBased || savedAnalysis?.sourceType === 'tiktok');
+        }
+
+        function setReadingWatchedForDay(dayValue, watched = true) {
+            const dayKey = String(Math.max(1, Number(dayValue) || 1));
+            const watchedDays = ensureReadingWatchedDays();
+            watchedDays[dayKey] = Boolean(watched);
+        }
+
+        function syncReadingWatchedUi(isWatched) {
+            const tiktokStatus = document.getElementById('tiktokStatus');
+            const tiktokMarkDoneBtn = document.getElementById('tiktokMarkDoneBtn');
+            if (tiktokStatus) tiktokStatus.style.display = isWatched ? 'inline' : 'none';
+            if (tiktokMarkDoneBtn) tiktokMarkDoneBtn.style.display = isWatched ? 'none' : 'block';
+        }
+
+        function hasRecordingReadingAnalysis(dayValue) {
+            const dayKey = String(Math.max(1, Number(dayValue) || 1));
+            const saved = (userProgress.readingAnalyses && userProgress.readingAnalyses[dayKey]) || null;
+            const active = readingAiAnalysis || saved;
+            return Boolean(active && active.sourceType === 'recording' && !active.isSkipped && !active.isTiktokBased);
+        }
+
         function resetReadingRecordingState() {
             if (readingTimerInterval) {
                 clearInterval(readingTimerInterval);
@@ -19225,7 +19262,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
             readingFallbackAutoOpenRequested = false;
             readingAiAnalysis = null;
             readingRecordingSkipped = false;
-            tiktokVideoWatched = false;
+
+            const currentDay = selectedChallengeDay || 1;
+            tiktokVideoWatched = isReadingWatchedForDay(currentDay);
 
             const statusEl = document.getElementById('readingRecordingStatus');
             const timerEl = document.getElementById('readingRecordingTimer');
@@ -19250,8 +19289,9 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 btnEl.style.background = 'var(--primary)';
             }
             if (skipContainer) skipContainer.style.display = 'none';
-            if (tiktokStatus) tiktokStatus.style.display = 'none';
-            if (tiktokMarkDoneBtn) tiktokMarkDoneBtn.style.display = 'block';
+            if (tiktokStatus || tiktokMarkDoneBtn) {
+                syncReadingWatchedUi(tiktokVideoWatched);
+            }
             setReadingFallbackVisibility(false);
             setReadingFallbackCardState(false, false);
         }
@@ -19567,27 +19607,49 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
         function markTiktokWatched() {
             // Mark TikTok video as watched
-            tiktokVideoWatched = true;
-            document.getElementById('tiktokStatus').style.display = 'inline';
-            document.getElementById('tiktokMarkDoneBtn').style.display = 'none';
-            
-            // Assign baseline scores for TikTok completion
-            readingAiAnalysis = {
-                fluency: 60,
-                clarity: 60,
-                rhythm: 60,
-                transcript: '[TikTok video watched]',
-                feedback: 'Reading practice completed via TikTok. You watched a native speaker example to improve pronunciation.',
-                suggestions: ['Review the TikTok video regularly', 'Compare your pronunciation with native speaker', 'Focus on rhythm and intonation'],
-                isTiktokBased: true,
-                sourceType: 'tiktok',
-            };
             const currentDay = selectedChallengeDay || 1;
-            userProgress.readingAnalyses = userProgress.readingAnalyses || {};
-            userProgress.readingAnalyses[currentDay] = readingAiAnalysis;
+            const isRecordingRunning = readingIsRecording || /processing/i.test(String(document.getElementById('readingRecordingStatus')?.textContent || ''));
+
+            tiktokVideoWatched = true;
+            setReadingWatchedForDay(currentDay, true);
+            syncReadingWatchedUi(true);
+
+            // Do not overwrite an existing speaking recording analysis.
+            const alreadyHasRecordingAnalysis = hasRecordingReadingAnalysis(currentDay);
+            if (!alreadyHasRecordingAnalysis && !isRecordingRunning) {
+                const focus = getChallengeSkillFocus();
+                if (!focus.speaking) {
+                    readingAiAnalysis = {
+                        fluency: 60,
+                        clarity: 60,
+                        rhythm: 60,
+                        transcript: '[TikTok video watched]',
+                        feedback: 'Reading practice completed via TikTok. You watched a native speaker example to improve pronunciation.',
+                        suggestions: ['Review the TikTok video regularly', 'Compare your pronunciation with native speaker', 'Focus on rhythm and intonation'],
+                        isTiktokBased: true,
+                        sourceType: 'tiktok',
+                    };
+                    userProgress.readingAnalyses = userProgress.readingAnalyses || {};
+                    userProgress.readingAnalyses[currentDay] = readingAiAnalysis;
+                }
+            }
+
             saveUserData();
-            showNotification('✓ Great! TikTok video watched. Scores assigned! 🎉', 'success');
-            document.getElementById('readingRecordingStatus').textContent = 'Status: TikTok completed';
+
+            if (isRecordingRunning) {
+                showNotification('✓ TikTok marked as watched. Finish recording analysis first, then continue.', 'info');
+                return;
+            }
+
+            if (alreadyHasRecordingAnalysis) {
+                showNotification('✓ TikTok marked as watched. Your speaking recording result is kept safely.', 'success');
+            } else {
+                showNotification('✓ Great! TikTok video marked as watched.', 'success');
+                const statusEl = document.getElementById('readingRecordingStatus');
+                if (statusEl && !getChallengeSkillFocus().speaking) {
+                    statusEl.textContent = 'Status: TikTok completed';
+                }
+            }
         }
 
         function tokenizeText(text) {
@@ -24696,6 +24758,12 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
                 const savedDayReadingAnalysis = (userProgress.readingAnalyses && userProgress.readingAnalyses[currentDay]) || null;
                 const activeReadingAnalysis = readingAiAnalysis || savedDayReadingAnalysis;
                 const manualFallbackText = String(document.getElementById('readingTranscriptFallback')?.value || '').trim();
+                const readingStatusText = String(document.getElementById('readingRecordingStatus')?.textContent || '').toLowerCase();
+
+                if (readingIsRecording || readingStatusText.includes('processing')) {
+                    showNotification('Recording masih berjalan/diproses. Tunggu selesai dulu sebelum lanjut.', 'warning');
+                    return;
+                }
 
                 if (!readingAiAnalysis && savedDayReadingAnalysis) {
                     readingAiAnalysis = savedDayReadingAnalysis;
@@ -24708,7 +24776,7 @@ const LISTENING_TRANSCRIPT_DRIVE_MAP = {
 
                 const finalReadingAnalysis = readingAiAnalysis || ((userProgress.readingAnalyses && userProgress.readingAnalyses[currentDay]) || null);
                 const hasSpeakingRecording = !!(finalReadingAnalysis && !finalReadingAnalysis.isTiktokBased && !finalReadingAnalysis.isSkipped);
-                const hasReadingWatch = !!tiktokVideoWatched || !!finalReadingAnalysis?.isTiktokBased;
+                const hasReadingWatch = !!tiktokVideoWatched || isReadingWatchedForDay(currentDay) || !!finalReadingAnalysis?.isTiktokBased;
 
                 if (requiresSpeaking && !hasSpeakingRecording) {
                     if (!readingIsRecording && document.getElementById('readingRecordingStatus')?.textContent.includes('blocked')) {
